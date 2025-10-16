@@ -1,5 +1,4 @@
 
-
 import 'package:get/get_navigation/get_navigation.dart';
 
 import '../features/authentication/forgot_pass/presentation/screen/create_new_pass_screen.dart';
@@ -12,11 +11,7 @@ import '../features/authentication/sign_up/presentation/screen/sign_up_otp_scree
 import '../features/authentication/sign_up/presentation/screen/sign_up_screen.dart';
 import '../features/main_view/presentation/screen/main_view_screen.dart';
 import '../features/onboarding/presentation/screen/slider_screen.dart';
-import '../features/profile/presentation/screen/profile_screen.dart';
 import '../features/splash/presentation/splash_screen.dart';
-
-
-
 
 
 class AppRoute {
