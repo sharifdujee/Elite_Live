@@ -58,6 +58,7 @@ class AppRoute {
       page: () => ForgotPassScreen(),
       transition: Transition.rightToLeft,
     ),
+
     GetPage(
       name: forgotPasswordOtp,
       page: () => ForgotOtpScreen(),
