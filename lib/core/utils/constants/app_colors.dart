@@ -79,5 +79,6 @@ class AppColors {
  static const Color liveColor = Color(0xFFFF4D67);
  static const Color textHeader = Color(0xFF2D2D2D);
  static const Color textBody = Color(0xFF636F85);
+ static const Color followText = Color(0xFF101010);
 
 }

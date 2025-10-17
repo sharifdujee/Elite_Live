@@ -1,13 +1,13 @@
 
 import 'package:elites_live/features/home/controller/home_controller.dart';
-import 'package:elites_live/features/home/presentation/widget/all_live_screen.dart';
+import 'package:elites_live/features/home/presentation/screen/all_live_screen.dart';
 import 'package:elites_live/features/home/presentation/widget/home_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 
-import '../../../search/presentation/widget/all_tab_widget.dart';
+
 import '../../../search/presentation/widget/live_tab_widgets.dart';
 
 import '../../../search/presentation/widget/user_tab_widget.dart';
@@ -71,7 +71,9 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(height: 20.h,),
             ],
+
           ),
         ),
 

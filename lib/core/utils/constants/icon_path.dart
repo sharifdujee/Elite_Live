@@ -26,4 +26,5 @@ class IconPath {
   /// added by sharif
 static const String group = "${asset}group.png";
 static const String notification = "${asset}notification.png";
+static const String dot = "${asset}dotIndicator.png";
 }

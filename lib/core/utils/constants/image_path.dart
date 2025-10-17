@@ -8,4 +8,8 @@ class ImagePath {
   static const String facebook = '${asset}facebook.png';
   static const String success = '${asset}success.png';
   static const String user = '${asset}shamim.png';
+  static const String badge = '${asset}badge.png';
+  static const String one = '${asset}one.png';
+  static const String two = '${asset}two.png';
+  static const String three = '${asset}three.jpg';
 }
