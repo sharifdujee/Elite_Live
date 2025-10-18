@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../search/presentation/widget/searchbar_widget.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GroupScreen extends StatelessWidget {
   const GroupScreen({super.key});
