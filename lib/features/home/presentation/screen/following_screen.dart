@@ -1,21 +1,18 @@
-import 'package:elites_live/core/global/custom_text_view.dart';
-import 'package:elites_live/core/utils/constants/app_colors.dart';
-import 'package:elites_live/features/home/controller/home_controller.dart';
-import 'package:elites_live/features/home/presentation/widget/video_player_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
+import '../../controller/home_controller.dart';
 import '../widget/designation_section.dart';
 import '../widget/follow_section.dart';
 import '../widget/live_description_section.dart';
 import '../widget/live_indicator_section.dart';
 import '../widget/nameBadgeSection.dart';
-import '../widget/top_influence_section.dart';
 import '../widget/video_interaction_section.dart';
-import 'package:get/get.dart';
+import '../widget/video_player_section.dart';
 
-
-class AllLiveScreen extends StatelessWidget {
-  const AllLiveScreen({super.key});
+class FollowingScreen extends StatelessWidget {
+  const FollowingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,26 +86,9 @@ class AllLiveScreen extends StatelessWidget {
           ),
 
           SizedBox(height: 32.h,),
-          CustomTextView("Top Influencer Live", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,),
-          SizedBox(height: 16.h,),
-          SizedBox(
-            height: 260.h,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (context,index){
-                  return TopInfluenceSection();
-            }),
-          )
+
         ],
       ),
     );
   }
 }
-
-
-
-
-
-

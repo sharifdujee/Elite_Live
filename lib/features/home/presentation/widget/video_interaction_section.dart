@@ -3,6 +3,7 @@ import 'package:elites_live/features/home/presentation/widget/comment_sheet.dart
 import 'package:elites_live/features/home/presentation/widget/donation_sheet.dart';
 import 'package:elites_live/features/home/presentation/widget/share_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/global/custom_text_view.dart';
 
 
@@ -23,14 +24,14 @@ class VideoInteractionSection extends StatelessWidget {
               CommentSheet().show(context);
 
             },
-            child: _buildItem(Icons.comment, "25.2k"),
+            child: _buildItem(FontAwesomeIcons.comment, "25.2k"),
           ),
           SizedBox(width: 19),
           GestureDetector(
             onTap: () {
               DonationSheet().show(context);
             },
-            child: _buildItem(Icons.redeem, "Donate"),
+            child: _buildItem(FontAwesomeIcons.donate, "Donate"),
           ),
           SizedBox(width: 19),
           GestureDetector(

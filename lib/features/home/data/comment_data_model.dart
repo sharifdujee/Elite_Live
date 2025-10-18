@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+
+import 'package:get/get.dart';
 
 class Comment {
   final String id;
@@ -8,7 +11,7 @@ class Comment {
   final String? emoji;
   final DateTime timestamp;
   final List<Comment> replies;
-  bool isLiked;
+  final RxBool isLiked; // Changed to RxBool for reactivity
 
   Comment({
     required this.id,
@@ -19,6 +22,32 @@ class Comment {
     this.emoji,
     required this.timestamp,
     this.replies = const [],
-    this.isLiked = false,
+    bool isLiked = false,
+  }) : isLiked = RxBool(isLiked); // Initialize RxBool in initializer list
+
+  // Optional: Add a convenience method to toggle like
+  void toggleLike() {
+    isLiked.value = !isLiked.value;
+  }
+}
+
+// Vote Detail Model
+class VoteDetail {
+  final String userName;
+  final String userImage;
+  final int selectedOptionIndex;
+  final DateTime timestamp;
+  final bool isVerified;
+
+  VoteDetail({
+    required this.userName,
+    required this.userImage,
+    required this.selectedOptionIndex,
+    required this.timestamp,
+    this.isVerified = false,
   });
 }
+
+
+
+
