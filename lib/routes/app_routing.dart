@@ -1,5 +1,7 @@
 
 
+import 'package:elites_live/features/group/presentation/screen/group_screen.dart';
+import 'package:elites_live/features/notification/presentation/screen/notification.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 import '../features/authentication/forgot_pass/presentation/screen/create_new_pass_screen.dart';
@@ -30,6 +32,9 @@ class AppRoute {
   static const String passwordChanged = '/PasswordChangedScreen';
   static const String setupProfile = '/SetupProfileScreen';
   static const String mainView = '/MainViewScreen';
+  /// added by sharif 
+  static const String group = "/group";
+  static const String notification = "/notification";
 
   static final route = [
     GetPage(
@@ -87,5 +92,9 @@ class AppRoute {
       page: () => MainViewScreen(),
       transition: Transition.rightToLeft,
     ),
+    
+    /// 
+    GetPage(name: group, page: ()=>GroupScreen(), transition: Transition.rightToLeft), 
+    GetPage(name: notification, page: ()=>NotificationScreen(), transition: Transition.rightToLeft)
   ];
 }

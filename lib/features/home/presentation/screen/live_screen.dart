@@ -1,7 +1,9 @@
 
+import 'package:elites_live/core/utils/constants/image_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controller/live_controller.dart';
+import '../widget/ad_widget.dart';
 import '../widget/live_content_section.dart';
 import '../widget/pool_bottom_sheet.dart';
 import '../widget/vote_bottom_sheet.dart';
@@ -35,9 +37,17 @@ class LiveScreen extends StatelessWidget {
           LiveContentSection(controller: controller),
 
           // Ad Widget (Overlay)
-          Obx(() => controller.showAd.value
-              ? AdWidget(onDismiss: controller.dismissAd)
-              : const SizedBox.shrink()),
+          Obx(() {
+            final controller = Get.find<LiveController>();
+            return controller.showAd.value
+                ? AdWidget(
+              onDismiss: controller.dismissAd,
+              secondsRemaining: controller.adCountdown.value,
+              backgroundImagePath: ImagePath.ad,
+            )
+                : const SizedBox.shrink();
+          }),
+
 
           // Poll Bottom Sheet
           Obx(() => controller.showPollSheet.value
@@ -58,77 +68,11 @@ class LiveScreen extends StatelessWidget {
 
 
 
-class AdWidget extends StatelessWidget {
-  final VoidCallback onDismiss;
 
-  const AdWidget({
-    super.key,
-    required this.onDismiss,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 40,
-      left: 16,
-      child: Container(
-        width: 62,
-        height: 62,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(31),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            // Ad label
-            Center(
-              child: Text(
-                'Ad',
-                style: TextStyle(
-                  color: Colors.grey.shade800,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            // Close button
-            Positioned(
-              right: 0,
-              top: 0,
-              child: GestureDetector(
-                onTap: onDismiss,
-                child: Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade800,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 14,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+
+
+
 
 
 

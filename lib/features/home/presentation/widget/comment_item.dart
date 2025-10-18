@@ -1,3 +1,5 @@
+import 'package:elites_live/features/home/presentation/widget/donation_sheet.dart';
+import 'package:elites_live/features/home/presentation/widget/share_sheet.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -163,16 +165,26 @@ class CommentItem extends StatelessWidget {
                       size: 18,
                     ),
                     const SizedBox(height: 8),
-                    Icon(
-                      Icons.paid_outlined,
-                      color: Colors.grey.shade400,
-                      size: 18,
+                    GestureDetector(
+                      onTap: (){
+                        DonationSheet().show(context);
+                      },
+                      child: Icon(
+                        Icons.paid_outlined,
+                        color: Colors.grey.shade400,
+                        size: 18,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    Icon(
-                      Icons.share_outlined,
-                      color: Colors.grey.shade400,
-                      size: 18,
+                    GestureDetector(
+                      onTap: (){
+                        ShareSheet().show(context);
+                      },
+                      child: Icon(
+                        Icons.share_outlined,
+                        color: Colors.grey.shade400,
+                        size: 18,
+                      ),
                     ),
                   ],
                 ),

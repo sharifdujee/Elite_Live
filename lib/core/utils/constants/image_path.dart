@@ -6,6 +6,7 @@ class ImagePath {
   static const String slider3 = '${asset}slider3.png';
   static const String google = '${asset}google.png';
   static const String facebook = '${asset}facebook.png';
+  static const String ad = '${asset}Ads.png';
   static const String success = '${asset}success.png';
   static const String user = '${asset}shamim.png';
   static const String badge = '${asset}badge.png';

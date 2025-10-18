@@ -1,4 +1,6 @@
+import 'package:elites_live/features/home/presentation/widget/donation_sheet.dart';
 import 'package:elites_live/features/home/presentation/widget/pool_section.dart';
+import 'package:elites_live/features/home/presentation/widget/share_sheet.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -99,14 +101,14 @@ class LiveContentSection extends StatelessWidget {
             ),
           ),
 
-          // Video Grid (Participants)
+          /// Video Grid (Participants)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Container(
-              height: 310,
+              height: 310.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.orange, width: 2),
+                ///border: Border.all(color: Colors.orange, width: 2),
               ),
               child: Row(
                 children: [
@@ -418,16 +420,27 @@ class LiveContentSection extends StatelessWidget {
                               size: 24,
                             ),
                             const SizedBox(height: 8),
-                            Icon(
-                              Icons.paid_outlined,
-                              color: Colors.grey.shade400,
-                              size: 24,
+                            GestureDetector(
+                              onTap: (){
+                                DonationSheet().show(context);
+                              },
+
+                              child: Icon(
+                                Icons.paid_outlined,
+                                color: Colors.grey.shade400,
+                                size: 24,
+                              ),
                             ),
                             const SizedBox(height: 8),
-                            Icon(
-                              Icons.share_outlined,
-                              color: Colors.grey.shade400,
-                              size: 24,
+                            GestureDetector(
+                              onTap: (){
+                                ShareSheet().show(context);
+                              },
+                              child: Icon(
+                                Icons.share_outlined,
+                                color: Colors.grey.shade400,
+                                size: 24,
+                              ),
                             ),
                           ],
                         ),

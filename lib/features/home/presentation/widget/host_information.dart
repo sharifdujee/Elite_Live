@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../data/live_stream_data_model.dart';

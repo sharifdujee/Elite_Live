@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../live/presentation/screen/live_screen.dart';
 import '../../controller/home_controller.dart';
 import '../widget/home_tab_bar.dart';
 import '../widget/top_header.dart';

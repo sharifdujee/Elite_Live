@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../data/comment_data_model.dart';
@@ -18,6 +20,8 @@ class LiveController extends GetxController {
   final voteDetails = <VoteDetail>[].obs;
 
   final showAd = true.obs;
+  final adCountdown = 10.obs;
+  Timer? _adTimer;
 
   @override
   void onInit() {
@@ -27,13 +31,19 @@ class LiveController extends GetxController {
   }
 
   void _startAdTimer() {
-    Future.delayed(const Duration(seconds: 10), () {
-      showAd.value = false;
+    _adTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (adCountdown.value > 0) {
+        adCountdown.value--;
+      } else {
+        showAd.value = false;
+        timer.cancel();
+      }
     });
   }
 
   void dismissAd() {
     showAd.value = false;
+    _adTimer?.cancel();
   }
 
 
@@ -272,6 +282,7 @@ class LiveController extends GetxController {
   @override
   void onClose() {
     messageController.dispose();
+    _adTimer?.cancel();
     super.onClose();
   }
 }

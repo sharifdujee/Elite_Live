@@ -1,5 +1,6 @@
 
 import 'package:elites_live/features/home/controller/home_controller.dart';
+import 'package:elites_live/features/home/controller/live_controller.dart';
 import 'package:elites_live/features/home/controller/video_player_controller.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -34,5 +35,6 @@ class AppBinding extends Bindings {
     Get.lazyPut(() => MainViewController(), fenix: true);
     Get.lazyPut(()=>HomeController(), fenix: true);
     Get.lazyPut(()=>VideoController(), fenix: true);
+    Get.lazyPut(()=>LiveController(), fenix: true);
   }
 }

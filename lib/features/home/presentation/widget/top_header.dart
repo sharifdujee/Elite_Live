@@ -1,6 +1,7 @@
+import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:get/get.dart';
 import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/icon_path.dart';
@@ -30,25 +31,35 @@ class TopHeader extends StatelessWidget {
             ],
           ),
           SizedBox(width: 37.w,),
-          Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: AppColors.bgColor,
-              borderRadius: BorderRadius.circular(50.r),
-            ),
-            child: Image.asset(IconPath.group, fit: BoxFit.cover,
-              height: 36.h,
-              width: 36.w,
+          GestureDetector(
+            onTap: (){
+              Get.toNamed(AppRoute.group);
+            },
+            child: Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                color: AppColors.bgColor,
+                borderRadius: BorderRadius.circular(50.r),
+              ),
+              child: Image.asset(IconPath.group, fit: BoxFit.cover,
+                height: 36.h,
+                width: 36.w,
+              ),
             ),
           ),
           SizedBox(width: 16.w,),
-          Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: AppColors.bgColor,
-              borderRadius: BorderRadius.circular(100.r),
+          GestureDetector(
+            onTap: (){
+              Get.toNamed(AppRoute.group);
+            },
+            child: Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                color: AppColors.bgColor,
+                borderRadius: BorderRadius.circular(100.r),
+              ),
+              child: Image.asset(IconPath.notification, height: 36.h,width:36.w, fit: BoxFit.cover,),
             ),
-            child: Image.asset(IconPath.notification, height: 36.h,width:36.w, fit: BoxFit.cover,),
           ),
 
         ],
