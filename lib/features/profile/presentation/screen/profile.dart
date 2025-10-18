@@ -1,9 +1,13 @@
+import 'package:elites_live/features/profile/presentation/screen/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/global_widget/custombuttonwhite.dart';
+import '../../../../core/route/app_route.dart';
 import '../../../../core/utility/app_colors.dart';
 import '../../controller/profile_controller.dart';
+import '../widget/profile_tab_widget.dart';
 
 class ProfilePage extends StatelessWidget {
   final ProfileController controller = Get.put(ProfileController());
@@ -39,7 +43,11 @@ class ProfilePage extends StatelessWidget {
                           fontSize: 20.sp
                       ),),
                         SizedBox(width: 240.w,),
-                      Image.asset("assets/icons/settings.png",height: 24.h, width: 24.w,),
+                      InkWell(
+                          onTap: (){
+                          Get.toNamed(AppRoute.settings);
+                          },
+                          child: Image.asset("assets/icons/settings.png",height: 24.h, width: 24.w,)),
                     ],
                   ),
                 ),
@@ -74,8 +82,8 @@ class ProfilePage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 24.h),
-                     
-                      
+
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -138,36 +146,18 @@ class ProfilePage extends StatelessWidget {
 
                         ],
                       ),
-
-
-                      SizedBox(height: 40.h),
-
-                      // About Me Section
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'About Me',
-                          style: GoogleFonts.poppins(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF2D2D2D),
-                          ),
-                        ),
+                      SizedBox(height: 24.h,),
+                      CustomButtonWhite(
+                        text:'Edit Profile',
+                      onPressed: (){
+                          Get.toNamed(AppRoute.edit_profile);
+                      },
                       ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        "A brief description of the agency, its mission, services, and areas of expertise. For example, 'We specialize in custom adventure tours and eco-friendly expeditions.",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF636F85),
-                        ),
-                      ),
+                      SizedBox(height: 15.h),
 
+                      ProfileTabsWidget(),
 
-
-                      SizedBox(height: 400.h),
-
+                     // SizedBox(height: 200.h),
 
                     ],
                   ),
