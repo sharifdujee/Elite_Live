@@ -1,6 +1,11 @@
 
 
+import 'package:elites_live/features/group/presentation/screen/create_group.dart';
+import 'package:elites_live/features/group/presentation/screen/create_post_screen.dart';
+import 'package:elites_live/features/group/presentation/screen/discover_group.dart';
+import 'package:elites_live/features/group/presentation/screen/group_post_screen.dart';
 import 'package:elites_live/features/group/presentation/screen/group_screen.dart';
+import 'package:elites_live/features/group/presentation/screen/invite_people_screen.dart';
 import 'package:elites_live/features/notification/presentation/screen/notification.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
@@ -35,6 +40,11 @@ class AppRoute {
   /// added by sharif 
   static const String group = "/group";
   static const String notification = "/notification";
+  static const String invite = "/invite";
+  static const String createGroup = "/createGroup";
+  static const String discoverGroup = "/discoverGroup";
+  static const String groupPost = "/groupPost";
+  static const String createPost = "/createPost";
 
   static final route = [
     GetPage(
@@ -93,8 +103,13 @@ class AppRoute {
       transition: Transition.rightToLeft,
     ),
     
-    /// 
+    /// added by sharif
     GetPage(name: group, page: ()=>GroupScreen(), transition: Transition.rightToLeft), 
-    GetPage(name: notification, page: ()=>NotificationScreen(), transition: Transition.rightToLeft)
+    GetPage(name: notification, page: ()=>NotificationScreen(), transition: Transition.rightToLeft),
+    GetPage(name: invite, page: ()=>InvitePeopleScreen(), transition: Transition.rightToLeft),
+    GetPage(name: createGroup, page: ()=>CreateGroupScreen(), transition: Transition.rightToLeft),
+    GetPage(name: discoverGroup, page: ()=>DiscoverGroup(), transition: Transition.rightToLeft),
+    GetPage(name: groupPost, page: ()=>GroupPostScreen(), transition: Transition.rightToLeft),
+    GetPage(name: createPost, page: ()=>CreatePostScreen(), transition: Transition.rightToLeft),
   ];
 }

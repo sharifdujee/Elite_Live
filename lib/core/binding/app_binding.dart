@@ -1,4 +1,6 @@
 
+import 'package:elites_live/features/event/controller/event_controller.dart';
+import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/controller/live_controller.dart';
 import 'package:elites_live/features/home/controller/video_player_controller.dart';
@@ -36,5 +38,7 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>HomeController(), fenix: true);
     Get.lazyPut(()=>VideoController(), fenix: true);
     Get.lazyPut(()=>LiveController(), fenix: true);
+    Get.lazyPut(()=>GroupController(), fenix: true);
+    Get.lazyPut(()=>EventController(), fenix: true);
   }
 }
