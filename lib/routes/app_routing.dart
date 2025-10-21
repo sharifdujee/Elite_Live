@@ -11,6 +11,7 @@ import 'package:elites_live/features/group/presentation/screen/invite_people_scr
 import 'package:elites_live/features/live/presentation/screen/live_screen.dart';
 import 'package:elites_live/features/live/presentation/screen/subscription_screen.dart';
 import 'package:elites_live/features/live/presentation/screen/upgrade_premimu_screen.dart';
+import 'package:elites_live/features/live/presentation/widget/my_live_screen.dart';
 import 'package:elites_live/features/notification/presentation/screen/notification.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
@@ -55,6 +56,7 @@ class AppRoute {
   static const String liveScreen = "/live";
   static const String premiumScreen = "/premium";
   static const String subscription = "/subscription";
+  static const String myLive = "/myLive";
 
   static final route = [
     GetPage(
@@ -126,5 +128,7 @@ class AppRoute {
     GetPage(name: liveScreen, page: ()=>CreateLiveScreen(), transition: Transition.rightToLeft),
     GetPage(name: premiumScreen, page: ()=>UpgradePremiumScreen(), transition: Transition.rightToLeft),
     GetPage(name: subscription, page: ()=>SubscriptionScreen(), transition: Transition.rightToLeft),
+    GetPage(name: myLive, page: ()=>MyLiveScreen(), transition: Transition.rightToLeft),
+
   ];
 }
