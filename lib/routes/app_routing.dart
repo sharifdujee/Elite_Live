@@ -1,11 +1,16 @@
 
 
+import 'package:elites_live/features/event/presentation/screen/create_funding_screen.dart';
+import 'package:elites_live/features/event/presentation/screen/create_schedule_screen.dart';
 import 'package:elites_live/features/group/presentation/screen/create_group.dart';
 import 'package:elites_live/features/group/presentation/screen/create_post_screen.dart';
 import 'package:elites_live/features/group/presentation/screen/discover_group.dart';
 import 'package:elites_live/features/group/presentation/screen/group_post_screen.dart';
 import 'package:elites_live/features/group/presentation/screen/group_screen.dart';
 import 'package:elites_live/features/group/presentation/screen/invite_people_screen.dart';
+import 'package:elites_live/features/live/presentation/screen/live_screen.dart';
+import 'package:elites_live/features/live/presentation/screen/subscription_screen.dart';
+import 'package:elites_live/features/live/presentation/screen/upgrade_premimu_screen.dart';
 import 'package:elites_live/features/notification/presentation/screen/notification.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
@@ -45,6 +50,11 @@ class AppRoute {
   static const String discoverGroup = "/discoverGroup";
   static const String groupPost = "/groupPost";
   static const String createPost = "/createPost";
+  static const String createEvent = "/createEvent";
+  static const String createFunding = "/createFunding";
+  static const String liveScreen = "/live";
+  static const String premiumScreen = "/premium";
+  static const String subscription = "/subscription";
 
   static final route = [
     GetPage(
@@ -111,5 +121,10 @@ class AppRoute {
     GetPage(name: discoverGroup, page: ()=>DiscoverGroup(), transition: Transition.rightToLeft),
     GetPage(name: groupPost, page: ()=>GroupPostScreen(), transition: Transition.rightToLeft),
     GetPage(name: createPost, page: ()=>CreatePostScreen(), transition: Transition.rightToLeft),
+    GetPage(name: createEvent, page: ()=>CreateScheduleScreen(), transition: Transition.rightToLeft),
+    GetPage(name: createFunding, page: ()=>CreateFundingScreen(), transition: Transition.rightToLeft),
+    GetPage(name: liveScreen, page: ()=>CreateLiveScreen(), transition: Transition.rightToLeft),
+    GetPage(name: premiumScreen, page: ()=>UpgradePremiumScreen(), transition: Transition.rightToLeft),
+    GetPage(name: subscription, page: ()=>SubscriptionScreen(), transition: Transition.rightToLeft),
   ];
 }

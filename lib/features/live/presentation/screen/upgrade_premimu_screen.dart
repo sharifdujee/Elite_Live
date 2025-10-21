@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/global/custom_elevated_button.dart';
 import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
 
-class CreateLiveScreen extends StatelessWidget {
-  const CreateLiveScreen({super.key});
+class UpgradePremiumScreen extends StatelessWidget {
+  const UpgradePremiumScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class CreateLiveScreen extends StatelessWidget {
                               child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp)),
                           SizedBox(width: 12.w),
                           CustomTextView(
-                            "Back",
+                            "Upgrade",
                             fontWeight: FontWeight.w600,
                             fontSize: 20.sp,
                             color: AppColors.white,
@@ -63,30 +63,35 @@ class CreateLiveScreen extends StatelessWidget {
                       children: [
                         SizedBox(height: 157.h,),
                         /// Search Bar
-                       CustomTextView("Get your suitable live session with us.", fontWeight: FontWeight.w600,fontSize: 24.sp,textAlign: TextAlign.center,color: AppColors.liveText,),
-                        SizedBox(height: 32.h,),
+                        CustomTextView("Upgrade to Premium", fontWeight: FontWeight.w600,fontSize: 24.sp,textAlign: TextAlign.center,color: AppColors.liveText,),
+                        SizedBox(height: 20.h,),
+                        CustomTextView("Access all features with a single purchase plan.", textAlign: TextAlign.center,fontSize: 16.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
+                        SizedBox(height: 24.h,),
 
                         /// Bottom Buttons
 
-                            CustomElevatedButton(
-                              suffix: Icons.arrow_forward,
-                              ontap: () {
-                                Get.toNamed(AppRoute.premiumScreen);
-                              },
-                              text: "Go to Paid Live",
-                              gradient: AppColors.primaryGradient,
-                            ),
-                            SizedBox(height: 12.w),
-                            CustomElevatedButton(
-                              suffix: Icons.arrow_forward,
-                              ontap: () {
-                                Get.toNamed(AppRoute.createGroup);
-                              },
-                              text: "Go to Free Live",
+                        CustomElevatedButton(
 
-                              gradient: AppColors.primaryGradient,
-
-                            ),
+                          ontap: () {
+                            Get.toNamed(AppRoute.subscription);
+                          },
+                          text: "Upgrade Now ",
+                          gradient: AppColors.primaryGradient,
+                        ),
+                        SizedBox(height: 12.w),
+                        CustomElevatedButton(
+                          ontap: () {
+                            Get.toNamed(AppRoute.createGroup);
+                          },
+                          text: "Not Now",
+                          backgroundColor: Colors.white,
+                          gradient: LinearGradient(colors: [Colors.white, Colors.white]),
+                          textStyle: GoogleFonts.andika(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF8E2DE2),
+                          ),
+                        ),
 
 
                         SizedBox(height: 16.h),

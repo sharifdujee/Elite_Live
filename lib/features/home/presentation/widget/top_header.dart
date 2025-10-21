@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,8 +13,10 @@ class TopHeader extends StatelessWidget {
   const TopHeader({
     super.key,
     this.isAdd = false,
+    this.onTap,
   });
   final bool isAdd;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +38,20 @@ class TopHeader extends StatelessWidget {
             ],
           ),
           SizedBox(width: 37.w,),
-          isAdd?Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(100.r)
-            ),
-            child: Icon(Icons.add),
+          isAdd?GestureDetector(
+            onTap: (){
+              log("Hello, I try to navigate");
+              onTap!();
+            },
+            child: Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(100.r)
+              ),
+              child: Icon(Icons.add),
 
+            ),
           ):SizedBox.shrink(),
           SizedBox(width: 16.w,),
           GestureDetector(

@@ -14,6 +14,7 @@ class CustomElevatedButton extends StatelessWidget {
   final bool isLoading;
   final double? widths;
   final Color? textColor;
+  final IconData? suffix;
 
   const CustomElevatedButton({
     super.key,
@@ -25,6 +26,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.textStyle,
     this.isLoading = false,
     this.textColor,
+    this.suffix,
   });
 
   @override
@@ -53,27 +55,49 @@ class CustomElevatedButton extends StatelessWidget {
           ),
         ),
         onPressed: isLoading ? null : ontap,
-         child: isLoading
-        ? SizedBox(
-        height: 24.h,
-        width: 24.h,
-        child: CircularProgressIndicator(
-          color: Colors.white,
-          strokeWidth: 2.5,
-        ),
-      )
-          : Text(
-      text,
-      textAlign: TextAlign.center,
-      style: textStyle ??
-          GoogleFonts.andika(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
-            color: textColor ?? (isWhiteButton ? Color(0xFF8E2DE2) : Colors.white),
+        child: isLoading
+            ? SizedBox(
+          height: 24.h,
+          width: 24.h,
+          child: CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2.5,
           ),
-    ),
+        )
+            : Stack(
+          alignment: Alignment.center,
+          children: [
+            // Centered Text
+            Center(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: textStyle ??
+                    GoogleFonts.andika(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w700,
+                      color: textColor ??
+                          (isWhiteButton ? const Color(0xFF8E2DE2) : Colors.white),
+                    ),
+              ),
+            ),
+            // Right-aligned Icon (if provided)
+            if (suffix != null)
+              Positioned(
+                right: 16, // adjust padding from right edge
+                child: Icon(
+                  suffix,
+                  size: 18.sp,
+                  color: textColor ??
+                      (isWhiteButton ? const Color(0xFF8E2DE2) : Colors.white),
+                ),
+              ),
+          ],
+        ),
 
-    ),
+
+
+      ),
     );
   }
 }

@@ -37,7 +37,7 @@ class EventTabBar extends StatelessWidget {
                 SizedBox(height: 5.h),
                 Container(
                   height: 2.h,
-                  width: 35.w,
+                  width: 88.w,
                   color: selected ? Colors.white : Colors.transparent,
                 )
               ],

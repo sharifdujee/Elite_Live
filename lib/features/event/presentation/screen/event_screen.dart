@@ -3,12 +3,12 @@ import 'package:elites_live/features/event/controller/event_controller.dart';
 import 'package:elites_live/features/event/presentation/screen/cloud_funding_screen.dart';
 import 'package:elites_live/features/event/presentation/screen/event_schedule_screen.dart';
 import 'package:elites_live/features/event/presentation/widget/event_tab_bar.dart';
+import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../home/presentation/screen/all_live_screen.dart';
-import '../../../home/presentation/screen/following_screen.dart';
+
 import '../../../home/presentation/widget/top_header.dart';
 
 class EventScreen extends StatelessWidget {
@@ -34,12 +34,22 @@ class EventScreen extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    TopHeader(isAdd: true,),
+                    TopHeader(
+                      isAdd: true,
+                      onTap: () {
+                        if (controller.selectedTab.value == 0) {
+                          Get.toNamed(AppRoute.createEvent);
+                        } else if (controller.selectedTab.value == 1) {
+                          Get.toNamed(AppRoute.createFunding);
+                        }
+                      },
+                    ),
+
                     EventTabBar(),
                     Container(
                       margin: EdgeInsets.only(top: 25.h),
                       padding: EdgeInsets.symmetric(horizontal: 25.w),
-                      height: 560.h,
+                      ///height: 560.h,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(

@@ -34,6 +34,7 @@ class HomeController extends GetxController {
     ImagePath.one
   ];
   List<bool> isLive = [true, false, true, true, true];
+  List<bool> eventLive = [false, false, false, false, false];
   List<bool> isFollow = [true, false, true, true, true];
   var commentImage = Rx<File?>(null); // Selected image
   var isEmojiVisible = false.obs;
