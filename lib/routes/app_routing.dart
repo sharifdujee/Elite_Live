@@ -1,3 +1,4 @@
+import 'package:get/get_navigation/get_navigation.dart';
 
 
 import 'package:elites_live/features/event/presentation/screen/create_funding_screen.dart';
@@ -13,7 +14,8 @@ import 'package:elites_live/features/live/presentation/screen/subscription_scree
 import 'package:elites_live/features/live/presentation/screen/upgrade_premimu_screen.dart';
 import 'package:elites_live/features/live/presentation/widget/my_live_screen.dart';
 import 'package:elites_live/features/notification/presentation/screen/notification.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+
+
 
 import '../features/authentication/forgot_pass/presentation/screen/create_new_pass_screen.dart';
 import '../features/authentication/forgot_pass/presentation/screen/forgot_otp_screen.dart';
@@ -26,9 +28,6 @@ import '../features/authentication/sign_up/presentation/screen/sign_up_screen.da
 import '../features/main_view/presentation/screen/main_view_screen.dart';
 import '../features/onboarding/presentation/screen/slider_screen.dart';
 import '../features/splash/presentation/splash_screen.dart';
-
-
-
 
 
 class AppRoute {
@@ -89,6 +88,7 @@ class AppRoute {
       page: () => ForgotPassScreen(),
       transition: Transition.rightToLeft,
     ),
+
     GetPage(
       name: forgotPasswordOtp,
       page: () => ForgotOtpScreen(),
