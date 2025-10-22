@@ -5,8 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/utility/app_colors.dart';
-import '../../../../core/utility/image_path.dart';
+import '../../../core/utils/constants/app_colors.dart';
+import '../../../core/utils/constants/image_path.dart';
 import '../controller/slider_controller.dart';
 
 class SliderScreen extends StatelessWidget {

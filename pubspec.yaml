@@ -49,6 +49,7 @@ dependencies:
   video_player: ^2.10.0
   emoji_picker_flutter: ^4.3.0
   font_awesome_flutter: ^10.10.0
+  avatar_stack: ^3.0.0
 
 
 

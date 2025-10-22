@@ -1,24 +1,24 @@
-
-
 import 'dart:io';
 
-import 'package:elites_live/core/global/custom_text_view.dart';
-import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/features/home/controller/live_controller.dart';
+import 'package:elites_live/features/home/presentation/widget/vote_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../controller/home_controller.dart';
-import '../../data/comment_data_model.dart';
-import 'comment_input_box.dart';
 
+import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/utils/constants/app_colors.dart';
+import '../../../home/controller/home_controller.dart';
+import '../../../home/data/comment_data_model.dart';
+import '../../../home/presentation/widget/comment_input_box.dart';
 
-class CommentSheet extends StatelessWidget {
+class LiveCommentSheet extends StatelessWidget {
   final HomeController controller = Get.find<HomeController>();
-  final liveController = Get.find();
+  final liveController = Get.put(LiveController());
   final RxString replyingToId = ''.obs;
   final RxString replyingToName = ''.obs;
 
-  CommentSheet({super.key});
+  LiveCommentSheet({super.key});
 
   void show(BuildContext context) {
     Get.bottomSheet(
@@ -33,8 +33,8 @@ class CommentSheet extends StatelessWidget {
         replyingToId.value = comment.id;
         replyingToName.value = comment.userName;
       },
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10.h),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10.h),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -145,9 +145,10 @@ class CommentSheet extends StatelessWidget {
       ),
       child: Column(
         children: [
+          VoteDetailsBottomSheet(controller: liveController),
           // Header
-          Padding(
-            padding:  EdgeInsets.all(16.sp),
+          Container(
+            margin:  EdgeInsets.all(16.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -164,7 +165,7 @@ class CommentSheet extends StatelessWidget {
               ],
             ),
           ),
-           Divider(height: 1.h),
+          Divider(height: 1.h),
 
           // Comments List
           Expanded(
@@ -195,9 +196,3 @@ class CommentSheet extends StatelessWidget {
     return '${timestamp.day}/${timestamp.month}/${timestamp.year}';
   }
 }
-
-
-
-
-
-

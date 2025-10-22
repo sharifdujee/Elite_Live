@@ -1,28 +1,39 @@
-
-
-
-
+import 'package:elites_live/features/live/presentation/widget/contributor_dialog.dart';
+import 'package:elites_live/features/live/presentation/widget/live_comment_sheet.dart';
+import 'package:elites_live/features/live/presentation/widget/pool_create_dialog.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import '../../controller/live_screen_controller.dart';
-import 'contributor_dialog.dart';
+
 
 
 
 class MyLiveScreen extends StatelessWidget {
-  const MyLiveScreen({super.key});
+  MyLiveScreen({super.key});
+
+  final LiveScreenController controller = Get.put(LiveScreenController());
 
   @override
   Widget build(BuildContext context) {
-    final LiveScreenController controller = Get.put(LiveScreenController());
-
     return Scaffold(
       body: Stack(
         children: [
-          // Background video feed
-          Container(
+          // Background video feed or screen share
+          Obx(() => controller.isScreenSharing.value
+              ? Container(
+            color: Colors.grey[800],
+            child: const Center(
+              child: Text(
+                'Screen Sharing Content',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+              : Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -43,13 +54,13 @@ class MyLiveScreen extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: Colors.grey[800],
-                    child: const Center(
-                      child: Icon(
-                        Icons.person,
-                        size: 100,
-                        color: Colors.white54,
-                      ),
-                    ),
+                          child: const Center(
+                  child: Icon(
+                  Icons.person,
+                    size: 100,
+                    color: Colors.white54,
+                  ),
+                  ),
                   );
                 },
               ),
@@ -77,9 +88,68 @@ class MyLiveScreen extends StatelessWidget {
                 ),
               ),
             )),
-          ),
+          )),
 
-          // Top bar with viewer count
+          // Video feed in top-left corner when screen sharing
+          Obx(() => controller.isScreenSharing.value
+              ? Positioned(
+            top: MediaQuery.of(context).padding.top + 16,
+            left: 16,
+            child: Container(
+              width: 120,
+              height: 160,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white54, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: controller.isCameraOn.value
+                    ? Image.network(
+                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[800],
+                      child: const Center(
+                        child: Icon(
+                          Icons.person,
+                          size: 50,
+                          color: Colors.white54,
+                        ),
+                      ),
+                    );
+                  },
+                )
+                    : Container(
+                  color: Colors.black,
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.videocam_off,
+                          size: 40,
+                          color: Colors.white54,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Camera off',
+                          style: TextStyle(
+                            color: Colors.white54,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+              : const SizedBox.shrink()),
+
+          // Top bar with viewer count and back button
           Positioned(
             top: 0,
             left: 0,
@@ -104,33 +174,44 @@ class MyLiveScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.circle,
-                          color: Colors.white,
-                          size: 8,
+                  Row(
+                    children: [
+                      _buildControlButton(
+                        icon: Icons.arrow_back,
+                        onPressed: (){
+                          controller.goBack(context);
+                        }
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
                         ),
-                        const SizedBox(width: 6),
-                        Obx(() => Text(
-                          '${controller.viewerCount.value}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        )),
-                      ],
-                    ),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.circle,
+                              color: Colors.white,
+                              size: 8,
+                            ),
+                            const SizedBox(width: 6),
+                            Obx(() => Text(
+                              '${controller.viewerCount.value}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            )),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -212,7 +293,9 @@ class MyLiveScreen extends StatelessWidget {
                   _buildControlButton(
                     icon: Icons.call_end,
                     backgroundColor: Colors.red,
-                    onPressed: controller.endCall,
+                    onPressed: (){
+                      controller.endCall(context);
+                    }
                   ),
                 ],
               ),
@@ -262,7 +345,7 @@ class MyLiveScreen extends StatelessWidget {
                             _buildMenuItem(
                               icon: Icons.person_add_outlined,
                               text: 'Add Contributor',
-                              onTap: (){
+                              onTap: () {
                                 AddContributorDialog.show(context);
                               },
                             ),
@@ -273,7 +356,9 @@ class MyLiveScreen extends StatelessWidget {
                             _buildMenuItem(
                               icon: Icons.chat_bubble_outline,
                               text: 'Comment',
-                              onTap: controller.openComments,
+                              onTap: () {
+                                LiveCommentSheet().show(context);
+                              },
                             ),
                             const Divider(
                               color: Colors.white12,
@@ -284,8 +369,7 @@ class MyLiveScreen extends StatelessWidget {
                               text: 'Screen Share',
                               onTap: controller.toggleScreenShare,
                               trailing: Switch(
-                                value:
-                                controller.isScreenSharing.value,
+                                value: controller.isScreenSharing.value,
                                 onChanged: (value) {
                                   controller.toggleScreenShare();
                                 },
@@ -299,7 +383,9 @@ class MyLiveScreen extends StatelessWidget {
                             _buildMenuItem(
                               icon: Icons.poll_outlined,
                               text: 'Polls',
-                              onTap: controller.openPolls,
+                              onTap: () {
+                                CreatePollDialog.show(context);
+                              },
                             ),
                           ],
                         ),
@@ -316,7 +402,7 @@ class MyLiveScreen extends StatelessWidget {
           Obx(() => controller.isScreenSharing.value
               ? Positioned(
             top: MediaQuery.of(context).padding.top + 60,
-            left: 16,
+            left: 150,
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: 12,

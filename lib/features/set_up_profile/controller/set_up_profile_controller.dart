@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import '../../../core/global_widget/controller/custom_date_time_dialogue.dart';
 import '../../../core/global_widget/custom_text_view.dart';
 import '../../../core/helper/shared_prefarenses_helper.dart';
-import '../../../core/route/app_route.dart';
 import '../../../core/utility/icon_path.dart';
 import '../../../routes/app_routing.dart';
 

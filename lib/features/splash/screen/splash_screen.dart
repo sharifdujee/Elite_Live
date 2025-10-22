@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
-import '../../../core/utility/app_colors.dart';
-import '../../../core/utility/image_path.dart';
+
+import '../../../core/utils/constants/app_colors.dart';
+import '../../../core/utils/constants/image_path.dart';
 import '../controller/splash_controller.dart';
 
 class SplashScreen extends StatelessWidget {

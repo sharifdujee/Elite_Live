@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/utility/app_colors.dart';
+
+import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/search_controller.dart';
 import '../widgets/all_tab_widget.dart';
 import '../widgets/live_tab_widgets.dart';

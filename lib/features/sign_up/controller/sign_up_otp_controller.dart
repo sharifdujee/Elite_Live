@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import '../../../core/global_widget/custom_text_view.dart';
 import '../../../core/helper/shared_prefarenses_helper.dart';
 import '../../../core/service_class/network_caller/repository/network_caller.dart';
-import '../../../core/utility/app_colors.dart';
 import '../../../core/utility/app_urls.dart';
+import '../../../core/utils/constants/app_colors.dart';
 
 class SignUpOtpController extends GetxController {
   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();

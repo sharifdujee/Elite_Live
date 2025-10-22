@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/utility/app_colors.dart';
+
+import '../../../../core/utils/constants/app_colors.dart';
 
 class ProfileTabsController extends GetxController {
   RxInt selectedIndex = 0.obs;
@@ -14,7 +15,7 @@ class ProfileTabsWidget extends StatelessWidget {
   // Replace with your actual icons
   final String gridActive = 'assets/icons/grid_active.png';
   final String gridInactive = 'assets/icons/grid_inactive.png';
-  final String calendarActive = 'assets/icons/calendar_active.png';
+  final String calendarActive = 'assets/icons/calendar-active.png';
   final String calendarInactive = 'assets/icons/calender_inactive.png';
 
   ProfileTabsWidget({super.key});

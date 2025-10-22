@@ -8,7 +8,8 @@ import 'package:pinput/pinput.dart';
 import '../../../core/global_widget/custom_appbar.dart';
 import '../../../core/global_widget/custom_elevated_button.dart';
 import '../../../core/global_widget/custom_text_view.dart';
-import '../../../core/utility/app_colors.dart';
+
+import '../../../core/utils/constants/app_colors.dart';
 import '../../../core/validation/pin_validation.dart';
 import '../controller/sign_up_otp_controller.dart';
 

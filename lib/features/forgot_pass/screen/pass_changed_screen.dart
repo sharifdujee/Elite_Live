@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 
 import '../../../core/global_widget/custom_elevated_button.dart';
 import '../../../core/global_widget/custom_text_view.dart';
-import '../../../core/route/app_route.dart';
-import '../../../core/utility/app_colors.dart';
-import '../../../core/utility/image_path.dart';
+
+import '../../../core/utils/constants/app_colors.dart';
+import '../../../core/utils/constants/image_path.dart';
 import '../../../routes/app_routing.dart';
 
 class PasswordChangedScreen extends StatelessWidget {
