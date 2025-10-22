@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/route/app_route.dart';
 import '../../../core/service_class/network_caller/repository/network_caller.dart';
 import '../../../core/utility/app_urls.dart';
+import '../../../routes/app_routing.dart';
 
 class CreateNewPassController extends GetxController {
   RxBool isLoading = false.obs;

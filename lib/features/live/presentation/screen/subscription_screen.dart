@@ -1,4 +1,5 @@
 
+import 'package:elites_live/features/live/presentation/widget/payment_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -118,8 +119,9 @@ class SubscriptionScreen extends StatelessWidget {
 
                   /// Bottom Button
                   CustomElevatedButton(
+
                     ontap: () {
-                      Get.toNamed(AppRoute.premiumScreen);
+                      PaymentDialog.show(context);
                     },
                     text: "Pay Now",
                     gradient: AppColors.primaryGradient,

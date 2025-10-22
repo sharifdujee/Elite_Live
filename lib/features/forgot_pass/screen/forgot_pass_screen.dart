@@ -9,6 +9,7 @@ import '../../../core/global_widget/custom_text_view.dart';
 import '../../../core/route/app_route.dart';
 import '../../../core/utility/app_colors.dart';
 import '../../../core/validation/email_validation.dart';
+import '../../../routes/app_routing.dart';
 import '../controller/forgot_pass_controller.dart';
 
 class ForgotPassScreen extends StatelessWidget {

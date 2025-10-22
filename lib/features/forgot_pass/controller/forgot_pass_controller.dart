@@ -5,6 +5,7 @@ import '../../../core/route/app_route.dart';
 import '../../../core/service_class/network_caller/model/network_response.dart';
 import '../../../core/service_class/network_caller/repository/network_caller.dart';
 import '../../../core/utility/app_urls.dart';
+import '../../../routes/app_routing.dart';
 
 class ForgotPassController extends GetxController {
   TextEditingController emailController = TextEditingController();
