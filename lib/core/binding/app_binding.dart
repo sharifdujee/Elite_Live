@@ -1,6 +1,11 @@
 
+import 'package:elites_live/features/event/controller/event_controller.dart';
+import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
+import 'package:elites_live/features/home/controller/live_controller.dart';
+import 'package:elites_live/features/home/controller/video_player_controller.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../features/authentication/forgot_pass/controller/create_new_pass_controller.dart';
 import '../../features/authentication/forgot_pass/controller/forgot_otp_controller.dart';
@@ -31,5 +36,9 @@ class AppBinding extends Bindings {
     Get.lazyPut(() => CustomDateTimeController(), fenix: true);
     Get.lazyPut(() => MainViewController(), fenix: true);
     Get.lazyPut(()=>HomeController(), fenix: true);
+    Get.lazyPut(()=>VideoController(), fenix: true);
+    Get.lazyPut(()=>LiveController(), fenix: true);
+    Get.lazyPut(()=>GroupController(), fenix: true);
+    Get.lazyPut(()=>EventController(), fenix: true);
   }
 }

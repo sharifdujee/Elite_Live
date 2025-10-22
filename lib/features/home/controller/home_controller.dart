@@ -1,185 +1,119 @@
+import 'dart:io';
+
+import 'package:elites_live/core/utils/constants/image_path.dart';
+
 import 'package:get/get.dart';
-
-import '../../search/data/user_tab_data_model.dart';
-import '../../search/data/video_tab_model.dart';
-
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import '../data/comment_data_model.dart';
 
 class HomeController extends GetxController {
   var searchText = ''.obs;
-  var selectedTab = 0.obs; // 0 = All, 1 = Live, 2 = Video, 3 = User
-
+  var selectedTab = 0.obs;
+  var commentText = ''.obs;
+  var selectedDonationAmount = 0.0.obs;
+  List<String> liveDescription = [
+    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
+    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
+    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
+    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
+    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
+  ];
+  List<String> influencerName = [
+    "Ethan Walker",
+    "Ronald Richards",
+    "Marvin",
+    "Jerome Bell",
+    "Marvin",
+  ];
+  List<String> influencerProfile = [
+    ImagePath.two,
+    ImagePath.one,
+    ImagePath.user,
+    ImagePath.three,
+    ImagePath.one
+  ];
+  List<bool> isLive = [true, false, true, true, true];
+  List<bool> eventLive = [false, false, false, false, false];
+  List<bool> isFollow = [true, false, true, true, true];
+  var commentImage = Rx<File?>(null); // Selected image
+  var isEmojiVisible = false.obs;
+  final commentController = TextEditingController();
+  var comments = <Comment>[].obs;
 
   // Tab control
   void onTabSelected(int index) => selectedTab.value = index;
+
   void onSearchChanged(String value) => searchText.value = value;
 
-  // Recent actions
-  void removeRecentItem(String name) => recentList.remove(name);
-  void clearHistory() => recentList.clear();
+  void processDonation(double amount) {
+    selectedDonationAmount.value = amount;
+    // Add your donation processing logic here
+    Get.snackbar(
+      'Donation',
+      'Processing donation of \$${amount.toStringAsFixed(2)}',
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }
+
+  void toggleEmojiKeyboard() {
+    isEmojiVisible.value = !isEmojiVisible.value;
+  }
+
+  Future<void> pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: source, imageQuality: 75);
+    if (picked != null) {
+      commentImage.value = File(picked.path);
+    }
+  }
+
+  void clearCommentState() {
+    commentController.clear();
+    commentImage.value = null;
+    isEmojiVisible.value = false;
+  }
+
+  void submitComment(String text, {String? replyToId}) {
+    if (text.trim().isEmpty && commentImage.value == null) return;
+
+    final newComment = Comment(
+      id: UniqueKey().toString(),
+      userName: 'You',
+      userImage: ImagePath.user,
+      text: text,
+      imagePath: commentImage.value?.path,
+      timestamp: DateTime.now(),
+    );
+
+    if (replyToId != null) {
+      final parentIndex = comments.indexWhere((c) => c.id == replyToId);
+      if (parentIndex != -1) {
+        comments[parentIndex].replies.add(newComment);
+        comments.refresh();
+        clearCommentState();
+        return;
+      }
+    }
+
+    comments.insert(0, newComment);
+    clearCommentState();
+  }
+
+  // Comment submission
 
 
 
-  // Recent and Suggested
-  var recentList = <String>[
-    "Theresa Webb",
-    "Cameron Williamson",
-    "Floyd Miles",
-    "Savannah Nguyen",
-    "Savannah Nguyen",
-    "Savannah Nguyen",
-  ].obs;
 
-  var suggestedList = <String>[
-    "Theresa Webb",
-    "Cameron Williamson",
-    "Savannah Nguyen",
-    "Floyd Miles"
-  ].obs;
-
-
-
-  // Live Tab Data
-  var liveList = <Map<String, dynamic>>[
-    {
-      'image': 'assets/images/live1.png',
-      'viewers': '5.6k',
-    },
-    {
-      'image': 'assets/images/live2.png',
-      'viewers': '5.8k',
-    },
-    {
-      'image': 'assets/images/live3.png',
-      'viewers': '5.1k',
-    },
-    {
-      'image': 'assets/images/live4.png',
-      'viewers': '5.9k',
-    },
-    {
-      'image': 'assets/images/live5.png',
-      'viewers': '6.2k',
-    },
-    {
-      'image': 'assets/images/live6.png',
-      'viewers': '6.5k',
-    },
-    {
-      'image': 'assets/images/live6.png',
-      'viewers': '6.5k',
-    },
-    {
-      'image': 'assets/images/live6.png',
-      'viewers': '6.5k',
-    },
-    {
-      'image': 'assets/images/live6.png',
-      'viewers': '6.5k',
-    },
-    {
-      'image': 'assets/images/live6.png',
-      'viewers': '6.5k',
-    },
-  ].obs;
-
-
-  // Video tab data using model
-  var videoList = <VideoModel>[
-    VideoModel(
-      name: 'Ariana Grande',
-      username: '@arianagrande',
-      views: '728.5k',
-      time: '05:00',
-      image: 'assets/images/live1.png',
-    ),
-    VideoModel(
-      name: 'Taylor Swift',
-      username: '@taylorswift',
-      views: '1.2M',
-      time: '08:20',
-      image: 'assets/images/live2.png',
-    ),
-    VideoModel(
-      name: 'Selena Gomez',
-      username: '@selenagomez',
-      views: '985.3k',
-      time: '03:50',
-      image: 'assets/images/live3.png',
-    ),
-    VideoModel(
-      name: 'Justin Bieber',
-      username: '@justinbieber',
-      views: '875.1k',
-      time: '06:40',
-      image: 'assets/images/live4.png',
-    ),
-    VideoModel(
-      name: 'Justin Bieber',
-      username: '@justinbieber',
-      views: '875.1k',
-      time: '06:40',
-      image: 'assets/images/live5.png',
-    ),
-    VideoModel(
-      name: 'Justin Bieber',
-      username: '@justinbieber',
-      views: '875.1k',
-      time: '06:40',
-      image: 'assets/images/live6.png',
-    ),
-  ].obs;
-
-
-  //user_tab_data
-  var userList = <UserTabDataModel>[
-    UserTabDataModel(
-      name: 'Marvin McKinney',
-      username: 'Arianagrande',
-      followers: '200k Followers',
-      image: 'assets/images/live6.png',
-    ),
-    UserTabDataModel(
-      name: 'Darrell Steward',
-      username: 'Arianagrande',
-      followers: '200k Followers',
-      image: 'assets/images/live5.png',
-    ),
-    UserTabDataModel(
-      name: 'Darlene Robertson',
-      username: 'Arianagrande',
-      followers: '200k Followers',
-      image: 'assets/images/live2.png',
-    ),
-    UserTabDataModel(
-      name: 'Guy Hawkins',
-      username: 'Arianagrande',
-      followers: '200k Followers',
-      image: 'assets/images/live4.png',
-    ),
-    UserTabDataModel(
-      name: 'Savannah Nguyen',
-      username: 'Arianagrande',
-      followers: '200k Followers',
-      image: 'assets/images/live1.png',
-    ),
-    UserTabDataModel(
-      name: 'Devon Lane',
-      username: 'Arianagrande',
-      followers: '200k Followers',
-      image: 'assets/images/live3.png',
-    ),
-    UserTabDataModel(
-      name: 'Jacob Jones',
-      username: 'Arianagrande',
-      followers: '200k Followers',
-      image: 'assets/images/live2.png',
-    ),
-    UserTabDataModel(
-      name: 'Dianne Russell',
-      username: 'Arianagrande',
-      followers: '200k Followers',
-      image: 'assets/images/live1.png',
-    ),
-  ].obs;
-
+  void toggleLike(String commentId, {String? parentId}) {
+    if (parentId != null) {
+      final parent = comments.firstWhere((c) => c.id == parentId);
+      final reply = parent.replies.firstWhere((r) => r.id == commentId);
+      reply.isLiked.value = !reply.isLiked.value;
+    } else {
+      final comment = comments.firstWhere((c) => c.id == commentId);
+      comment.isLiked.value = !comment.isLiked.value;
+    }
+    comments.refresh();
+  }
 }

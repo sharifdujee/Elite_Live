@@ -1,22 +1,30 @@
+import 'dart:developer';
+
+import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../core/utils/constants/icon_path.dart';
 import '../../../../core/utils/constants/image_path.dart';
 
 class TopHeader extends StatelessWidget {
   const TopHeader({
     super.key,
+    this.isAdd = false,
+    this.onTap,
   });
+  final bool isAdd;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 24.w, right: 24.w, top: 61.h),
+      margin: EdgeInsets.only(left: 24.w, right: 12.w, top: 61.h),
       child: Row(
         children: [
+
           CircleAvatar(
             radius: 30.r,
             backgroundImage: AssetImage(ImagePath.user),),
@@ -30,25 +38,49 @@ class TopHeader extends StatelessWidget {
             ],
           ),
           SizedBox(width: 37.w,),
-          Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: AppColors.bgColor,
-              borderRadius: BorderRadius.circular(50.r),
+          isAdd?GestureDetector(
+            onTap: (){
+              log("Hello, I try to navigate");
+              onTap!();
+            },
+            child: Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(100.r)
+              ),
+              child: Icon(Icons.add),
+
             ),
-            child: Image.asset(IconPath.group, fit: BoxFit.cover,
-              height: 36.h,
-              width: 36.w,
+          ):SizedBox.shrink(),
+          SizedBox(width: 16.w,),
+          GestureDetector(
+            onTap: (){
+              Get.toNamed(AppRoute.group);
+            },
+            child: Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                color: AppColors.bgColor,
+                borderRadius: BorderRadius.circular(50.r),
+              ),
+              child: Icon(FontAwesomeIcons.peopleGroup)
             ),
           ),
           SizedBox(width: 16.w,),
-          Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: AppColors.bgColor,
-              borderRadius: BorderRadius.circular(100.r),
+
+          GestureDetector(
+            onTap: (){
+              Get.toNamed(AppRoute.notification);
+            },
+            child: Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                color: AppColors.bgColor,
+                borderRadius: BorderRadius.circular(100.r),
+              ),
+              child: Icon(FontAwesomeIcons.bell),
             ),
-            child: Image.asset(IconPath.notification, height: 36.h,width:36.w, fit: BoxFit.cover,),
           ),
 
         ],

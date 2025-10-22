@@ -17,6 +17,7 @@ class AppColors {
     ],
   );
 
+
   static const Color primaryLightColor = Color(0xff62524d);
   static const Color backgroundColor = Color(0xffd7ead6);
   static const Color textGrey = Color(0xFF808080);
@@ -78,6 +79,12 @@ class AppColors {
  static const Color professionColor = Color(0xFFF8FAFC);
  static const Color liveColor = Color(0xFFFF4D67);
  static const Color textHeader = Color(0xFF2D2D2D);
+ static const Color liveText = Color(0xFF191919);
  static const Color textBody = Color(0xFF636F85);
+ static const Color followText = Color(0xFF101010);
+ static const Color secondaryColor = Color(0xFF591AD4);
+ static const Color redColor = Color(0xFFFF4D4F);
+ static const Color linkColor = Color(0xFF2196F3);
+
 
 }
