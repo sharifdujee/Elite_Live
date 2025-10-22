@@ -9,14 +9,8 @@ import '../../../core/route/app_route.dart';
 class SplashController extends GetxController {
   final SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
 
-import 'package:elites_live/core/services/auth_service.dart';
-import 'package:get/get.dart';
 
 
-import '../../../routes/app_routing.dart';
-
-class SplashController extends GetxController {
-  final AuthService preferencesHelper = AuthService();
 
 
   @override
@@ -53,5 +47,5 @@ class SplashController extends GetxController {
 
 }
 
-}
+
 

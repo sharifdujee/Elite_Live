@@ -1,10 +1,12 @@
-import 'package:elites_live/features/live/presentation/widget/payment_dialog.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import '../../../../core/global/custom_elevated_button.dart';
 import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
+import '../../../../routes/app_routing.dart';
 import '../../controller/subscription_controller.dart';
 import '../widget/subscription_plan_card.dart';
 
@@ -117,8 +119,7 @@ class SubscriptionScreen extends StatelessWidget {
                   /// Bottom Button
                   CustomElevatedButton(
                     ontap: () {
-                      PaymentDialog.show(context);
-
+                      Get.toNamed(AppRoute.premiumScreen);
                     },
                     text: "Pay Now",
                     gradient: AppColors.primaryGradient,
@@ -133,22 +134,7 @@ class SubscriptionScreen extends StatelessWidget {
       ),
     );
   }
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
 
 
 

@@ -35,11 +35,11 @@ class PaymentSuccessDialog {
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFFC121A0).withValues(alpha: 0.1)
+                      color: Color(0xFFC121A0).withValues(alpha: 0.1)
                   ),
                   child: Image.asset(ImagePath.card, fit: BoxFit.cover,),
                 ),
-                
+
               ),
 
               // Title

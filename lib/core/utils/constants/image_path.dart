@@ -19,4 +19,5 @@ class ImagePath {
   static const String upload = '${asset}upload.png';
   static const String dotIndicator = '${asset}dotIndicator.png';
   static const String card = '${asset}bankCard.png';
+
 }
