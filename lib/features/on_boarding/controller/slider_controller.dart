@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../core/helper/shared_prefarenses_helper.dart';
 import '../../../../core/route/app_route.dart';
+import '../../../routes/app_routing.dart';
 
 class SliderController extends GetxController {
   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();

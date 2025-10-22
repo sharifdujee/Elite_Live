@@ -26,6 +26,7 @@ import '../features/live/presentation/screen/live_screen.dart';
 import '../features/live/presentation/screen/subscription_screen.dart';
 import '../features/live/presentation/screen/upgrade_premimu_screen.dart';
 import '../features/live/presentation/widget/my_live_screen.dart';
+import '../features/main_view/presentation/screen/main_view_screen.dart';
 import '../features/notification/presentation/screen/notification.dart';
 
 class AppRoute {

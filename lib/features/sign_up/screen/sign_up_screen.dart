@@ -16,6 +16,7 @@ import '../../../core/utility/image_path.dart';
 import '../../../core/validation/email_validation.dart';
 import '../../../core/validation/name_validator.dart';
 import '../../../core/validation/password_validation.dart';
+import '../../../routes/app_routing.dart';
 import '../controller/sign_up_controller.dart';
 
 class SignUpScreen extends StatelessWidget {

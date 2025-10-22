@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/route/app_route.dart';
 import '../../../../core/utility/app_colors.dart';
+import '../../../../routes/app_routing.dart';
 import '../../controller/settings_controller.dart';
 import 'delete.dart';
 import 'logout.dart';

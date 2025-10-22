@@ -5,6 +5,7 @@ import '../../../core/helper/shared_prefarenses_helper.dart';
 import '../../../core/route/app_route.dart';
 import '../../../core/service_class/network_caller/repository/network_caller.dart';
 import '../../../core/utility/app_urls.dart';
+import '../../../routes/app_routing.dart';
 
 class ForgotOtpController extends GetxController {
   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
