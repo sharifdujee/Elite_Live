@@ -1,10 +1,15 @@
 
-import 'package:elites_live/features/live/presentation/widget/contributor_dialog.dart';
+
+
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
 import '../../controller/live_screen_controller.dart';
+import 'contributor_dialog.dart';
+
+
 
 class MyLiveScreen extends StatelessWidget {
   const MyLiveScreen({super.key});
@@ -415,7 +420,6 @@ class MyLiveScreen extends StatelessWidget {
     );
   }
 }
-
 
 
 

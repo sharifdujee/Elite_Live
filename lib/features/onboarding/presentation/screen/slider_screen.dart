@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/image_path.dart';
+import '../../../on_boarding/controller/slider_controller.dart';
 import '../../controller/slider_controller.dart';
 
 

@@ -14,6 +14,7 @@ import '../../../../../core/utils/constants/image_path.dart';
 import '../../../../../core/validation/email_validation.dart';
 import '../../../../../core/validation/password_validation.dart';
 import '../../../../../routes/app_routing.dart';
+import '../../../../sign_in/controller/sign_in_controller.dart';
 import '../../controller/sign_in_controller.dart';
 
 
