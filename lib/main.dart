@@ -1,14 +1,15 @@
 
+import 'package:elites_live/core/services/auth_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'app.dart';
-import 'core/binding/binding.dart';
-import 'core/helper/shared_prefarenses_helper.dart';
+import 'core/binding/app_binding.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferencesHelper().init();
+  await AuthService().init();
   // Get.put(NotificationService());
   AppBinding().dependencies();
 
@@ -19,3 +20,4 @@ Future<void> main() async {
 
   runApp(MyApp());
 }
+

@@ -1,3 +1,4 @@
+
    String? validatePassword(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Password cannot be empty';
@@ -34,3 +35,4 @@
 
     return null; 
   }
+

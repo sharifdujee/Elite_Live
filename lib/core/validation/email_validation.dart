@@ -1,3 +1,4 @@
+
   String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Email cannot be empty';
