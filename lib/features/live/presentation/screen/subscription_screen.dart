@@ -119,6 +119,7 @@ class SubscriptionScreen extends StatelessWidget {
 
                   /// Bottom Button
                   CustomElevatedButton(
+
                     ontap: () {
                       PaymentDialog.show(context);
                     },
