@@ -1,5 +1,14 @@
 import 'dart:async';
 
+
+import 'package:get/get.dart';
+
+import '../../../core/helper/shared_prefarenses_helper.dart';
+import '../../../core/route/app_route.dart';
+
+class SplashController extends GetxController {
+  final SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
+
 import 'package:elites_live/core/services/auth_service.dart';
 import 'package:get/get.dart';
 
@@ -9,11 +18,15 @@ import '../../../routes/app_routing.dart';
 class SplashController extends GetxController {
   final AuthService preferencesHelper = AuthService();
 
+
   @override
   Future<void> onInit() async {
     super.onInit();
 
-    await AuthService().init();
+
+    await preferencesHelper.init();
+
+
 
     // final String? token = preferencesHelper.getString("userToken");
     // final isOnBoarding = preferencesHelper.getBool("onBoarding") ?? false;
@@ -37,4 +50,8 @@ class SplashController extends GetxController {
     //   }
     // }
   }
+
 }
+
+}
+

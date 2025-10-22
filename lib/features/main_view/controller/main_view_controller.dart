@@ -1,14 +1,9 @@
-import 'package:elites_live/features/profile/presentation/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../authentication/set_up_profile/presentation/screen/set_up_profile.dart';
-import '../../event/presentation/screen/event_screen.dart';
-
-import '../../home/presentation/screen/home_screen.dart';
-
-import '../../search/presentation/screen/search.dart';
-
+import '../../event/screen/event_screen.dart';
+import '../../home/screen/home_screen.dart';
+import '../../profile/presentation/screen/profile.dart';
+import '../../search/presentation/screens/search.dart';
 
 class MainViewController extends GetxController {
   var currentIndex = 0.obs;
@@ -19,7 +14,8 @@ class MainViewController extends GetxController {
     Search(),
    // SearchScreen(),
     EventScreen(),
-ProfileScreen()  ];
+    ProfilePage(),
+  ];
 
   void changePage(int index) {
     currentIndex.value = index;

@@ -2,7 +2,11 @@ import 'package:get/get.dart';
 
 import '../data/user_tab_data_model.dart';
 
+import '../data/video _tab_model.dart';
+
+
 import '../data/video_tab_model.dart';
+
 
 class SearchScreenController extends GetxController {
   var searchText = ''.obs;
