@@ -15,7 +15,7 @@ class ProfileTabsWidget extends StatelessWidget {
   // Replace with your actual icons
   final String gridActive = 'assets/icons/grid_active.png';
   final String gridInactive = 'assets/icons/grid_inactive.png';
-  final String calendarActive = 'assets/icons/calendar-active.png';
+  final String calendarActive = 'assets/icons/calendar_active.png';
   final String calendarInactive = 'assets/icons/calender_inactive.png';
 
   ProfileTabsWidget({super.key});
