@@ -21,7 +21,7 @@ class TopHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 24.w, right: 12.w, top: 61.h),
+      margin: EdgeInsets.only(left: 18.w, right: 12.w, top: 61.h),
       child: Row(
         children: [
 

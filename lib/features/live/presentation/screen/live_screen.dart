@@ -23,7 +23,7 @@ class CreateLiveScreen extends StatelessWidget {
               children: [
                 /// Gradient Header
                 Container(
-                  height: 130.h,
+                  height: 140.h,
                   width: double.infinity,
                   decoration:  BoxDecoration(
                     gradient: LinearGradient(
