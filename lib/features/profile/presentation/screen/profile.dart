@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/global_widget/custombuttonwhite.dart';
-
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
 import '../../controller/profile_controller.dart';

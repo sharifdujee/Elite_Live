@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
 import '../../controller/settings_controller.dart';
@@ -170,25 +168,25 @@ class SettingsPage extends StatelessWidget {
                         showArrow: true,
                         color: Color(0xFF2D2D2D), // icon color
                         textColor: Color(0xFF2D2D2D), // text color
-                        //onTap: () => Get.to(() => EditProfilePage()),
+                        onTap: (){Get.toNamed(AppRoute.moderator);},
                       ),
 
                       settingTile(
                         'assets/icons/earnings.png',
-                        'Notifications',
+                        'Earning',
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                       // onTap: () => Get.to(() => NotificationPage()),
+                       onTap: () {Get.toNamed(AppRoute.earnings);},
                       ),
 
                       settingTile(
                         'assets/icons/wallet.png',
-                        'Privacy Policy',
+                        'Wallet',
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                       // onTap: () => Get.to(() => PrivacyPage()),
+                        onTap: () => Get.toNamed(AppRoute.wallet),
                       ),
 
                       settingTile(
@@ -197,7 +195,7 @@ class SettingsPage extends StatelessWidget {
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                        // onTap: () => Get.to(() => PrivacyPage()),
+                        onTap: (){Get.toNamed(AppRoute.subscription);},
                       ),
 
                       settingTile(
@@ -206,16 +204,16 @@ class SettingsPage extends StatelessWidget {
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                        // onTap: () => Get.to(() => PrivacyPage()),
+                        onTap: (){Get.toNamed(AppRoute.changePass);},
                       ),
 
                       settingTile(
                         'assets/icons/bank.png',
-                        'Change Password',
+                        'Bank Information',
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                        // onTap: () => Get.to(() => PrivacyPage()),
+                         onTap: (){Get.toNamed(AppRoute.bank);},
                       ),
 
                       settingTile(

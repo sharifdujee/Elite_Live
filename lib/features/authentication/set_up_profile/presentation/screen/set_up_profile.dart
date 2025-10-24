@@ -12,7 +12,6 @@ import '../../../../../core/global/custom_text_view.dart';
 import '../../../../../core/validation/email_validation.dart';
 import '../../../../../core/validation/name_validation.dart';
 import '../../../../../core/validation/phone_number_validation.dart';
-import '../../../../profile/controller/set_up_profile_controller.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../set_up_profile/controller/set_up_profile_controller.dart';

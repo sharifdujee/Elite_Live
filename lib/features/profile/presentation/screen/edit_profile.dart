@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../core/global_widget/custom_elevated_button.dart';
-
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/edit_profile_controller.dart';
 
