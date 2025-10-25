@@ -28,7 +28,7 @@ class UserProfilePictureSection extends StatelessWidget {
               bottom: -3,
               right: 3,
               child: Image.asset(
-                IconPath.editProfile,
+                IconPath.edit,
                 width: 27.w,
                 height: 27.h,
               ),

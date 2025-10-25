@@ -15,7 +15,7 @@ class PaymentInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(PaymentInfoController());
+    final controller = Get.put(PaymentInfopageController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -163,9 +163,10 @@ class PaymentInfoPage extends StatelessWidget {
 
                       SizedBox(height: 24.h),
 
+
                       // ==========================
-                      // Payment method
-                      // ==========================
+// Payment method (corrected)
+// ==========================
                       Text(
                         "Add payment method",
                         style: GoogleFonts.inter(
@@ -176,18 +177,18 @@ class PaymentInfoPage extends StatelessWidget {
                       ),
                       SizedBox(height: 10.h),
 
+// Card option
                       Obx(() => GestureDetector(
-                        onTap: () => controller.selectCard(true),
+                        onTap: () => controller.selectPaymentMethod('card'),
                         child: Row(
                           children: [
                             GradientRadio(
-                              selected: controller.isCardSelected.value,
-                              onTap: () => controller.selectCard(true),
+                              // Compare against controller.selectedPaymentMethod
+                              selected: controller.selectedPaymentMethod.value == 'card',
+                              // pass a VoidCallback - do not call the method here
+                              onTap: () => controller.selectPaymentMethod('card'),
                               gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFF8A3FFC),
-                                  Color(0xFFFF2E93)
-                                ],
+                                colors: [Color(0xFF8A3FFC), Color(0xFFFF2E93)],
                               ),
                             ),
                             SizedBox(width: 10.w),
@@ -199,84 +200,37 @@ class PaymentInfoPage extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 8.w),
-                            Image.asset(
-                              IconPath.visa,
-                              width: 28.w,
-                              height: 18.h,
-                            ),
+                            Image.asset(IconPath.visa, width: 28.w, height: 18.h),
                             SizedBox(width: 6.w),
-                            Image.asset(
-                           IconPath.master,
-                              width: 28.w,
-                              height: 18.h,
-                            ),
+                            Image.asset(IconPath.master, width: 28.w, height: 18.h),
                             SizedBox(width: 6.w),
-                            Image.asset(
-                              IconPath.master,
-                              width: 28.w,
-                              height: 18.h,
-                            ),
-                            SizedBox(width: 5.w,),
-                            Text(
-                              "+ More",
-                              style: GoogleFonts.inter(
-                                fontSize: 13.sp,
-                                color: Colors.black87,
-                              ),
-                            ),
+                            // other icons...
+                            SizedBox(width: 5.w),
+                            Text("+ More", style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.black87)),
                           ],
                         ),
                       )),
-                      SizedBox(height: 20.h),
 
-                      // ==========================
-                      // Ad credit checkbox
-                      // ==========================
+                      SizedBox(height: 12.h),
+
+// Example second option (e.g., PayPal) — illustrate how to add more options
                       Obx(() => GestureDetector(
-                        onTap: () => controller.toggleAdCredit(
-                            !controller.hasAdCredit.value),
+                        onTap: () => controller.selectPaymentMethod('paypal'),
                         child: Row(
                           children: [
-                            Container(
-                              width: 20.w,
-                              height: 20.h,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 1.5,
-                                ),
+                            GradientRadio(
+                              selected: controller.selectedPaymentMethod.value == 'paypal',
+                              onTap: () => controller.selectPaymentMethod('paypal'),
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF8A3FFC), Color(0xFFFF2E93)],
                               ),
-                              child: controller.hasAdCredit.value
-                                  ? Center(
-                                child: Container(
-                                  width: 12.w,
-                                  height: 12.h,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFF8A3FFC),
-                                        Color(0xFFFF2E93)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                                  : const SizedBox.shrink(),
                             ),
                             SizedBox(width: 10.w),
-                            Text(
-                              "I have an ad credit to claim.",
-                              style: GoogleFonts.inter(
-                                fontSize: 13.sp,
-                                color: Colors.black87,
-                              ),
-                            ),
+                            Text("I have an ad credit to claim.", style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.black87)),
                           ],
                         ),
                       )),
-                      SizedBox(height: 90.h),
+SizedBox(height: 310.h,),
 
                       // ==========================
                       // Next Button

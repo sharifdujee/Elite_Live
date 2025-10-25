@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-
 import '../../../routes/app_routing.dart';
 
-class PaymentInfoController extends GetxController {
-  // Payment method selection
-  RxBool isCardSelected = true.obs;
+class PaymentInfopageController extends GetxController {
+  RxString selectedPaymentMethod = 'card'.obs;
+
+  // Track ad credit checkbox
   RxBool hasAdCredit = false.obs;
 
-  void selectCard(bool value) {
-    isCardSelected.value = value;
+  void selectPaymentMethod(String method) {
+    selectedPaymentMethod.value = method;
   }
 
   void toggleAdCredit(bool value) {
@@ -16,6 +16,6 @@ class PaymentInfoController extends GetxController {
   }
 
   void onNext() {
- Get.toNamed(AppRoute.carddetails);
+    Get.toNamed(AppRoute.carddetails);
   }
 }
