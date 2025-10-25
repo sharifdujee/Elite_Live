@@ -1,3 +1,5 @@
+import 'package:elites_live/features/profile/presentation/screen/payment_info_dialog.dart';
+import 'package:elites_live/features/profile/presentation/screen/tax_info_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -80,25 +82,39 @@ class PaymentInfoPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4.h),
-                      Text(
-                        "America, America Us Dollar",
-                        style: GoogleFonts.inter(
-                          fontSize: 13.sp,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          "Edit",
-                          style: GoogleFonts.inter(
-                            fontSize: 13.sp,
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.w600,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "America, America Us Dollar",
+                            style: GoogleFonts.inter(
+                              fontSize: 13.sp,
+                              color: Colors.grey.shade600,
+                            ),
                           ),
-                        ),
+                          InkWell(
+                            onTap: (){
+                              showDialog(
+                                context: context,
+                                builder: (context) => PaymentInfoDialog(),
+                              );
+
+                            },
+                            child: Text(
+                              "Edit",
+                              style: GoogleFonts.inter(
+                                fontSize: 13.sp,
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                    //  SizedBox(height: 4.h),
+
+
+
                       SizedBox(height: 24.h),
 
                       // ==========================
@@ -113,25 +129,38 @@ class PaymentInfoPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4.h),
-                      Text(
-                        "Optional - Add a tax ID or address",
-                        style: GoogleFonts.inter(
-                          fontSize: 13.sp,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
+
                       SizedBox(height: 4.h),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          "Edit",
-                          style: GoogleFonts.inter(
-                            fontSize: 13.sp,
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text(
+                           "Optional - Add a tax ID or address",
+                           style: GoogleFonts.inter(
+                             fontSize: 13.sp,
+                             color: Colors.grey.shade600,
+                           ),
+                         ),
+                         InkWell(
+                           onTap: (){
+                             showDialog(
+                               context: context,
+                               builder: (context) => TaxInfoDialog(),
+                             );
+
+                           },
+                           child: Text(
+                                "Edit",
+                                style: GoogleFonts.inter(
+                                  fontSize: 13.sp,
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                         ),
+                       ],
+                     ),
+
                       SizedBox(height: 24.h),
 
                       // ==========================
