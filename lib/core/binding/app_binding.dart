@@ -4,6 +4,7 @@ import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/controller/live_controller.dart';
 import 'package:elites_live/features/home/controller/video_player_controller.dart';
+import 'package:elites_live/features/profile/controller/profile_tab_controller.dart';
 import 'package:get/get.dart';
 
 import '../../features/authentication/forgot_pass/controller/create_new_pass_controller.dart';
@@ -39,5 +40,6 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>LiveController(), fenix: true);
     Get.lazyPut(()=>GroupController(), fenix: true);
     Get.lazyPut(()=>EventController(), fenix: true);
+    Get.lazyPut(()=>ProfileTabsController(), fenix: true);
   }
 }

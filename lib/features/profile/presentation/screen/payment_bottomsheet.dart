@@ -6,7 +6,7 @@ import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utility/icon_path.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../payment_controller.dart';
+import '../../controller/payment_controller.dart';
 import '../widget/payment_options.dart';
 
 class PaymentDialog {

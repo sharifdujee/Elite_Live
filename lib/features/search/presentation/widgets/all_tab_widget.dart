@@ -12,7 +12,7 @@ class AllTabBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 570.h,
+      ///height: 570.h,
       width: double.maxFinite,
       color: Colors.white,
       child: Column(

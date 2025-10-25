@@ -50,6 +50,7 @@ dependencies:
   emoji_picker_flutter: ^4.3.0
   font_awesome_flutter: ^10.10.0
   avatar_stack: ^3.0.0
+  flutter_launcher_icons: ^0.14.4
 
 
 
