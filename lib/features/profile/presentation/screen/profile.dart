@@ -1,4 +1,3 @@
-import 'package:elites_live/features/profile/presentation/screen/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -21,10 +20,9 @@ class ProfilePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Top header + profile image
+
             Stack(
               children: [
-                //* Yellow background with curved white container
                 Container(
                   height: 190.h,
                   width: double.infinity,

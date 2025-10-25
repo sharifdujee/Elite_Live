@@ -43,6 +43,6 @@ class BillingDetailsController extends GetxController {
 
   void onNext() {
     // Add your logic here
-    Get.toNamed(AppRoute.carddetails);
+    Get.toNamed(AppRoute.payment_info);
   }
 }

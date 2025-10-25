@@ -37,7 +37,7 @@ class BillingDetailsPage extends StatelessWidget {
                         child: const Icon(Icons.arrow_back,color: Colors.white,),
                       ),
                       SizedBox(width: 20.w),
-                      Text('Edit Profile',
+                      Text('Billing & payment',
                         style: GoogleFonts.inter(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,

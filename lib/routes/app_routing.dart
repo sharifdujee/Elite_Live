@@ -32,6 +32,7 @@ import '../features/profile/presentation/screen/card_details.dart';
 import '../features/profile/presentation/screen/change_password.dart';
 import '../features/profile/presentation/screen/earning_overview.dart';
 import '../features/profile/presentation/screen/moderator.dart';
+import '../features/profile/presentation/screen/payment_info.dart';
 import '../features/profile/presentation/screen/settings.dart';
 import '../features/profile/presentation/screen/upgrade_premium.dart';
 import '../features/profile/presentation/screen/wallet.dart';
@@ -58,6 +59,7 @@ class AppRoute {
   static const String wallet = '/wallet';
   static const String bank = '/bank';
   static const String bankDetails = '/bankDetails';
+  static const String payment_info = '/payment_info';
 
   /// added by sharif 
   static const String group = "/group";
@@ -195,6 +197,11 @@ class AppRoute {
     GetPage(
       name: bankDetails,
       page: () => BillingDetailsPage(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: payment_info,
+      page: () => PaymentInfoPage(),
       transition: Transition.rightToLeft,
     ),
     

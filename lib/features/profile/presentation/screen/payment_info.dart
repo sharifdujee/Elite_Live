@@ -1,0 +1,270 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/global/gradient_radio.dart';
+import '../../../../core/global_widget/custom_elevated_button.dart';
+import '../../../../core/utility/icon_path.dart';
+import '../../../../core/utils/constants/app_colors.dart';
+import '../../controller/payment_info_controller.dart';
+
+class PaymentInfoPage extends StatelessWidget {
+  const PaymentInfoPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.put(PaymentInfoController());
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                // Header gradient
+                Container(
+                  height: 190.h,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                  ),
+                ),
+
+                // Back + Title
+                Positioned(
+                  top: 50.h,
+                  left: 20.w,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => Get.back(),
+                        child: const Icon(Icons.arrow_back, color: Colors.white),
+                      ),
+                      SizedBox(width: 20.w),
+                      Text(
+                        'Payment Info',
+                        style: GoogleFonts.inter(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // White body container
+                Container(
+                  margin: EdgeInsets.only(top: 160.h),
+                  padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 25.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(24.r),
+                      topRight: Radius.circular(24.r),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ==========================
+                      // Business location section
+                      // ==========================
+                      Text(
+                        "Business location and currency",
+                        style: GoogleFonts.inter(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "America, America Us Dollar",
+                        style: GoogleFonts.inter(
+                          fontSize: 13.sp,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "Edit",
+                          style: GoogleFonts.inter(
+                            fontSize: 13.sp,
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
+
+                      // ==========================
+                      // Business tax info
+                      // ==========================
+                      Text(
+                        "Business and tax info",
+                        style: GoogleFonts.inter(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        "Optional - Add a tax ID or address",
+                        style: GoogleFonts.inter(
+                          fontSize: 13.sp,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "Edit",
+                          style: GoogleFonts.inter(
+                            fontSize: 13.sp,
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 24.h),
+
+                      // ==========================
+                      // Payment method
+                      // ==========================
+                      Text(
+                        "Add payment method",
+                        style: GoogleFonts.inter(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+
+                      Obx(() => GestureDetector(
+                        onTap: () => controller.selectCard(true),
+                        child: Row(
+                          children: [
+                            GradientRadio(
+                              selected: controller.isCardSelected.value,
+                              onTap: () => controller.selectCard(true),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color(0xFF8A3FFC),
+                                  Color(0xFFFF2E93)
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10.w),
+                            Text(
+                              "Debit or credit card",
+                              style: GoogleFonts.inter(
+                                fontSize: 13.sp,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(width: 8.w),
+                            Image.asset(
+                              IconPath.visa,
+                              width: 28.w,
+                              height: 18.h,
+                            ),
+                            SizedBox(width: 6.w),
+                            Image.asset(
+                           IconPath.master,
+                              width: 28.w,
+                              height: 18.h,
+                            ),
+                            SizedBox(width: 6.w),
+                            Image.asset(
+                              IconPath.master,
+                              width: 28.w,
+                              height: 18.h,
+                            ),
+                            SizedBox(width: 5.w,),
+                            Text(
+                              "+ More",
+                              style: GoogleFonts.inter(
+                                fontSize: 13.sp,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                      SizedBox(height: 20.h),
+
+                      // ==========================
+                      // Ad credit checkbox
+                      // ==========================
+                      Obx(() => GestureDetector(
+                        onTap: () => controller.toggleAdCredit(
+                            !controller.hasAdCredit.value),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 20.w,
+                              height: 20.h,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: controller.hasAdCredit.value
+                                  ? Center(
+                                child: Container(
+                                  width: 12.w,
+                                  height: 12.h,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFF8A3FFC),
+                                        Color(0xFFFF2E93)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                                  : const SizedBox.shrink(),
+                            ),
+                            SizedBox(width: 10.w),
+                            Text(
+                              "I have an ad credit to claim.",
+                              style: GoogleFonts.inter(
+                                fontSize: 13.sp,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                      SizedBox(height: 90.h),
+
+                      // ==========================
+                      // Next Button
+                      // ==========================
+                      CustomElevatedButton(
+                        text: 'Save Changes',
+                        ontap: controller.onNext,
+                      ),
+                      SizedBox(height: 20.h),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

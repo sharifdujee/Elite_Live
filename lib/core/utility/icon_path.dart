@@ -14,6 +14,8 @@ class IconPath {
   static const String profileActive  = "${asset}profile_active.png";
   static const String profileInactive  = "${asset}profile_inactive.png";
   static const String stream  = "${asset}stream.png";
+  static const String visa  = "${asset}visa.png";
+  static const String master  = "${asset}master.png";
 
 
 
