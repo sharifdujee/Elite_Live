@@ -19,6 +19,10 @@ import '../../../core/validation/password_validation.dart';
 import '../../../routes/app_routing.dart';
 import '../controller/sign_up_controller.dart';
 
+
+
+
+
 class SignUpScreen extends StatelessWidget {
   final SignUpController controller = Get.find();
   final formKey = GlobalKey<FormState>();
@@ -36,7 +40,6 @@ class SignUpScreen extends StatelessWidget {
             key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 CustomTextView(
                   "Create an account",
@@ -51,10 +54,12 @@ class SignUpScreen extends StatelessWidget {
                   color: AppColors.textColor,
                 ),
                 SizedBox(height: 25.h),
+
+                // ===== First Name =====
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Full Name",
+                    "First Name",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -62,12 +67,33 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 5.h),
                 CustomTextField(
-                  hintText: "Enter Full Name",
-                  controller: controller.nameController,
+                  hintText: "Enter First Name",
+                  controller: controller.firstNameController,
                   keyboardType: TextInputType.text,
                   validator: validateName,
                 ),
                 SizedBox(height: 25.h),
+
+                // ===== Last Name =====
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: CustomTextView(
+                    "Last Name",
+                    fontSize: 14.sp,
+                    color: AppColors.textColorBlack,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(height: 5.h),
+                CustomTextField(
+                  hintText: "Enter Last Name",
+                  controller: controller.lastNameController,
+                  keyboardType: TextInputType.text,
+                  validator: validateName,
+                ),
+                SizedBox(height: 25.h),
+
+                // ===== Email =====
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
@@ -85,6 +111,8 @@ class SignUpScreen extends StatelessWidget {
                   validator: validateEmail,
                 ),
                 SizedBox(height: 25.h),
+
+                // ===== Password =====
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
@@ -101,6 +129,8 @@ class SignUpScreen extends StatelessWidget {
                   validator: validatePassword,
                 ),
                 SizedBox(height: 25.h),
+
+                // ===== Confirm Password =====
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
@@ -117,19 +147,22 @@ class SignUpScreen extends StatelessWidget {
                   validator: validatePassword,
                 ),
                 SizedBox(height: 30.h),
+
+                // ===== Sign Up Button =====
                 Obx(() {
                   return CustomElevatedButton(
-                    ontap: () {
-                      Get.toNamed(AppRoute.signOtp);
-                      // if (formKey.currentState!.validate()) {
-                      // controller.registerUser();
-                      // }
-                    },
                     text: "Sign Up",
                     isLoading: controller.isLoading.value,
+                    ontap: () {
+                      if (formKey.currentState!.validate()) {
+                        controller.registerUser(); // ✅ call API
+                      }
+                    },
                   );
                 }),
                 SizedBox(height: 25.h),
+
+                // ===== Social Logins =====
                 Row(
                   children: [
                     Expanded(child: Divider()),
@@ -145,27 +178,19 @@ class SignUpScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 25.h),
+
                 SocialLoginButton(
-                  icon: Image.asset(
-                    ImagePath.google,
-                    width: 24.w,
-                    height: 24.h,
-                  ),
+                  icon: Image.asset(ImagePath.google, width: 24.w, height: 24.h),
                   text: 'Continue with Google',
-                  onPressed: () {
-                    // controller.continueWithGoogle();
-                  },
+                  onPressed: () {},
                 ),
                 SizedBox(height: 20.h),
                 SocialLoginButton(
-                  icon: Image.asset(
-                    ImagePath.facebook,
-                    width: 24.w,
-                    height: 24.h,
-                  ),
+                  icon: Image.asset(ImagePath.facebook, width: 24.w, height: 24.h),
                   text: 'Continue with Facebook',
                   onPressed: () {},
                 ),
+
                 SizedBox(height: 25.h),
                 Align(
                   alignment: Alignment.center,
@@ -185,11 +210,10 @@ class SignUpScreen extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             fontSize: 14.sp,
                           ),
-                          recognizer:
-                              TapGestureRecognizer()
-                                ..onTap = () {
-                                  Get.offAllNamed(AppRoute.signIn);
-                                },
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Get.toNamed(AppRoute.signIn);
+                            },
                         ),
                       ],
                     ),
@@ -204,3 +228,4 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
+

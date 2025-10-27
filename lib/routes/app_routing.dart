@@ -1,3 +1,4 @@
+import 'package:elites_live/features/authentication/set_up_profile/presentation/screen/set_up_profile.dart';
 import 'package:elites_live/features/set_up_profile/screen/set_up_profile_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';

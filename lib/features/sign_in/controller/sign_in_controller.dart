@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -5,6 +7,7 @@ import '../../../core/helper/shared_prefarenses_helper.dart';
 import '../../../core/service_class/google_signin_helper.dart';
 import '../../../core/service_class/network_caller/repository/network_caller.dart';
 import '../../../core/utility/app_urls.dart';
+import '../../../routes/app_routing.dart';
 
 class SignInController extends GetxController {
   final _helper = GoogleSignInHelper();
@@ -44,6 +47,8 @@ class SignInController extends GetxController {
           "userToken",
           response.responseData['accessToken'],
         );
+        log("the api response is ${response.responseData}");
+        Get.offAllNamed(AppRoute.setupProfile, arguments: {});
         final isSetup = response.responseData['isSetup'];
         if (isSetup) {
           preferencesHelper.setBool("isSetup", isSetup);
@@ -54,6 +59,7 @@ class SignInController extends GetxController {
             "User logged in successfully",
             snackPosition: SnackPosition.TOP,
           );
+
           // Get.offAllNamed(AppRoute.mainView);
         } else {
           preferencesHelper.setBool("isSetup", isSetup);

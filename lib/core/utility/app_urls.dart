@@ -1,9 +1,11 @@
 class AppUrls {
-  static const String _baseUrl = '';
+  static const String _baseUrl = 'http://206.162.244.144:5020/api/v1';
 
   //create
   static const String registerUrl = '$_baseUrl/users/create';
   static const String loginUrl = '$_baseUrl/auth/login';
+  /// profile set up
+  static const String setUpProfile = "$_baseUrl/auth/profile";
   static const String socialLogin = '$_baseUrl/auth/auth-login';
   static const String verifyOtp = '$_baseUrl/users/signup-verification';
 

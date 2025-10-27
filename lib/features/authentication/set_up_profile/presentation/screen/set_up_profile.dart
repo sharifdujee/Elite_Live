@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import '../../../../../core/global/custom_appbar.dart';
 import '../../../../../core/global/custom_date_time_dialog.dart';
 import '../../../../../core/global/custom_date_time_field.dart';
@@ -12,9 +12,9 @@ import '../../../../../core/global/custom_text_view.dart';
 import '../../../../../core/validation/email_validation.dart';
 import '../../../../../core/validation/name_validation.dart';
 import '../../../../../core/validation/phone_number_validation.dart';
-import 'package:intl/intl.dart';
-
 import '../../../../set_up_profile/controller/set_up_profile_controller.dart';
+import 'package:get/get.dart';
+
 class SetUpProfileScreen extends StatelessWidget {
   SetUpProfileScreen({super.key});
 
@@ -24,11 +24,21 @@ class SetUpProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: "Set Up Profile", lead: true, center: true),
+      // Update your Save button in SetUpProfileScreen
       floatingActionButton: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: CustomElevatedButton(ontap: () {
-          controller.showSuccessDialogue();
-        }, text: "Save"),
+        child: Obx(
+              () => controller.isLoading.value
+              ? Center(
+            child: CircularProgressIndicator(),
+          )
+              : CustomElevatedButton(
+            ontap: () {
+              controller.setupProfile();
+            },
+            text: "Save",
+          ),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Padding(

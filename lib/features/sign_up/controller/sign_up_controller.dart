@@ -1,7 +1,10 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/helper/shared_prefarenses_helper.dart';
+
 import '../../../core/service_class/google_signin_helper.dart';
 import '../../../core/service_class/network_caller/model/network_response.dart';
 import '../../../core/service_class/network_caller/repository/network_caller.dart';
@@ -12,7 +15,8 @@ class SignUpController extends GetxController {
   final _helper = GoogleSignInHelper();
   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
   RxBool isLoading = false.obs;
-  final nameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -26,9 +30,10 @@ class SignUpController extends GetxController {
     isLoading.value = true;
     try {
       Map<String, dynamic> signUpData = {
-        "fullName": nameController.text,
-        "email": emailController.text,
-        "password": passwordController.text,
+        "firstName": firstNameController.text.trim(),
+        "lastName": lastNameController.text.trim(),
+        "email": emailController.text.trim(),
+        "password": passwordController.text.trim(),
       };
 
       ResponseData response = await NetworkCaller().postRequest(
@@ -37,29 +42,39 @@ class SignUpController extends GetxController {
       );
 
       if (response.isSuccess) {
+        // ✅ Only navigate when API is successful
         Get.toNamed(
           AppRoute.signOtp,
           arguments: {
-            "email": emailController.text,
-            "name": nameController.text,
-            "password": passwordController.text,
+            "email": emailController.text.trim(),
+            "name": firstNameController.text.trim(),
+            "password": passwordController.text.trim(),
           },
         );
       } else {
+        // ❌ Show error but don’t navigate
         Get.snackbar(
-          'error:',
-          response.errorMessage,
+          'Registration Failed',
+          response.errorMessage.isNotEmpty ? response.errorMessage : 'Something went wrong',
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("Register Error: $e");
+      Get.snackbar(
+        'Error',
+        'Unable to register. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }
   }
+
 
   Future<Map<String, dynamic>?> continueWithGoogle() async {
     final user = await _helper.signInWithGoogle();
@@ -73,10 +88,10 @@ class SignUpController extends GetxController {
   }
 
   Future<void> sendToBackEnd(
-    String name,
-    String email,
-    String? profileImage,
-  ) async {
+      String name,
+      String email,
+      String? profileImage,
+      ) async {
     isLoading.value = true;
     Map<String, dynamic> signInData = {
       "fullName": name,
@@ -139,7 +154,8 @@ class SignUpController extends GetxController {
 
   @override
   void onClose() {
-    nameController.dispose();
+    firstNameController.clear();
+    lastNameController.clear();
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
