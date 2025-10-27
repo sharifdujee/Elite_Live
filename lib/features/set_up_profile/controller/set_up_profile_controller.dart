@@ -283,6 +283,7 @@ class SetUpProfileController extends GetxController {
     );
   }
 
+
   @override
   void dispose() {
     firstNameController.dispose();
