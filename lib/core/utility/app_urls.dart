@@ -6,6 +6,9 @@ class AppUrls {
   static const String loginUrl = '$_baseUrl/auth/login';
   /// profile set up
   static const String setUpProfile = "$_baseUrl/auth/profile";
+  static const String user = '$_baseUrl/auth/profile';
+
+
   static const String socialLogin = '$_baseUrl/auth/auth-login';
   static const String verifyOtp = '$_baseUrl/users/signup-verification';
 
@@ -15,7 +18,7 @@ class AppUrls {
 
   static const String setProfile = '$_baseUrl/auth/set-profile';
   static const String setProfilePic = '$_baseUrl/auth/update-profile-image';
-  static const String user = '$_baseUrl/auth/profile';
+
 
   static const String notifications = '$_baseUrl/notifications/my-notifications';
 

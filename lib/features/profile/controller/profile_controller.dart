@@ -36,26 +36,23 @@ class ProfileController extends GetxController {
   }
 
   /// get user profile
-  Future<void> getMyProfile()async{
+  Future<void> getMyProfile() async {
     isLoading.value = true;
-    String?token = sharedPreferencesHelper.getString('userToken');
+    String? token = sharedPreferencesHelper.getString('userToken');
     log("the user token is $token");
-    try{
+    try {
       var response = await networkCaller.getRequest(AppUrls.user, token: token);
-      if(response.statusCode==200 && response.isSuccess){
+      if (response.statusCode == 200 && response.isSuccess) { // ✅ Check isSuccess
         log("the api response is ${response.responseData}");
-        final userData = UserInformation.fromJson(response.responseData);
-
+        // ✅ Directly parse the result since responseData already contains only the result
+        userinfo.value = UserResult.fromJson(response.responseData);
       }
-      
-    }
-    catch(e){
+    } catch (e) {
       log("the exception is ${e.toString()}");
-    }
-    
-    finally{
+    } finally {
       isLoading.value = false;
     }
   }
+
 
 }

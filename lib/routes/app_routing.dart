@@ -1,5 +1,5 @@
-import 'package:elites_live/features/authentication/set_up_profile/presentation/screen/set_up_profile.dart';
-import 'package:elites_live/features/set_up_profile/screen/set_up_profile_screen.dart';
+
+
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
@@ -13,6 +13,7 @@ import '../../features/sign_in/screen/sign_in_screen.dart';
 import '../../features/sign_up/screen/sign_up_otp_screen.dart';
 import '../../features/sign_up/screen/sign_up_screen.dart';
 import '../../features/splash/screen/splash_screen.dart';
+import '../features/authentication/set_up_profile/screen/set_up_profile_screen.dart';
 import '../features/event/presentation/screen/create_funding_screen.dart';
 import '../features/event/presentation/screen/create_schedule_screen.dart';
 import '../features/group/presentation/screen/create_group.dart';
@@ -37,6 +38,7 @@ import '../features/profile/presentation/screen/payment_info.dart';
 import '../features/profile/presentation/screen/settings.dart';
 import '../features/profile/presentation/screen/upgrade_premium.dart';
 import '../features/profile/presentation/screen/wallet.dart';
+
 
 class AppRoute {
   static const String splash = '/SplashScreen';

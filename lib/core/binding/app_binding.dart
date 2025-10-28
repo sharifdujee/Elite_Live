@@ -4,6 +4,8 @@ import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/controller/live_controller.dart';
 import 'package:elites_live/features/home/controller/video_player_controller.dart';
+import 'package:elites_live/features/profile/controller/edit_profile_controller.dart';
+import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:elites_live/features/profile/controller/profile_tab_controller.dart';
 import 'package:get/get.dart';
 
@@ -11,9 +13,9 @@ import '../../features/authentication/forgot_pass/controller/create_new_pass_con
 import '../../features/authentication/forgot_pass/controller/forgot_otp_controller.dart';
 import '../../features/authentication/forgot_pass/controller/forgot_pass_controller.dart';
 
+import '../../features/authentication/set_up_profile/controller/set_up_profile_controller.dart';
 import '../../features/main_view/controller/main_view_controller.dart';
 import '../../features/on_boarding/controller/slider_controller.dart';
-import '../../features/set_up_profile/controller/set_up_profile_controller.dart';
 import '../../features/sign_in/controller/sign_in_controller.dart';
 import '../../features/sign_up/controller/sign_up_controller.dart';
 import '../../features/sign_up/controller/sign_up_otp_controller.dart';
@@ -41,6 +43,8 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>LiveController(), fenix: true);
     Get.lazyPut(()=>GroupController(), fenix: true);
     Get.lazyPut(()=>EventController(), fenix: true);
+    Get.lazyPut(()=>ProfileController(), fenix: true);
+    Get.lazyPut(()=>EditProfileController(), fenix: true);
     Get.lazyPut(()=>ProfileTabsController(), fenix: true);
   }
 }

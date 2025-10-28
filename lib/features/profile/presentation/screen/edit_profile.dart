@@ -1,17 +1,23 @@
+import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/global/custom_date_time_dialog.dart';
+import '../../../../core/global/custom_date_time_field.dart';
+import '../../../../core/global/custom_dropdown.dart';
 import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/edit_profile_controller.dart';
+import 'package:intl/intl.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(EditProfileController());
+    final EditProfileController controller = Get.find();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -30,14 +36,18 @@ class EditProfilePage extends StatelessWidget {
                 Positioned(
                   top: 50.h,
                   left: 20.w,
-                  child:     Row(
+                  child: Row(
                     children: [
                       GestureDetector(
                         onTap: () => Get.back(),
-                        child: const Icon(Icons.arrow_back,color: Colors.white,),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
                       ),
                       SizedBox(width: 20.w),
-                      Text('Edit Profile',
+                      Text(
+                        'Edit Profile',
                         style: GoogleFonts.inter(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
@@ -62,33 +72,100 @@ class EditProfilePage extends StatelessWidget {
                     children: [
                       SizedBox(height: 30.h),
                       20.verticalSpace,
-                      _labelText('Gender'),
-                      Obx(() => _dropdownField(
-                        value: controller.selectedGender.value,
-                        items: ['Male', 'Female', 'Others'],
-                        onChanged: (value) {
-                          controller.selectedGender.value = value!;
+                      CustomTextView(
+                        "Gender",
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textBody,
+                      ),
+                      Obx(
+                        () => CustomDropDown(
+                          hintText: "Select Gender",
+                          items: ["MALE", "FEMALE"],
+                          selectedValue: controller.selectedGender.value,
+                          onChanged: (String? value) {
+                            controller.setSelectedGender(value);
+                          },
+                          textStyle: GoogleFonts.poppins(),
+                        ),
+                      ),
+                      20.verticalSpace,
+                      CustomTextView(
+                        "Date of Birth",
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textBody,
+                      ),
+                      CustomDateOfBirthFiled(
+                        controller: controller.dateController,
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return CustomDatePicker(
+                                selectedDateCallback: (DateTime selectedDate) {
+                                  controller.dateController.text = DateFormat(
+                                    'yyyy-MM-dd',
+                                  ).format(
+                                    controller
+                                        .dateTimeController
+                                        .selectedDate
+                                        .value,
+                                  );
+                                },
+                              );
+                            },
+                          );
                         },
-                      )),
+                      ),
                       20.verticalSpace,
-                      _labelText('Date of Birth'),
-                      Obx(() => _dateField(
-                        controller.selectedDate.value,
-                        onTap: () => controller.selectDate(context),
-                      )),
+                      CustomTextView(
+                        "Profession",
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textBody,
+                      ),
+
+                      Obx(
+                        () => CustomDropDown(
+                          hintText: "Select Profession",
+                          items: ["Professional Model ", "Professional Model"],
+                          selectedValue: controller.selectedProfession.value,
+                          onChanged: (String? value) {
+                            controller.setSelectedProfession(value);
+                          },
+                          textStyle: GoogleFonts.poppins(),
+                        ),
+                      ),
                       20.verticalSpace,
-                      _labelText('Profession'),
-                      _textField(controller.professionController,hintText: 'Professional Model' ),
+                      CustomTextView(
+                        "Location",
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textBody,
+                      ),
+
+                      CustomTextField(
+                        controller: controller.addressController,
+                        hintText: "Dhaka, Bangladesh",
+                      ),
                       20.verticalSpace,
-                      _labelText('Location'),
-                      _textField(controller.professionController, hintText:'Dhaka, Bangladesh' ),
-                      20.verticalSpace,
-                      _labelText('Bio'),
-                      _textField3(controller.professionController),
+                      CustomTextView(
+                        "Bio",
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textBody,
+                      ),
+                      CustomTextField(
+                        controller: controller.bioController,
+                        hintText: "Enter your bio here",
+                      ),
                       30.verticalSpace,
                       CustomElevatedButton(
                         text: 'Save Changes',
-                        ontap: controller.updateProfile,
+                        ontap: () {
+                          controller.editProfile();
+                        },
                       ),
                       40.verticalSpace,
                     ],
@@ -101,122 +178,6 @@ class EditProfilePage extends StatelessWidget {
       ),
     );
   }
-
-
-  Widget _labelText(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.poppins(
-        fontSize: 16.sp,
-        fontWeight: FontWeight.w500,
-        color: Color(0xFF2D2D2D),
-      ),
-    );
-  }
-
-  Widget _dropdownField({
-    required String value,
-    required List<String> items,
-    required Function(String?) onChanged,
-  }) {
-    return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.only(top: 8.h),
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: value,
-          icon: const Icon(Icons.keyboard_arrow_down),
-          items: items.map((String val) {
-            return DropdownMenuItem<String>(
-              value: val,
-              child: Text(
-                val,
-                style: GoogleFonts.poppins(fontSize: 14.sp, color:Color(0xFF686666)),
-              ),
-            );
-          }).toList(),
-          onChanged: onChanged,
-        ),
-      ),
-    );
-  }
-
-  Widget _dateField(DateTime? selectedDate, {required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(top: 8.h),
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF5F5F5),
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              selectedDate != null
-                  ? "${selectedDate.day.toString().padLeft(2, '0')}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.year}"
-                  : "Select Date",
-              style: GoogleFonts.poppins(fontSize: 14.sp, color:Color(0xFF686666)),
-            ),
-            const Icon(Icons.calendar_today_outlined, size: 20),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _textField(TextEditingController controller,{String hintText = 'Bio '}) {
-    return Container(
-      margin: EdgeInsets.only(top: 8.h),
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: TextField(
-        controller: controller,
-        style: GoogleFonts.poppins(fontSize: 14.sp),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: GoogleFonts.poppins(fontSize: 14.sp, color: const Color(
-              0xFF686666)),
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-
-
-  Widget _textField3(TextEditingController controller, {String hintText = 'Bio '}) {
-    return Container(
-      height: 113.h,
-      margin: EdgeInsets.only(top: 8.h),
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: TextField(
-        maxLines: 5,
-        controller: controller,
-        style: GoogleFonts.poppins(fontSize: 14.sp),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: GoogleFonts.poppins(fontSize: 14.sp, color: const Color(
-              0xFF686666)),
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-
 
 
 }

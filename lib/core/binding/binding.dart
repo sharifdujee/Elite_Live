@@ -2,12 +2,13 @@ import 'package:elites_live/features/sign_in/controller/sign_in_controller.dart'
 
 import 'package:get/get.dart';
 
+import '../../features/authentication/set_up_profile/controller/set_up_profile_controller.dart';
 import '../../features/forgot_pass/controller/create_new_pass_controller.dart';
 import '../../features/forgot_pass/controller/forgot_otp_controller.dart';
 import '../../features/forgot_pass/controller/forgot_pass_controller.dart';
 import '../../features/main_view/controller/main_view_controller.dart';
 import '../../features/on_boarding/controller/slider_controller.dart';
-import '../../features/set_up_profile/controller/set_up_profile_controller.dart';
+
 import '../../features/sign_up/controller/sign_up_controller.dart';
 import '../../features/sign_up/controller/sign_up_otp_controller.dart';
 import '../../features/splash/controller/splash_controller.dart';
