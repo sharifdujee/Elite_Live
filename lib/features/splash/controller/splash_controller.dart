@@ -23,27 +23,27 @@ class SplashController extends GetxController {
 
 
 
-    // final String? token = preferencesHelper.getString("userToken");
-    // final isOnBoarding = preferencesHelper.getBool("onBoarding") ?? false;
-    // final isSetup = preferencesHelper.getBool("isSetup") ?? false;
+     final String? token = preferencesHelper.getString("userToken");
+     final isOnBoarding = preferencesHelper.getBool("onBoarding") ?? false;
+     final isSetup = preferencesHelper.getBool("isSetup") ?? false;
     await Future.delayed(const Duration(seconds: 1));
 
     Get.offAllNamed(AppRoute.slider);
 
 
-    // if (token != null && token.isNotEmpty) {
-    //   if (isSetup) {
-    //     Get.offAllNamed(AppRoute.mainView);
-    //   } else {
-    //     Get.offAllNamed(AppRoute.settingGoalScreen);
-    //   }
-    // } else {
-    //   if (isOnBoarding) {
-    //     Get.offAllNamed(AppRoute.signIn);
-    //   } else {
-    //     Get.offAllNamed(AppRoute.slider);
-    //   }
-    // }
+     if (token != null && token.isNotEmpty) {
+       if (isSetup) {
+         Get.offAllNamed(AppRoute.mainView);
+       } else {
+         Get.offAllNamed(AppRoute.setupProfile);
+       }
+     } else {
+       if (isOnBoarding) {
+         Get.offAllNamed(AppRoute.signIn);
+       } else {
+         Get.offAllNamed(AppRoute.slider);
+       }
+     }
   }
 
 }

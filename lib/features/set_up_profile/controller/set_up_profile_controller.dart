@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -142,7 +143,7 @@ class SetUpProfileController extends GetxController {
       }
 
       if (selectedGender.value != null) {
-        request.fields['gender'] = selectedGender.value!;
+        request.fields['gender'] = selectedGender.value!.capitalizeFirst!;
       }
 
       if (dateController.text.isNotEmpty) {
@@ -192,13 +193,18 @@ class SetUpProfileController extends GetxController {
 
       // FIXED: Only show success dialogue if API call is successful
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Update setup status in preferences
+        // Parse the response body
+        var responseData = jsonDecode(response.body);
+
+        // Save isSetup status in preferences (set to true after successful profile setup)
         await preferencesHelper.setBool("isSetup", true);
+
+        log("Profile setup completed. isSetup saved as: true");
 
         // Show success snackbar
         Get.snackbar(
           "Success",
-          "Profile setup completed successfully",
+          responseData['message'] ?? "Profile setup completed successfully",
           backgroundColor: Colors.green,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,
@@ -206,11 +212,22 @@ class SetUpProfileController extends GetxController {
 
         // Show success dialogue ONLY on successful API response
         showSuccessDialogue();
+
+        // Navigate to main view after successful setup
+        // Get.offAllNamed(AppRoute.mainView);
       } else {
         // Show error if status code is not 200/201
+        var errorMessage = "Failed to setup profile. Status: ${response.statusCode}";
+        try {
+          var errorData = jsonDecode(response.body);
+          errorMessage = errorData['message'] ?? errorMessage;
+        } catch (e) {
+          log("Error parsing error response: $e");
+        }
+
         Get.snackbar(
           "Error",
-          "Failed to setup profile. Status: ${response.statusCode}",
+          errorMessage,
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,

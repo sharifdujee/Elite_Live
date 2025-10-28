@@ -60,7 +60,7 @@ class SignInController extends GetxController {
             snackPosition: SnackPosition.TOP,
           );
 
-          // Get.offAllNamed(AppRoute.mainView);
+           Get.offAllNamed(AppRoute.mainView);
         } else {
           preferencesHelper.setBool("isSetup", isSetup);
           Get.snackbar(
