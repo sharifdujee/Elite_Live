@@ -15,7 +15,6 @@ import '../../../../../core/validation/email_validation.dart';
 import '../../../../../core/validation/password_validation.dart';
 import '../../../../../routes/app_routing.dart';
 import '../../../../sign_in/controller/sign_in_controller.dart';
-import '../../controller/sign_in_controller.dart';
 
 
 class SignInScreen extends StatelessWidget {
@@ -133,7 +132,7 @@ class SignInScreen extends StatelessWidget {
                   ),
                   text: 'Continue with Google',
                   onPressed: () {
-                    // controller.continueWithGoogle();
+           
                   },
                 ),
                 SizedBox(height: 20.h),

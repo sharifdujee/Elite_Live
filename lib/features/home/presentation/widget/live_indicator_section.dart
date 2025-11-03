@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../core/utils/constants/image_path.dart';
+
 
 class LiveIndicatorSection extends StatelessWidget {
   const LiveIndicatorSection({

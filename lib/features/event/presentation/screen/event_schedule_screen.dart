@@ -1,5 +1,4 @@
-import 'package:elites_live/core/global/custom_text_view.dart';
-import 'package:elites_live/core/utils/constants/app_colors.dart';
+
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

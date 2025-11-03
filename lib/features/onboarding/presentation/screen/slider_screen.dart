@@ -10,7 +10,6 @@ import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/image_path.dart';
 import '../../../on_boarding/controller/slider_controller.dart';
-import '../../controller/slider_controller.dart';
 
 
 class SliderScreen extends StatelessWidget {

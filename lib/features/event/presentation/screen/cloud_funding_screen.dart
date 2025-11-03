@@ -8,8 +8,6 @@ import '../../../home/presentation/widget/designation_section.dart';
 import '../../../home/presentation/widget/follow_section.dart';
 import '../../../home/presentation/widget/live_indicator_section.dart';
 import '../../../home/presentation/widget/nameBadgeSection.dart';
-import '../widget/date_time_section.dart';
-import '../widget/event_details_section.dart';
 import '../widget/user_interaction_section.dart';
 
 class CloudFundingScreen extends StatelessWidget {
