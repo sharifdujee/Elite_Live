@@ -1,4 +1,8 @@
+import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
+import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class LiveScreenController extends GetxController {
@@ -24,6 +28,7 @@ class LiveScreenController extends GetxController {
   void toggleMenu() {
     showMenu.value = !showMenu.value;
   }
+
 
   void closeMenu() {
     showMenu.value = false;
@@ -65,17 +70,65 @@ class LiveScreenController extends GetxController {
     );
   }
 
-  void endCall() {
-    Get.defaultDialog(
-      title: 'End Live Session',
-      middleText: 'Are you sure you want to end this live session?',
-      textConfirm: 'End',
-      textCancel: 'Cancel',
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
-      onConfirm: () {
-        Get.back();
-        Get.back();
+  void endCall(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: CustomTextView("End Session", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
+          content: CustomTextView("Are you sure you want to end this live session?", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center,),
+
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: CustomElevatedButton(ontap: (){
+                  Get.back();
+                }, text: "Cancel")),
+                SizedBox(width: 8.w,),
+                Expanded(child: CustomElevatedButton(ontap: (){
+                  Navigator.of(context).pop(); // Closes the dialog
+                  Navigator.of(context).pop();
+                }, text: "End"))
+
+              ],
+            ),
+
+
+          ],
+        );
+      },
+    );
+  }
+
+  void goBack(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: CustomTextView("Leave Live Session", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
+          ///Text(''),
+          content: CustomTextView("Are you sure you want to leave this live session?", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center,),
+          ///Text(''),
+          actions: <Widget>[
+            Row(
+              children: [
+                Expanded(child: CustomElevatedButton(ontap: (){
+                  Get.back();
+                }, text: "Cancel")),
+                SizedBox(width: 8.w,),
+                Expanded(child: CustomElevatedButton(ontap: (){
+                  Get.back();
+                  Get.back();
+
+                }, text: "Leave"))
+
+              ],
+            ),
+
+
+          ],
+        );
       },
     );
   }

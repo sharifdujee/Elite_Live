@@ -9,9 +9,9 @@ import '../../../core/global_widget/custom_password_field.dart';
 import '../../../core/global_widget/custom_text_fields.dart';
 import '../../../core/global_widget/custom_text_view.dart';
 import '../../../core/global_widget/social_login_button.dart';
-import '../../../core/route/app_route.dart';
-import '../../../core/utility/app_colors.dart';
-import '../../../core/utility/image_path.dart';
+
+import '../../../core/utils/constants/app_colors.dart';
+import '../../../core/utils/constants/image_path.dart';
 import '../../../core/validation/email_validation.dart';
 import '../../../core/validation/password_validation.dart';
 import '../../../routes/app_routing.dart';
@@ -99,10 +99,10 @@ class SignInScreen extends StatelessWidget {
                 Obx(() {
                   return CustomElevatedButton(
                     ontap: () {
-                      // if (formKey.currentState!.validate()) {
-                        // controller.signIn();
-                      // }
-                      Get.offAllNamed(AppRoute.setupProfile);
+
+                         controller.signIn();
+
+
                     },
                     text: "Log in",
                     isLoading: controller.isLoading.value,

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/binding/binding.dart';
-import 'core/route/app_route.dart';
 import 'core/theme/dart_theme.dart';
 import 'core/theme/light_theme.dart';
 

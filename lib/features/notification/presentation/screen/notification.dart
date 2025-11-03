@@ -1,4 +1,5 @@
 import 'package:elites_live/core/global/custom_loading.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,7 @@ class NotificationScreen extends StatelessWidget {
     final controller = Get.put(NotificationController());
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: AppColors.bgColor,
       body: Column(
         children: [
           /// Gradient Header
@@ -46,7 +47,7 @@ class NotificationScreen extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 20.sp,
-                        color: Colors.white,
+                       /// color: Colors.white,
                       ),
                     ),
                   ],
@@ -75,12 +76,12 @@ class NotificationScreen extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       SizedBox(height: 16.h),
-                      Text(
+                      CustomTextView(
                         'No notifications yet',
-                        style: TextStyle(
+
                           fontSize: 16.sp,
-                          color: Colors.grey[600],
-                        ),
+
+
                       ),
                     ],
                   ),
@@ -90,60 +91,68 @@ class NotificationScreen extends StatelessWidget {
               final groupedNotifications = controller.groupedNotifications;
               final dateKeys = groupedNotifications.keys.toList();
 
-              return ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: dateKeys.length,
-                itemBuilder: (context, index) {
-                  final dateKey = dateKeys[index];
-                  final notificationList = groupedNotifications[dateKey]!;
+              return Container(
+                decoration: BoxDecoration(
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /// Date Header
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 12.h,
-                        ),
-                        color: Colors.grey[100],
-                        child: Text(
-                          dateKey,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[800],
+                  
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(50.r), topRight: Radius.circular(50.r))
+                ),
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: dateKeys.length,
+                  itemBuilder: (context, index) {
+                    final dateKey = dateKeys[index];
+                    final notificationList = groupedNotifications[dateKey]!;
+                
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /// Date Header
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 12.h,
+                          ),
+                          ///color: Colors.grey[100],
+                          child: CustomTextView(
+                            dateKey,
+                
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textHeader
+                              ///color: Colors.grey[800],
+                
                           ),
                         ),
-                      ),
-
-                      /// Notification Items
-                      Container(
-                        color: Colors.white,
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: notificationList.length,
-                          separatorBuilder:
-                              (context, index) => Divider(
-                                height: 1,
-                                thickness: 1,
-                                color: Colors.grey[200],
-                                indent: 80.w,
-                              ),
-                          itemBuilder: (context, notifIndex) {
-                            final notification = notificationList[notifIndex];
-                            return NotificationItem(
-                              notification: notification,
-                              controller: controller,
-                            );
-                          },
+                
+                        /// Notification Items
+                        Container(
+                          decoration:BoxDecoration(), 
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: notificationList.length,
+                            separatorBuilder:
+                                (context, index) => Divider(
+                                  height: 1,
+                                  thickness: 1,
+                                  color: Colors.grey[200],
+                                  indent: 80.w,
+                                ),
+                            itemBuilder: (context, notifIndex) {
+                              final notification = notificationList[notifIndex];
+                              return NotificationItem(
+                                notification: notification,
+                                controller: controller,
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 12.h),
-                    ],
-                  );
-                },
+                        SizedBox(height: 12.h),
+                      ],
+                    );
+                  },
+                ),
               );
             }),
           ),

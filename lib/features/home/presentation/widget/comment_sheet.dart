@@ -14,6 +14,7 @@ import 'comment_input_box.dart';
 
 class CommentSheet extends StatelessWidget {
   final HomeController controller = Get.find<HomeController>();
+  final liveController = Get.find();
   final RxString replyingToId = ''.obs;
   final RxString replyingToName = ''.obs;
 

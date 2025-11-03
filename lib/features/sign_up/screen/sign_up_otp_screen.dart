@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,8 +10,10 @@ import 'package:pinput/pinput.dart';
 import '../../../core/global_widget/custom_appbar.dart';
 import '../../../core/global_widget/custom_elevated_button.dart';
 import '../../../core/global_widget/custom_text_view.dart';
-import '../../../core/utility/app_colors.dart';
+
+import '../../../core/utils/constants/app_colors.dart';
 import '../../../core/validation/pin_validation.dart';
+
 import '../controller/sign_up_otp_controller.dart';
 
 class SignUpOtpScreen extends StatelessWidget {
@@ -18,10 +22,12 @@ class SignUpOtpScreen extends StatelessWidget {
   final SignUpOtpController controller = Get.find();
   final bool isLoginButton = false;
   final formKey = GlobalKey<FormState>();
+  final email = Get.arguments['email'];
 
 
   @override
   Widget build(BuildContext context) {
+    log("The user Email is $email");
     return Scaffold(
       appBar: CustomAppBar(),
       body: Center(
@@ -96,10 +102,10 @@ class SignUpOtpScreen extends StatelessWidget {
                 Obx(() {
                   return CustomElevatedButton(
                     ontap: () {
-                      controller.showSuccessDialog();
-                      // if (formKey.currentState!.validate()) {
-                        // controller.verifyOtp();
-                      // }
+
+                       if (formKey.currentState!.validate()) {
+                         controller.verifyOtp();
+                       }
                     },
                     text: 'Verify Otp',
                     isLoading: controller.isLoading.value,

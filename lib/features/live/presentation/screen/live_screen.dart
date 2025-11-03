@@ -7,8 +7,11 @@ import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
 
+
 class CreateLiveScreen extends StatelessWidget {
-  const CreateLiveScreen({super.key});
+
+ const  CreateLiveScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class CreateLiveScreen extends StatelessWidget {
               children: [
                 /// Gradient Header
                 Container(
-                  height: 130.h,
+                  height: 140.h,
                   width: double.infinity,
                   decoration:  BoxDecoration(
                     gradient: LinearGradient(
@@ -80,7 +83,7 @@ class CreateLiveScreen extends StatelessWidget {
                             CustomElevatedButton(
                               suffix: Icons.arrow_forward,
                               ontap: () {
-                                Get.toNamed(AppRoute.createGroup);
+                                Get.toNamed(AppRoute.myLive);
                               },
                               text: "Go to Free Live",
 

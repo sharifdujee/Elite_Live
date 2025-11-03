@@ -1,14 +1,15 @@
-import 'package:elites_live/core/route/app_route.dart';
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/utility/app_colors.dart';
+import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
 import '../../controller/logout_controller.dart';
 
 
 void showLogoutBottomSheet(BuildContext context) {
+
   Get.bottomSheet(
     LogoutBottomSheet(),
     backgroundColor: Colors.white,
@@ -25,6 +26,7 @@ class LogoutBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SharedPreferencesHelper helper = SharedPreferencesHelper();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
       child: Column(
@@ -95,6 +97,7 @@ class LogoutBottomSheet extends StatelessWidget {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
+                      helper.remove('userToken');
                      Get.toNamed(AppRoute.signIn);
                     },
                     style: ElevatedButton.styleFrom(

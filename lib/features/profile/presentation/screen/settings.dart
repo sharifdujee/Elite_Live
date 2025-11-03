@@ -1,17 +1,20 @@
+import 'package:elites_live/core/global/custom_text_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../core/route/app_route.dart';
-import '../../../../core/utility/app_colors.dart';
+import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
+import '../../controller/profile_controller.dart';
 import '../../controller/settings_controller.dart';
 import 'delete.dart';
 import 'logout.dart';
+import 'package:intl/intl.dart';
 
 class SettingsPage extends StatelessWidget {
   final SettingsController controller = Get.put(SettingsController());
+  final ProfileController profileController = Get.find();
+
 
   SettingsPage({super.key});
 
@@ -118,14 +121,20 @@ class SettingsPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8.h),
-                      Text(
-                        "A brief description of the agency, its mission, services, and areas of expertise. For example, 'We specialize in custom adventure tours and eco-friendly expeditions.",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF636F85),
-                        ),
-                      ),
+                      Obx(() {
+                        final user = profileController.userinfo.value;
+
+                        if (user == null || user.bio.trim().isEmpty) {
+                          return CustomTextView(
+                            "No bio available",
+                            fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,
+
+                          );
+                        }
+
+                        return CustomTextView(user.bio, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
+                      }),
+
                       SizedBox(height: 40.h),
 
                       // Personal Info Section
@@ -141,10 +150,110 @@ class SettingsPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 16.h),
-                      infoTile('assets/icons/mail.png', 'info@model.com'),
-                      infoTile('assets/icons/profile2.png', 'Female'),
-                      infoTile('assets/icons/dob.png', '12/02/2004 (22 year\'s)'),
-                      infoTile('assets/icons/pin.png', 'Hausa city-state of Zazzau'),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset("assets/icons/mail.png", height: 24.h, width: 24.w),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child:  Obx(() {
+                              final user = profileController.userinfo.value;
+
+                              if (user == null || user.email.trim().isEmpty) {
+                                return CustomTextView(
+                                  "example@gmail.com",
+                                  fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,
+
+                                );
+                              }
+
+                              return CustomTextView(user.email, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
+                            }),
+                          ),
+                        ],
+                      ),SizedBox(height: 18.h,),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset("assets/icons/profile2.png", height: 24.h, width: 24.w),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child:  Obx(() {
+                              final user = profileController.userinfo.value;
+
+                              if (user == null || user.gender.trim().isEmpty) {
+                                return CustomTextView(
+                                  "example@gmail.com",
+                                  fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,
+
+                                );
+                              }
+
+                              return CustomTextView(user.gender, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
+                            }),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 18.h,),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset("assets/icons/dob.png", height: 24.h, width: 24.w),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child: Obx(() {
+                              final user = profileController.userinfo.value;
+
+                              if (user == null) {
+                                return CustomTextView(
+                                  "New York USA",
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18.sp,
+                                  color: AppColors.textBody,
+                                );
+                              }
+
+                              final formattedDob = DateFormat('yyyy-MM-dd').format(user.dob);
+                              final age = calculateAge(user.dob);
+
+                              return CustomTextView(
+                                "$formattedDob ($age)",
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18.sp,
+                                color: AppColors.textBody,
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: 18.h,),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset("assets/icons/pin.png", height: 24.h, width: 24.w),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child:  Obx(() {
+                              final user = profileController.userinfo.value;
+
+                              if (user == null || user.address.trim().isEmpty) {
+                                return CustomTextView(
+                                  "New York USA",
+                                  fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,
+
+                                );
+                              }
+
+                              return CustomTextView(user.address, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
+                            }),
+                          ),
+                        ],
+                      ),
+
+
+
+
 
                       SizedBox(height: 40.h),
 
@@ -170,25 +279,25 @@ class SettingsPage extends StatelessWidget {
                         showArrow: true,
                         color: Color(0xFF2D2D2D), // icon color
                         textColor: Color(0xFF2D2D2D), // text color
-                        //onTap: () => Get.to(() => EditProfilePage()),
+                        onTap: (){Get.toNamed(AppRoute.moderator);},
                       ),
 
                       settingTile(
                         'assets/icons/earnings.png',
-                        'Notifications',
+                        'Earning',
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                       // onTap: () => Get.to(() => NotificationPage()),
+                       onTap: () {Get.toNamed(AppRoute.earnings);},
                       ),
 
                       settingTile(
                         'assets/icons/wallet.png',
-                        'Privacy Policy',
+                        'Wallet',
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                       // onTap: () => Get.to(() => PrivacyPage()),
+                        onTap: () => Get.toNamed(AppRoute.wallet),
                       ),
 
                       settingTile(
@@ -197,7 +306,7 @@ class SettingsPage extends StatelessWidget {
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                        // onTap: () => Get.to(() => PrivacyPage()),
+                        onTap: (){Get.toNamed(AppRoute.subscription);},
                       ),
 
                       settingTile(
@@ -206,16 +315,16 @@ class SettingsPage extends StatelessWidget {
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                        // onTap: () => Get.to(() => PrivacyPage()),
+                        onTap: (){Get.toNamed(AppRoute.changePass);},
                       ),
 
                       settingTile(
                         'assets/icons/bank.png',
-                        'Change Password',
+                        'Bank Information',
                         showArrow: true,
                         color: Color(0xFF191919), // icon color
                         textColor: Color(0xFF191919), // text color
-                        // onTap: () => Get.to(() => PrivacyPage()),
+                         onTap: (){Get.toNamed(AppRoute.bank);},
                       ),
 
                       settingTile(
@@ -249,6 +358,28 @@ class SettingsPage extends StatelessWidget {
       ),
     );
   }
+
+  String calculateAge(DateTime dob) {
+    final now = DateTime.now();
+
+    int years = now.year - dob.year;
+    int months = now.month - dob.month;
+    int days = now.day - dob.day;
+
+    if (days < 0) {
+      final prevMonth = DateTime(now.year, now.month, 0);
+      days += prevMonth.day;
+      months--;
+    }
+
+    if (months < 0) {
+      months += 12;
+      years--;
+    }
+
+    return "${years}y ${months}m ${days}d";
+  }
+
 
   Widget infoTile(String iconPath, String text) {
     return Padding(

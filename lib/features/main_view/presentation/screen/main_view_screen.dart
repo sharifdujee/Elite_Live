@@ -1,5 +1,6 @@
 
 
+import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,6 +16,7 @@ class MainViewScreen extends StatelessWidget {
   MainViewScreen({super.key});
 
   final MainViewController controller = Get.find();
+
 
   @override
   Widget build(BuildContext context) {

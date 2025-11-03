@@ -81,7 +81,7 @@ class UpgradePremiumScreen extends StatelessWidget {
                         SizedBox(height: 12.w),
                         CustomElevatedButton(
                           ontap: () {
-                            Get.toNamed(AppRoute.createGroup);
+                            Get.back();
                           },
                           text: "Not Now",
                           backgroundColor: Colors.white,

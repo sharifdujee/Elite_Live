@@ -1,5 +1,5 @@
-import 'package:elites_live/features/profile/presentation/screen/premium.dart';
-import 'package:elites_live/features/set_up_profile/screen/set_up_profile_screen.dart';
+
+
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
@@ -7,13 +7,13 @@ import '../../features/forgot_pass/screen/create_new_pass_screen.dart';
 import '../../features/forgot_pass/screen/forgot_otp_screen.dart';
 import '../../features/forgot_pass/screen/forgot_pass_screen.dart';
 import '../../features/forgot_pass/screen/pass_changed_screen.dart';
-import '../../features/main_view/screen/main_view_screen.dart';
 import '../../features/on_boarding/screen/slider_screen.dart';
 import '../../features/profile/presentation/screen/edit_profile.dart';
 import '../../features/sign_in/screen/sign_in_screen.dart';
 import '../../features/sign_up/screen/sign_up_otp_screen.dart';
 import '../../features/sign_up/screen/sign_up_screen.dart';
 import '../../features/splash/screen/splash_screen.dart';
+import '../features/authentication/set_up_profile/screen/set_up_profile_screen.dart';
 import '../features/event/presentation/screen/create_funding_screen.dart';
 import '../features/event/presentation/screen/create_schedule_screen.dart';
 import '../features/group/presentation/screen/create_group.dart';
@@ -25,9 +25,20 @@ import '../features/group/presentation/screen/invite_people_screen.dart';
 import '../features/live/presentation/screen/live_screen.dart';
 import '../features/live/presentation/screen/subscription_screen.dart';
 import '../features/live/presentation/screen/upgrade_premimu_screen.dart';
-import '../features/live/presentation/widget/my_live_screen.dart';
+import '../features/live/presentation/screen/my_live_screen.dart';
 import '../features/main_view/presentation/screen/main_view_screen.dart';
 import '../features/notification/presentation/screen/notification.dart';
+import '../features/profile/presentation/screen/billing_details.dart';
+import '../features/profile/presentation/screen/billing_payment.dart';
+import '../features/profile/presentation/screen/card_details.dart';
+import '../features/profile/presentation/screen/change_password.dart';
+import '../features/profile/presentation/screen/earning_overview.dart';
+import '../features/profile/presentation/screen/moderator.dart';
+import '../features/profile/presentation/screen/payment_info.dart';
+import '../features/profile/presentation/screen/settings.dart';
+import '../features/profile/presentation/screen/upgrade_premium.dart';
+import '../features/profile/presentation/screen/wallet.dart';
+
 
 class AppRoute {
   static const String splash = '/SplashScreen';
@@ -44,6 +55,14 @@ class AppRoute {
   static const String settings = '/settings';
   static const String edit_profile = '/edit_profile';
   static const String premium = '/premium';
+  static const String changePass = '/changePass';
+  static const String carddetails = '/carddetails';
+  static const String moderator = '/moderator';
+  static const String earnings = '/earnings';
+  static const String wallet = '/wallet';
+  static const String bank = '/bank';
+  static const String bankDetails = '/bankDetails';
+  static const String payment_info = '/payment_info';
 
   /// added by sharif 
   static const String group = "/group";
@@ -59,6 +78,8 @@ class AppRoute {
   static const String premiumScreen = "/premium";
   static const String subscription = "/subscription";
   static const String myLive = "/myLive";
+
+
 
   static final route = [
     GetPage(
@@ -91,15 +112,8 @@ class AppRoute {
       page: () => ForgotPassScreen(),
       transition: Transition.rightToLeft,
     ),
-
     GetPage(
-
-      name: edit_profile,
-      page: () => EditProfilePage(),
-      transition: Transition.rightToLeft,
-    ),
-
-     GetPage( name: forgotPasswordOtp,
+      name: forgotPasswordOtp,
       page: () => ForgotOtpScreen(),
       transition: Transition.rightToLeft,
     ),
@@ -121,6 +135,76 @@ class AppRoute {
     GetPage(
       name: mainView,
       page: () => MainViewScreen(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: settings,
+      page: () => SettingsPage(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: edit_profile,
+      page: () => EditProfilePage(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: premium,
+      page: () => PremiumPage(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: changePass,
+      page: () => ChangePassword(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: carddetails,
+      page: () => CardDetails(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: moderator,
+      page: () => ModeratorPage(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: subscription,
+      page: () => SubscriptionScreen(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: earnings,
+      page: () => EarningsPage(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: wallet,
+      page: () => WalletPage(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: bank,
+      page: () => BillingPaymentPage(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: bankDetails,
+      page: () => BillingDetailsPage(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: payment_info,
+      page: () => PaymentInfoPage(),
       transition: Transition.rightToLeft,
     ),
     

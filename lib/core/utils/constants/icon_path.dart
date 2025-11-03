@@ -22,6 +22,7 @@ class IconPath {
   static const String clock = "${asset}clock.png";
   static const String close = "${asset}close.png";
   static const String live_group = "${asset}search_live_group.png";
+  static const String visa = "${asset}visa.png";
 
   /// added by sharif
 static const String group = "${asset}group.png";

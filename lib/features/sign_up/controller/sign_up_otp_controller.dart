@@ -1,22 +1,29 @@
-import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
+
+import 'dart:developer';
+
+import 'package:elites_live/core/services/auth_service.dart';
+import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../core/global_widget/custom_text_view.dart';
-import '../../../core/helper/shared_prefarenses_helper.dart';
-import '../../../core/service_class/network_caller/repository/network_caller.dart';
-import '../../../core/utility/app_colors.dart';
-import '../../../core/utility/app_urls.dart';
+import '../../../../core/global/custom_elevated_button.dart';
+import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/services/network_caller/repository/network_caller.dart';
+import '../../../../core/utils/constants/app_colors.dart';
+import '../../../../core/utils/constants/app_urls.dart';
+
+
 
 class SignUpOtpController extends GetxController {
-  SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
+  AuthService preferencesHelper = AuthService();
   final TextEditingController otpController = TextEditingController();
   var otp = ''.obs;
   var name = ''.obs;
-  var email = ''.obs;
+
   var password = ''.obs;
   RxBool isLoading = false.obs;
+  final email = Get.arguments['email'];
 
   @override
   Future<void> onInit() async {
@@ -25,18 +32,20 @@ class SignUpOtpController extends GetxController {
       var data = Get.arguments;
       name.value = data['name'] ?? '';
       email.value = data['email'] ?? '';
+      log("the email is $email");
       password.value = data['password'] ?? '';
     } else {
       debugPrint("Error: Get.arguments is null");
     }
-    await preferencesHelper.init();
+    await AuthService().init();
     super.onInit();
   }
 
   Future<void> verifyOtp() async {
     Map<String, dynamic> data = {
-      "email": email.value,
       "otp": otpController.text.trim(),
+      "email": email,
+
     };
     try {
       isLoading.value = true;
@@ -45,7 +54,8 @@ class SignUpOtpController extends GetxController {
 
       final response = await NetworkCaller().postRequest(url, body: data);
       if (response.isSuccess) {
-        showSuccessDialog();
+        Get.offAllNamed(AppRoute.signIn);
+
       } else {
         Get.snackbar(
           "Error",

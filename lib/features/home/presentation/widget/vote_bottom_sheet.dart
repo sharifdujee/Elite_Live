@@ -1,10 +1,9 @@
-import 'package:elites_live/core/global/custom_text_view.dart';
-import 'package:elites_live/core/utils/constants/app_colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-
 import '../../controller/live_controller.dart';
+import 'package:avatar_stack/avatar_stack.dart';
+import 'package:avatar_stack/positions.dart';
 
 class VoteDetailsBottomSheet extends StatelessWidget {
   final LiveController controller;
@@ -40,8 +39,8 @@ class VoteDetailsBottomSheet extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(top: 12, bottom: 8),
                   child: Container(
-                    width: 40.w,
-                    height: 4.h,
+                    width: 40,
+                    height: 4,
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(2),
@@ -51,15 +50,20 @@ class VoteDetailsBottomSheet extends StatelessWidget {
 
                 // Header with question
                 Container(
-                  margin:  EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 12.h,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomTextView("How Would You Rate My Singing?", fontSize: 14.sp,fontWeight: FontWeight.w500,textAlign: TextAlign.center,),
-
+                      const Text(
+                        "How Would You Rate My Singing?",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       GestureDetector(
                         onTap: () => controller.closeVoteSheet(),
                         child: Container(
@@ -92,9 +96,10 @@ class VoteDetailsBottomSheet extends StatelessWidget {
                     return Column(
                         children: List.generate(poll.options.length, (index) {
                           final option = poll.options[index];
-                          final voteCount = controller.voteDetails
+                          final votersForOption = controller.voteDetails
                               .where((v) => v.selectedOptionIndex == index)
-                              .length;
+                              .toList();
+                          final voteCount = votersForOption.length;
                           final percentage = totalVotes > 0
                               ? (voteCount / totalVotes) * 100
                               : 0;
@@ -116,7 +121,7 @@ class VoteDetailsBottomSheet extends StatelessWidget {
                                       children: [
                                         Text(
                                           option.text,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
                                             color: Colors.black87,
@@ -151,17 +156,47 @@ class VoteDetailsBottomSheet extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          '${percentage.toStringAsFixed(0)}% ($voteCount ${voteCount == 1 ? 'vote' : 'votes'})',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey.shade600,
-                                          ),
-                                        ),
                                       ],
                                     ),
                                   ),
+                                  const SizedBox(width: 12),
+                                  // Avatar Stack
+                                  if (votersForOption.isNotEmpty)
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: voteCount > 1
+                                              ? (28 + (voteCount - 1) * 18).toDouble().clamp(0, 80)
+                                              : 28,
+                                          height: 28,
+                                          child: AvatarStack(
+                                            height: 28,
+                                            avatars: votersForOption
+                                                .take(3)
+                                                .map((voter) => NetworkImage(voter.userImage))
+                                                .toList(),
+                                            settings: RestrictedAmountPositions(
+                                              maxAmountItems: 3,
+                                              maxCoverage: 0.3,
+                                              minCoverage: 0.2,
+                                              align: StackAlign.right,
+                                            ),
+                                          ),
+                                        ),
+                                        if (voteCount > 3)
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 4),
+                                            child: Text(
+                                              '+${voteCount - 3}',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey.shade700,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                 ],
                               ),
                             ),
@@ -214,9 +249,9 @@ class VoteDetailsBottomSheet extends StatelessWidget {
 
   List<Color> _getGradientColors(int index) {
     final baseColors = [
-      [AppColors.secondaryColor, AppColors.primaryColor],
-      [AppColors.secondaryColor, AppColors.primaryColor],
-      [AppColors.secondaryColor, AppColors.primaryColor],
+      [const Color(0xFF9C27B0), const Color(0xFFE91E63)],
+      [const Color(0xFF9C27B0), const Color(0xFFE91E63)],
+      [const Color(0xFF9C27B0), const Color(0xFFE91E63)],
     ];
     return baseColors[index % baseColors.length];
   }
