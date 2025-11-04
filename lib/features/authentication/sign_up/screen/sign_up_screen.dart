@@ -4,29 +4,35 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../core/global/custom_elevated_button.dart';
-import '../../../../../core/global/custom_password_field.dart';
-import '../../../../../core/global/custom_text_field.dart';
-import '../../../../../core/global/custom_text_view.dart';
-import '../../../../../core/global/social_login_button.dart';
-import '../../../../../core/services/google_signin_helper.dart';
-import '../../../../../core/utils/constants/app_colors.dart';
-import '../../../../../core/utils/constants/image_path.dart';
-import '../../../../../core/validation/email_validation.dart';
-import '../../../../../core/validation/password_validation.dart';
-import '../../../../../routes/app_routing.dart';
-import '../../../../sign_in/controller/sign_in_controller.dart';
+
+import '../../../../core/global/custom_appbar.dart';
+import '../../../../core/global/custom_elevated_button.dart';
+import '../../../../core/global/custom_password_field.dart';
+import '../../../../core/global/custom_text_field.dart';
+import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global/social_login_button.dart';
+import '../../../../core/utils/constants/app_colors.dart';
+import '../../../../core/utils/constants/image_path.dart';
+import '../../../../core/validation/email_validation.dart';
+import '../../../../core/validation/name_validation.dart';
+import '../../../../core/validation/password_validation.dart';
+import '../../../../routes/app_routing.dart';
+import '../controller/sign_up_controller.dart';
 
 
-class SignInScreen extends StatelessWidget {
-  final SignInController controller = Get.find();
+
+
+
+class SignUpScreen extends StatelessWidget {
+  final SignUpController controller = Get.find();
   final formKey = GlobalKey<FormState>();
-  SignInScreen({super.key});
+
+  SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: CustomAppBar(),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: SingleChildScrollView(
@@ -34,21 +40,60 @@ class SignInScreen extends StatelessWidget {
             key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 CustomTextView(
-                  "Log In",
+                  "Create an account",
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                 ),
                 SizedBox(height: 5.h),
                 CustomTextView(
-                  "Log In to your account",
+                  "Create account and enjoy all services",
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.textColor,
                 ),
                 SizedBox(height: 25.h),
+
+                // ===== First Name =====
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: CustomTextView(
+                    "First Name",
+                    fontSize: 14.sp,
+                    color: AppColors.textColorBlack,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(height: 5.h),
+                CustomTextField(
+                  hintText: "Enter First Name",
+                  controller: controller.firstNameController,
+                  keyboardType: TextInputType.text,
+                  validator: validateName,
+                ),
+                SizedBox(height: 25.h),
+
+                // ===== Last Name =====
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: CustomTextView(
+                    "Last Name",
+                    fontSize: 14.sp,
+                    color: AppColors.textColorBlack,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(height: 5.h),
+                CustomTextField(
+                  hintText: "Enter Last Name",
+                  controller: controller.lastNameController,
+                  keyboardType: TextInputType.text,
+                  validator: validateName,
+                ),
+                SizedBox(height: 25.h),
+
+                // ===== Email =====
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
@@ -66,6 +111,8 @@ class SignInScreen extends StatelessWidget {
                   validator: validateEmail,
                 ),
                 SizedBox(height: 25.h),
+
+                // ===== Password =====
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
@@ -81,41 +128,47 @@ class SignInScreen extends StatelessWidget {
                   controller: controller.passwordController,
                   validator: validatePassword,
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 25.h),
+
+                // ===== Confirm Password =====
                 Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.toNamed(AppRoute.forgotPassword);
-                    },
-                    child: CustomTextView(
-                      "Forgot Password?",
-                      fontSize: 14.sp,
-                      color: AppColors.textColorBlack,
-                      fontWeight: FontWeight.w400,
-                    ),
+                  alignment: Alignment.centerLeft,
+                  child: CustomTextView(
+                    "Confirm Password",
+                    fontSize: 14.sp,
+                    color: AppColors.textColorBlack,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
+                SizedBox(height: 5.h),
+                CustomPasswordField(
+                  hints: "Enter Confirm Password",
+                  controller: controller.passwordController,
+                  validator: validatePassword,
+                ),
                 SizedBox(height: 30.h),
+
+                // ===== Sign Up Button =====
                 Obx(() {
                   return CustomElevatedButton(
-                    ontap: () {
-                      // if (formKey.currentState!.validate()) {
-                        // controller.signIn();
-                      // }
-                      Get.offAllNamed(AppRoute.setupProfile);
-                    },
-                    text: "Log in",
+                    text: "Sign Up",
                     isLoading: controller.isLoading.value,
+                    ontap: () {
+                      if (formKey.currentState!.validate()) {
+                        controller.registerUser(); // ✅ call API
+                      }
+                    },
                   );
                 }),
                 SizedBox(height: 25.h),
+
+                // ===== Social Logins =====
                 Row(
                   children: [
                     Expanded(child: Divider()),
                     SizedBox(width: 10.w),
                     CustomTextView(
-                      "Or login with",
+                      "Or continue with",
                       fontSize: 12.sp,
                       color: AppColors.textColor,
                       fontWeight: FontWeight.w400,
@@ -125,33 +178,25 @@ class SignInScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 25.h),
+
                 SocialLoginButton(
-                  icon: Image.asset(
-                    ImagePath.google,
-                    width: 24.w,
-                    height: 24.h,
-                  ),
+                  icon: Image.asset(ImagePath.google, width: 24.w, height: 24.h),
                   text: 'Continue with Google',
-                  onPressed: () {
-                    GoogleSignInHelper.instance.signInWithGoogle();
-                  },
+                  onPressed: () {},
                 ),
                 SizedBox(height: 20.h),
                 SocialLoginButton(
-                  icon: Image.asset(
-                    ImagePath.facebook,
-                    width: 24.w,
-                    height: 24.h,
-                  ),
+                  icon: Image.asset(ImagePath.facebook, width: 24.w, height: 24.h),
                   text: 'Continue with Facebook',
                   onPressed: () {},
                 ),
+
                 SizedBox(height: 25.h),
                 Align(
                   alignment: Alignment.center,
                   child: RichText(
                     text: TextSpan(
-                      text: 'Have an account ? ',
+                      text: 'Already a member? ',
                       style: GoogleFonts.andika(
                         color: Colors.grey,
                         fontSize: 14.sp,
@@ -159,7 +204,7 @@ class SignInScreen extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: 'Sign Up',
+                          text: 'Sign In',
                           style: GoogleFonts.andika(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.w400,
@@ -167,7 +212,7 @@ class SignInScreen extends StatelessWidget {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Get.toNamed(AppRoute.signUp);
+                              Get.toNamed(AppRoute.signIn);
                             },
                         ),
                       ],
@@ -183,3 +228,4 @@ class SignInScreen extends StatelessWidget {
     );
   }
 }
+

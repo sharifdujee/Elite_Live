@@ -3,13 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../core/helper/shared_prefarenses_helper.dart';
+import '../../../../core/helper/shared_prefarenses_helper.dart';
+import '../../../../core/service_class/google_signin_helper.dart';
+import '../../../../core/service_class/network_caller/model/network_response.dart';
+import '../../../../core/service_class/network_caller/repository/network_caller.dart';
+import '../../../../core/utils/constants/app_urls.dart';
+import '../../../../routes/app_routing.dart';
 
-import '../../../core/service_class/google_signin_helper.dart';
-import '../../../core/service_class/network_caller/model/network_response.dart';
-import '../../../core/service_class/network_caller/repository/network_caller.dart';
-import '../../../core/utility/app_urls.dart';
-import '../../../routes/app_routing.dart';
+
 
 class SignUpController extends GetxController {
   final _helper = GoogleSignInHelper2();

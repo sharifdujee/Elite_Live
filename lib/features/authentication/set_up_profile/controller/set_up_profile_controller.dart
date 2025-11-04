@@ -15,8 +15,9 @@ import 'package:http/http.dart' as http;
 import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/global_widget/controller/custom_date_time_dialogue.dart';
 import '../../../../core/helper/shared_prefarenses_helper.dart';
-import '../../../../core/utility/app_urls.dart';
+
 import '../../../../core/utility/icon_path.dart';
+import '../../../../core/utils/constants/app_urls.dart';
 import '../../../../routes/app_routing.dart';
 
 class SetUpProfileController extends GetxController {

@@ -7,13 +7,13 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 
-import '../../../core/global_widget/custom_appbar.dart';
-import '../../../core/global_widget/custom_elevated_button.dart';
-import '../../../core/global_widget/custom_text_view.dart';
 
-import '../../../core/utils/constants/app_colors.dart';
-import '../../../core/validation/pin_validation.dart';
 
+import '../../../../core/global/custom_appbar.dart';
+import '../../../../core/global/custom_elevated_button.dart';
+import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/utils/constants/app_colors.dart';
+import '../../../../core/validation/pin_validation.dart';
 import '../controller/sign_up_otp_controller.dart';
 
 class SignUpOtpScreen extends StatelessWidget {
