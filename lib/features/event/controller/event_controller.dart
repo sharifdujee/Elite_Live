@@ -1,5 +1,7 @@
 
 import 'dart:io';
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/service_class/network_caller/repository/network_caller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +9,10 @@ import '../../../core/utils/constants/image_path.dart';
 import '../../home/data/comment_data_model.dart';
 
 class EventController extends GetxController{
+
+  final NetworkCaller networkCaller = NetworkCaller();
+  final SharedPreferencesHelper sharedPreferencesHelper = SharedPreferencesHelper();
+  var isLoading = false.obs;
   var searchText = ''.obs;
   var selectedTab = 0.obs;
   var commentText = ''.obs;

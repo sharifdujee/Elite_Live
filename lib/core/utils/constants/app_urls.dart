@@ -15,6 +15,9 @@ class AppUrls {
   static const String setProfilePic = '$_baseUrl/auth/update-profile-image';
   static const String user = '$_baseUrl/auth/profile';
 
+  /// event section
+   static const String createEvent = "$_baseUrl/event";
+
   static const String notifications = '$_baseUrl/notifications/my-notifications';
 
 

@@ -23,9 +23,11 @@ class CreateScheduleScreen extends StatelessWidget {
         children: [
           /// Gradient Header
           Container(
-            height: 130.h,
+            
+            height: 140.h,
             width: double.infinity,
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
+
               gradient: LinearGradient(
                 colors: [Color(0xFF8E2DE2), Color(0xFF4A00E0)],
                 begin: Alignment.topLeft,
