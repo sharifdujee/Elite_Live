@@ -13,7 +13,7 @@ class GoogleSignInHelper {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Future<User?> signInWithGoogle() async {
+  /*Future<User?> signInWithGoogle() async {
     debugPrint("🔄 Initiating Google sign-in process...======>>>>>>>>");
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -59,5 +59,38 @@ class GoogleSignInHelper {
       debugPrint("❌ Error during Google sign-in: $e");
       return null;
     }
+  }*/
+
+  Future<Map<String, dynamic>?> signInWithGoogle() async {
+    debugPrint("🔄 Initiating Google sign-in process...======>>>>>>>>");
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return null; // User cancelled
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        debugPrint("✅ Google sign-in successful: ${user.displayName}, ${user.email}");
+
+        // Return a simple map
+        return {
+          'name': user.displayName ?? '',
+          'email': user.email ?? '',
+          'photoUrl': user.photoURL ?? '',
+        };
+      }
+    } catch (e) {
+      debugPrint("❌ Error during Google sign-in: $e");
+    }
+    return null;
   }
+
 }

@@ -6,8 +6,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/global_widget/gradient_radio.dart';
 import '../../../../core/global_widget/custom_elevated_button.dart';
-import '../../../../core/utility/icon_path.dart';
+
 import '../../../../core/utils/constants/app_colors.dart';
+import '../../../../core/utils/constants/icon_path.dart';
 import '../../controller/payment_info_controller.dart';
 
 class PaymentInfoPage extends StatelessWidget {
@@ -202,7 +203,8 @@ class PaymentInfoPage extends StatelessWidget {
                             SizedBox(width: 8.w),
                             Image.asset(IconPath.visa, width: 28.w, height: 18.h),
                             SizedBox(width: 6.w),
-                            Image.asset(IconPath.master, width: 28.w, height: 18.h),
+                            /// here add master card
+                            Image.asset(IconPath.visa, width: 28.w, height: 18.h),
                             SizedBox(width: 6.w),
                             // other icons...
                             SizedBox(width: 5.w),

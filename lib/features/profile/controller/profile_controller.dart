@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
-import 'package:elites_live/core/service_class/network_caller/repository/network_caller.dart';
+
 import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:elites_live/features/profile/data/user_data_model.dart';
 import 'package:get/get.dart';
+
+import '../../../core/services/network_caller/repository/network_caller.dart';
 
 class ProfileController extends GetxController {
   RxBool isDiscoveryVisible = false.obs;

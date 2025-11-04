@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/helper/shared_prefarenses_helper.dart';
-import '../../../../core/service_class/google_signin_helper.dart';
-import '../../../../core/service_class/network_caller/repository/network_caller.dart';
+
+import '../../../../core/services/google_signin_helper.dart';
+import '../../../../core/services/network_caller/repository/network_caller.dart';
 import '../../../../core/utils/constants/app_urls.dart';
 import '../../../../routes/app_routing.dart';
 
 
 
 class SignInController extends GetxController {
-  final _helper = GoogleSignInHelper2();
+  final _helper = GoogleSignInHelper.instance;
+
   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
   RxBool isLoading = false.obs;
   final emailController = TextEditingController();
