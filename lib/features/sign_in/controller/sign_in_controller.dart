@@ -10,7 +10,7 @@ import '../../../core/utility/app_urls.dart';
 import '../../../routes/app_routing.dart';
 
 class SignInController extends GetxController {
-  final _helper = GoogleSignInHelper();
+  final _helper = GoogleSignInHelper2();
   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
   RxBool isLoading = false.obs;
   final emailController = TextEditingController();
@@ -21,8 +21,6 @@ class SignInController extends GetxController {
     await preferencesHelper.init();
     super.onInit();
   }
-
-
 
   Future<void> signIn() async {
     String? token = "";
@@ -60,7 +58,7 @@ class SignInController extends GetxController {
             snackPosition: SnackPosition.TOP,
           );
 
-           Get.offAllNamed(AppRoute.mainView);
+          Get.offAllNamed(AppRoute.mainView);
         } else {
           preferencesHelper.setBool("isSetup", isSetup);
           Get.snackbar(

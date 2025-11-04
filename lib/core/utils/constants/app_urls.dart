@@ -16,6 +16,7 @@ class AppUrls {
   static const String user = '$_baseUrl/auth/profile';
 
   static const String notifications = '$_baseUrl/notifications/my-notifications';
+  static const String googleAuth = '$_baseUrl/auth/google-login';
 
 
 }
