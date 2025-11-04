@@ -51,7 +51,7 @@ class SubscriptionScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 12.w),
                     CustomTextView(
-                      "Subscription",
+                           text:   "Subscription",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,

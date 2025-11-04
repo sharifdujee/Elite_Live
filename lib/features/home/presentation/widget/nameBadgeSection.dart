@@ -22,7 +22,7 @@ class NameBadgeSection extends StatelessWidget {
       children: [
         Flexible(
           child: CustomTextView(
-            userName,
+                 text:   userName,
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.textHeader,

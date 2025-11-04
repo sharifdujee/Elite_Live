@@ -77,7 +77,7 @@ class NotificationScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 16.h),
                       CustomTextView(
-                        'No notifications yet',
+                            text:    'No notifications yet',
 
                           fontSize: 16.sp,
 
@@ -115,7 +115,7 @@ class NotificationScreen extends StatelessWidget {
                           ),
                           ///color: Colors.grey[100],
                           child: CustomTextView(
-                            dateKey,
+                           text:         dateKey,
                 
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w600,

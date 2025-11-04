@@ -24,7 +24,7 @@ class UserInteractionSection extends StatelessWidget {
           children: [
             Icon(Icons.favorite_outline),
             SizedBox(width: 4.w),
-            CustomTextView("4.5M",
+            CustomTextView(  text:   "4.5M",
                 fontWeight: FontWeight.w500,
                 fontSize: 14.sp,
                 color: AppColors.textHeader),
@@ -34,7 +34,7 @@ class UserInteractionSection extends StatelessWidget {
           children: [
             Icon(FontAwesomeIcons.comment),
             SizedBox(width: 4.w),
-            CustomTextView("25.2k",
+            CustomTextView(  text:   "25.2k",
                 fontWeight: FontWeight.w500,
                 fontSize: 14.sp,
                 color: AppColors.textHeader),
@@ -48,7 +48,7 @@ class UserInteractionSection extends StatelessWidget {
             children: [
               Icon(FontAwesomeIcons.share),
               SizedBox(width: 4.w),
-              CustomTextView("Share",
+              CustomTextView(  text:   "Share",
                   fontWeight: FontWeight.w500,
                   fontSize: 14.sp,
                   color: AppColors.textHeader),
@@ -68,7 +68,7 @@ class UserInteractionSection extends StatelessWidget {
                 AppColors.primaryColor
               ])
             ),
-            child: CustomTextView("Tips", color: AppColors.textWhite,fontWeight: FontWeight.w600,fontSize: 12.sp,),
+            child: CustomTextView(  text:   "Tips", color: AppColors.textWhite,fontWeight: FontWeight.w600,fontSize: 12.sp,),
           ),
         ):SizedBox.shrink()
       ],

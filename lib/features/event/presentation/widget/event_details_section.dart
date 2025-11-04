@@ -13,13 +13,13 @@ class EventDetailsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomTextView("Event Schedule is Live!", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.liveText,),
+        CustomTextView(  text:   "Event Schedule is Live!", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.liveText,),
         SizedBox(height: 10.h,),
-        CustomTextView("We’re excited to announce the official schedule for our upcoming Event !", fontSize: 14.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
+        CustomTextView(  text:   "We’re excited to announce the official schedule for our upcoming Event !", fontSize: 14.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
         SizedBox(height: 10.h,),
-        CustomTextView("Mark your calendars and get ready — it’s going to be an amazing experience! Stay tuned for more updates and don’t forget to share with your friends! ", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,),
+        CustomTextView(  text:   "Mark your calendars and get ready — it’s going to be an amazing experience! Stay tuned for more updates and don’t forget to share with your friends! ", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,),
         SizedBox(height: 10.h,),
-        CustomTextView("Pay \$2", fontSize: 14.sp,fontWeight: FontWeight.w500,color: AppColors.liveText,),
+        CustomTextView(  text:   "Pay \$2", fontSize: 14.sp,fontWeight: FontWeight.w500,color: AppColors.liveText,),
         SizedBox(height: 10.h,),
         RichText(text: TextSpan(
             children: [

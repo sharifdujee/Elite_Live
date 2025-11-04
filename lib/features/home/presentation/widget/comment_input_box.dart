@@ -97,7 +97,7 @@ class CommentInputBox extends StatelessWidget {
                               controller.pickImage(ImageSource.camera);
                             },
                             icon: Icon(Icons.camera_alt),
-                            label: CustomTextView("Camera", fontSize: 10.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
+                            label: CustomTextView(  text:   "Camera", fontSize: 10.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
@@ -105,7 +105,7 @@ class CommentInputBox extends StatelessWidget {
                               controller.pickImage(ImageSource.gallery);
                             },
                             icon: Icon(Icons.photo_library),
-                            label: CustomTextView("Gallery", fontSize: 10.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
+                            label: CustomTextView(  text:   "Gallery", fontSize: 10.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
                           ),
                         ],
                       ),

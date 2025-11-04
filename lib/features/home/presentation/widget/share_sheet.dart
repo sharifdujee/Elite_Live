@@ -52,7 +52,7 @@ class ShareSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomTextView("Share To", fontSize: 20.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
+          CustomTextView(       text: "Share To", fontSize: 20.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
            SizedBox(height: 24.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

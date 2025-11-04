@@ -26,14 +26,14 @@ class PasswordChangedScreen extends StatelessWidget {
               Image.asset(ImagePath.success, width: 100.w, height: 100.h,color: AppColors.primaryColor,),
               SizedBox(height: 5.h),
               CustomTextView(
-                "Password Changed!",
+                 text:    "Password Changed!",
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textColorBlack,
               ),
               SizedBox(height: 10.h),
               CustomTextView(
-                "Password changed successfully, you can login again with new password",
+               text:      "Password changed successfully, you can login again with new password",
                 fontSize: 14.sp,
                 color: AppColors.textColor,
                 fontWeight: FontWeight.w400,

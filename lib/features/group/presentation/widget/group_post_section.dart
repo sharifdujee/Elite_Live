@@ -47,7 +47,7 @@ class GroupPostSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomTextView(
-                    "Dance Club",
+                    text:     "Dance Club",
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w500,
                     color: AppColors.textHeader,
@@ -56,7 +56,7 @@ class GroupPostSection extends StatelessWidget {
                   Row(
                     children: [
                       CustomTextView(
-                        "April 06, 2025",
+                         text:    "April 06, 2025",
                         fontWeight: FontWeight.w400,
                         fontSize: 10.sp,
                         color: AppColors.textBody,
@@ -69,7 +69,7 @@ class GroupPostSection extends StatelessWidget {
                       ),
                       SizedBox(width: 4.w),
                       CustomTextView(
-                        "6:20 pm",
+                        text:     "6:20 pm",
                         fontWeight: FontWeight.w400,
                         fontSize: 10.sp,
                         color: AppColors.textBody,
@@ -82,7 +82,7 @@ class GroupPostSection extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
           CustomTextView(
-            "Join us for a special live stream where 🎶 Arif will be performing his favorite acoustic covers and interacting with fans in real time! Don’t miss the chance to request your song live and send virtual gifts.",
+            text:     "Join us for a special live stream where 🎶 Arif will be performing his favorite acoustic covers and interacting with fans in real time! Don’t miss the chance to request your song live and send virtual gifts.",
             fontSize: 12.sp,
             fontWeight: FontWeight.w400,
             color: AppColors.textBody,
@@ -95,7 +95,7 @@ class GroupPostSection extends StatelessWidget {
                 children: [
                   Icon(Icons.favorite_outline),
                   SizedBox(width: 4.w),
-                  CustomTextView("4.5M",
+                  CustomTextView(  text:   "4.5M",
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
                       color: AppColors.textHeader),
@@ -105,7 +105,7 @@ class GroupPostSection extends StatelessWidget {
                 children: [
                   Icon(FontAwesomeIcons.comment),
                   SizedBox(width: 4.w),
-                  CustomTextView("25.2k",
+                  CustomTextView(  text:   "25.2k",
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
                       color: AppColors.textHeader),
@@ -119,7 +119,7 @@ class GroupPostSection extends StatelessWidget {
                   children: [
                     Icon(FontAwesomeIcons.share),
                     SizedBox(width: 4.w),
-                    CustomTextView("Share",
+                    CustomTextView(  text:   "Share",
                         fontWeight: FontWeight.w500,
                         fontSize: 14.sp,
                         color: AppColors.textHeader),
@@ -194,7 +194,7 @@ Widget _buildCommentTile(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomTextView(
-                  comment.userName,
+                   text:    comment.userName,
                   fontWeight: FontWeight.w600,
                   fontSize: 12.sp,
                   color: AppColors.textHeader,
@@ -202,7 +202,7 @@ Widget _buildCommentTile(
                 SizedBox(height: 4.h),
                 if (comment.text.isNotEmpty)
                   CustomTextView(
-                    comment.text,
+                   text:      comment.text,
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.textBody,
@@ -224,7 +224,7 @@ Widget _buildCommentTile(
                 Row(
                   children: [
                     CustomTextView(
-                      _getTimeAgo(comment.timestamp),
+                      text:     _getTimeAgo(comment.timestamp),
                       fontWeight: FontWeight.w400,
                       fontSize: 10.sp,
                       color: AppColors.textHeader,
@@ -233,7 +233,7 @@ Widget _buildCommentTile(
                     GestureDetector(
                       onTap: () => controller.toggleLike(comment.id),
                       child: CustomTextView(
-                        comment.isLiked.value ? "Liked" : "Like",
+                   text:          comment.isLiked.value ? "Liked" : "Like",
                         color: AppColors.textHeader,
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w400,
@@ -246,7 +246,7 @@ Widget _buildCommentTile(
                         replyingToName.value = comment.userName;
                       },
                       child: CustomTextView(
-                        "Reply",
+                        text:     "Reply",
                         color: AppColors.textHeader,
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w400,

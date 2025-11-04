@@ -1,15 +1,12 @@
+import 'package:elites_live/core/utils/constants/icon_path.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-
-
 import '../../../../core/global_widget/custom_password_field.dart';
 import '../../../../core/global_widget/custom_text_field.dart';
 import '../../../../core/global_widget/custom_text_view.dart';
-
 import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/global_widget/social_login_button.dart';
 import '../../../../core/services/google_signin_helper.dart';
@@ -39,13 +36,13 @@ class SignInScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 CustomTextView(
-                  "Log In",
+                  text: "Log In",
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                 ),
                 SizedBox(height: 5.h),
                 CustomTextView(
-                  "Log In to your account",
+                  text: "Log In to your account",
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.textColor,
@@ -54,7 +51,7 @@ class SignInScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Email Address",
+                    text: "Email Address",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -71,7 +68,7 @@ class SignInScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Password",
+                    text: "Password",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -91,7 +88,7 @@ class SignInScreen extends StatelessWidget {
                       Get.toNamed(AppRoute.forgotPassword);
                     },
                     child: CustomTextView(
-                      "Forgot Password?",
+                      text: "Forgot Password?",
                       fontSize: 14.sp,
                       color: AppColors.textColorBlack,
                       fontWeight: FontWeight.w400,
@@ -102,10 +99,7 @@ class SignInScreen extends StatelessWidget {
                 Obx(() {
                   return CustomElevatedButton(
                     ontap: () {
-
-                         controller.signIn();
-
-
+                      controller.signIn();
                     },
                     text: "Log in",
                     isLoading: controller.isLoading.value,
@@ -117,7 +111,7 @@ class SignInScreen extends StatelessWidget {
                     Expanded(child: Divider()),
                     SizedBox(width: 10.w),
                     CustomTextView(
-                      "Or login with",
+                      text: "Or login with",
                       fontSize: 12.sp,
                       color: AppColors.textColor,
                       fontWeight: FontWeight.w400,
@@ -127,25 +121,38 @@ class SignInScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 25.h),
-                SocialLoginButton(
-                  icon: Image.asset(
-                    ImagePath.google,
-                    width: 24.w,
-                    height: 24.h,
+                Obx(
+                  () => SocialLoginButton(
+                    icon:
+                        GoogleSignInHelper.instance.isLoading.value
+                            ? Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 0.6,
+                                color: AppColors.primaryColor,
+                              ),
+                            )
+                            : Image.asset(
+                              ImagePath.google,
+                              width: 24.w,
+                              height: 24.h,
+                            ),
+                    borderColor: Colors.black.withValues(alpha: 0.5),
+                    borderRadius: 40.r,
+                    text:
+                        GoogleSignInHelper.instance.isLoading.value
+                            ? ""
+                            : 'Continue with Google',
+                    onPressed: () {
+                      GoogleSignInHelper.instance.signInWithGoogle();
+                    },
                   ),
-                  text: 'Continue with Google',
-                  onPressed: () {
-                    GoogleSignInHelper.instance.signInWithGoogle();
-                  },
                 ),
                 SizedBox(height: 20.h),
                 SocialLoginButton(
-                  icon: Image.asset(
-                    ImagePath.facebook,
-                    width: 24.w,
-                    height: 24.h,
-                  ),
-                  text: 'Continue with Facebook',
+                  icon: Image.asset(IconPath.applei, width: 24.w, height: 24.h),
+                  text: 'Continue with Apple',
+                  borderRadius: 40.r,
+                  borderColor: Colors.black.withValues(alpha: 0.5),
                   onPressed: () {},
                 ),
                 SizedBox(height: 25.h),
@@ -154,7 +161,7 @@ class SignInScreen extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       text: 'Have an account ? ',
-                      style: GoogleFonts.andika(
+                      style: GoogleFonts.poppins(
                         color: Colors.grey,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
@@ -162,15 +169,16 @@ class SignInScreen extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: 'Sign Up',
-                          style: GoogleFonts.andika(
+                          style: GoogleFonts.poppins(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.w400,
                             fontSize: 14.sp,
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Get.toNamed(AppRoute.signUp);
-                            },
+                          recognizer:
+                              TapGestureRecognizer()
+                                ..onTap = () {
+                                  Get.toNamed(AppRoute.signUp);
+                                },
                         ),
                       ],
                     ),

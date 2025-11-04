@@ -45,14 +45,14 @@ class UserSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomTextView(
-                  groupName,
+                 text:      groupName,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textHeader,
                 ),
                 SizedBox(height: 4.h),
                 CustomTextView(
-                  userProfession,
+                   text:    userProfession,
                   fontWeight: FontWeight.w400,
                   fontSize: 13.sp,
                   color: AppColors.textBody,

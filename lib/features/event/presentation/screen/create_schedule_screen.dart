@@ -52,7 +52,7 @@ class CreateScheduleScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 32.h),
                     CustomTextView(
-                      "Create Schedule",
+                    text:       "Create Schedule",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -85,14 +85,14 @@ class CreateScheduleScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CustomTextView(
-                              "Jolie Topley",
+                             text:      "Jolie Topley",
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.textHeader,
                             ),
                             SizedBox(height: 2.h),
                             CustomTextView(
-                              "Model",
+                             text:      "Model",
                               fontWeight: FontWeight.w400,
                               fontSize: 12.sp,
                               color: AppColors.textBody,
@@ -111,7 +111,7 @@ class CreateScheduleScreen extends StatelessWidget {
 
                     SizedBox(height: 12.h),
                     CustomTextView(
-                      "Schedule Date",
+                      text:     "Schedule Date",
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.liveText,
@@ -138,7 +138,7 @@ class CreateScheduleScreen extends StatelessWidget {
 
                     SizedBox(height: 12.h),
                     CustomTextView(
-                      "Time",
+                    text:       "Time",
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.liveText,
@@ -183,7 +183,7 @@ class CreateScheduleScreen extends StatelessWidget {
 
                     SizedBox(height: 12.h),
                     CustomTextView(
-                      "Pay Amount",
+                     text:     "Pay Amount",
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.liveText,

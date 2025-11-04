@@ -44,7 +44,7 @@ class InvitePeopleScreen extends StatelessWidget {
                         child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp)),
                     SizedBox(width: 12.w),
                     CustomTextView(
-                      "Invite People",
+                       text:    "Invite People",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,

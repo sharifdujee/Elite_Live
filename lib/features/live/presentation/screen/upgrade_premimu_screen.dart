@@ -42,7 +42,7 @@ class UpgradePremiumScreen extends StatelessWidget {
                               child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp)),
                           SizedBox(width: 12.w),
                           CustomTextView(
-                            "Upgrade",
+                                 text:   "Upgrade",
                             fontWeight: FontWeight.w600,
                             fontSize: 20.sp,
                             color: AppColors.white,
@@ -64,9 +64,9 @@ class UpgradePremiumScreen extends StatelessWidget {
                       children: [
                         SizedBox(height: 157.h,),
                         /// Search Bar
-                        CustomTextView("Upgrade to Premium", fontWeight: FontWeight.w600,fontSize: 24.sp,textAlign: TextAlign.center,color: AppColors.liveText,),
+                        CustomTextView(       text: "Upgrade to Premium", fontWeight: FontWeight.w600,fontSize: 24.sp,textAlign: TextAlign.center,color: AppColors.liveText,),
                         SizedBox(height: 20.h,),
-                        CustomTextView("Access all features with a single purchase plan.", textAlign: TextAlign.center,fontSize: 16.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
+                        CustomTextView(       text: "Access all features with a single purchase plan.", textAlign: TextAlign.center,fontSize: 16.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
                         SizedBox(height: 24.h,),
 
                         /// Bottom Buttons

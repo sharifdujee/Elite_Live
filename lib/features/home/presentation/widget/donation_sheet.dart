@@ -71,7 +71,7 @@ class DonationSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const SizedBox(width: 12),
-                  CustomTextView("Donation", textAlign: TextAlign.center,fontSize: 24.sp,fontWeight: FontWeight.w600,color: AppColors.textColorBlack,),
+                  CustomTextView(  text:   "Donation", textAlign: TextAlign.center,fontSize: 24.sp,fontWeight: FontWeight.w600,color: AppColors.textColorBlack,),
 
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -82,7 +82,7 @@ class DonationSheet extends StatelessWidget {
               const SizedBox(height: 24),
 
               // Description
-             CustomTextView("Choose a donation amount or send a virtual gift to cheer for your favorite streamer!", fontWeight: FontWeight.w400,fontSize: 12.sp,color: AppColors.textBody,textAlign: TextAlign.center
+             CustomTextView(  text:   "Choose a donation amount or send a virtual gift to cheer for your favorite streamer!", fontWeight: FontWeight.w400,fontSize: 12.sp,color: AppColors.textBody,textAlign: TextAlign.center
                ,),
               const SizedBox(height: 24),
 

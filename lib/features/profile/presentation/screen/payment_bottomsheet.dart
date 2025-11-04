@@ -41,7 +41,7 @@ class PaymentDialog {
 
               // Title
               CustomTextView(
-                "Payment Method",
+                      text:  "Payment Method",
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textHeader,

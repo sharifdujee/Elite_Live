@@ -54,7 +54,7 @@ class ForgotPassScreen extends StatelessWidget {
               SizedBox(height: 20.h),
               CustomTextView(
                 textAlign: TextAlign.center,
-                "Forgot Password",
+               text:      "Forgot Password",
                 fontWeight: FontWeight.w700,
                 fontSize: 20.sp,
                 color: Color(0xFF2D2D2D),
@@ -62,7 +62,7 @@ class ForgotPassScreen extends StatelessWidget {
               SizedBox(height: 10.h),
               CustomTextView(
                 textAlign: TextAlign.center,
-                "Enter your email to get a verification code.",
+                 text:    "Enter your email to get a verification code.",
                 fontWeight: FontWeight.w400,
                 fontSize: 14.sp,
                 color: Color(0xFF636F85),
@@ -71,7 +71,7 @@ class ForgotPassScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Email Address",
+                   text:    "Email Address",
                   fontSize: 14.sp,
                   color: AppColors.textColorBlack,
                   fontWeight: FontWeight.w400,

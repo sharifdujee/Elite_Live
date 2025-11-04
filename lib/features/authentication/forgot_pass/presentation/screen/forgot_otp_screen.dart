@@ -56,7 +56,7 @@ class ForgotOtpScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
                     textAlign: TextAlign.center,
-                    "Verification Code",
+                   text:     "Verification Code",
                     fontWeight: FontWeight.w600,
                     fontSize: 20.sp,
                     color: Color(0xFF2D2D2D),
@@ -66,7 +66,7 @@ class ForgotOtpScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Enter the verification code that we have sent to your email",
+                    text:     "Enter the verification code that we have sent to your email",
                     fontWeight: FontWeight.w400,
                     fontSize: 14.sp,
                     color: Color(0xFF636F85),

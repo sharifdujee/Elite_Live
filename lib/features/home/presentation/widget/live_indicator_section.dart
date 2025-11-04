@@ -35,7 +35,7 @@ class LiveIndicatorSection extends StatelessWidget {
             ),
             child: isLive?
             CustomTextView(
-              'Live',
+              text:   'Live',
               color: AppColors.white,
               fontWeight: FontWeight.w500,
               fontSize: 14.sp,

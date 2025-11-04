@@ -14,7 +14,7 @@ class LiveDescriptionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomTextView(
-      description,
+       text:    description,
       fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       color: AppColors.textBody,

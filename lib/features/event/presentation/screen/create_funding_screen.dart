@@ -45,7 +45,7 @@ class CreateFundingScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 32.h),
                     CustomTextView(
-                      "Create Schedule",
+                      text:     "Create Schedule",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -78,14 +78,14 @@ class CreateFundingScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CustomTextView(
-                              "Jolie Topley",
+                              text:     "Jolie Topley",
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.textHeader,
                             ),
                             SizedBox(height: 2.h),
                             CustomTextView(
-                              "Model",
+                             text:      "Model",
                               fontWeight: FontWeight.w400,
                               fontSize: 12.sp,
                               color: AppColors.textBody,

@@ -62,14 +62,14 @@ class CreateNewPassScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 20.h),
                 CustomTextView(
-                  "Create New Password",
+                 text:      "Create New Password",
                   fontWeight: FontWeight.w600,
                   fontSize: 20.sp,
                   color: Color(0xFF2D2D2D),
                 ),
                 SizedBox(height: 10.h),
                 CustomTextView(
-                  "Your password must be different from previous used password",
+                text:       "Your password must be different from previous used password",
                   fontWeight: FontWeight.w400,
                   fontSize: 14.sp,
                   color: Color(0xFF636F85),
@@ -78,7 +78,7 @@ class CreateNewPassScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Password",
+                text:     "Password",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -94,7 +94,7 @@ class CreateNewPassScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Confirm Password",
+                     text:    "Confirm Password",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,

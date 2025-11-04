@@ -110,7 +110,7 @@ class VideoPlayerSection extends StatelessWidget {
                     mainAxisAlignment:
                     MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomTextView(Format.formatDuration(pos)), 
+                      CustomTextView(       text: Format.formatDuration(pos)), 
                       Row(
                         children: [
                           GestureDetector(
@@ -124,7 +124,7 @@ class VideoPlayerSection extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 10.w),
-                          CustomTextView(Format.formatDuration(dur))
+                          CustomTextView(       text: Format.formatDuration(dur))
 
                         ],
                       ),

@@ -151,7 +151,7 @@ class SignUpOtpController extends GetxController {
                 ),
                 SizedBox(height: 20.h),
                 CustomTextView(
-                  'Account verified\nSuccessfully',
+                 text:      'Account verified\nSuccessfully',
                   textAlign: TextAlign.center,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,

@@ -27,7 +27,7 @@ class SubscriptionFeature extends StatelessWidget {
         SizedBox(width: 8.w),
         Expanded(
           child: CustomTextView(
-            feature,
+                  text:  feature,
             fontWeight: FontWeight.w400,
             fontSize: 14.sp,
             color: AppColors.textBody,

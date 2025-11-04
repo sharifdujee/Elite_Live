@@ -15,7 +15,7 @@ class DesignationSection extends StatelessWidget {
     return Row(
       children: [
         CustomTextView(
-          "Influencer",
+         text:      "Influencer",
           fontSize: 14.sp,
           fontWeight: FontWeight.w400,
           color: AppColors.textBody,
@@ -29,7 +29,7 @@ class DesignationSection extends StatelessWidget {
         ),
         SizedBox(width: 3.w),
         CustomTextView(
-          "5h",
+         text:      "5h",
           fontWeight: FontWeight.w400,
           fontSize: 14.sp,
           color: AppColors.textBody,

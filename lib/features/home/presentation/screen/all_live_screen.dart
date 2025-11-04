@@ -89,7 +89,7 @@ class AllLiveScreen extends StatelessWidget {
           ),
 
           SizedBox(height: 32.h,),
-          CustomTextView("Top Influencer Live", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,),
+          CustomTextView(  text:   "Top Influencer Live", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,),
           SizedBox(height: 16.h,),
           SizedBox(
             height: 260.h,

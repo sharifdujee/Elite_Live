@@ -45,13 +45,13 @@ class SignUpScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomTextView(
-                  "Create an account",
+                    text:   "Create an account",
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                 ),
                 SizedBox(height: 5.h),
                 CustomTextView(
-                  "Create account and enjoy all services",
+                  text:     "Create account and enjoy all services",
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.textColor,
@@ -62,7 +62,7 @@ class SignUpScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "First Name",
+                    text:     "First Name",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -81,7 +81,7 @@ class SignUpScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Last Name",
+                     text:    "Last Name",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -100,7 +100,7 @@ class SignUpScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Email Address",
+                    text:     "Email Address",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -119,7 +119,7 @@ class SignUpScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Password",
+                     text:    "Password",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -137,7 +137,7 @@ class SignUpScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Confirm Password",
+                   text:      "Confirm Password",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -171,7 +171,7 @@ class SignUpScreen extends StatelessWidget {
                     Expanded(child: Divider()),
                     SizedBox(width: 10.w),
                     CustomTextView(
-                      "Or continue with",
+                      text:     "Or continue with",
                       fontSize: 12.sp,
                       color: AppColors.textColor,
                       fontWeight: FontWeight.w400,

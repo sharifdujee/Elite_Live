@@ -76,7 +76,7 @@ class EditProfilePage extends StatelessWidget {
                       SizedBox(height: 30.h),
                       20.verticalSpace,
                       CustomTextView(
-                        "Gender",
+                           text:     "Gender",
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textBody,
@@ -94,7 +94,7 @@ class EditProfilePage extends StatelessWidget {
                       ),
                       20.verticalSpace,
                       CustomTextView(
-                        "Date of Birth",
+                           text:     "Date of Birth",
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textBody,
@@ -123,7 +123,7 @@ class EditProfilePage extends StatelessWidget {
                       ),
                       20.verticalSpace,
                       CustomTextView(
-                        "Profession",
+                            text:    "Profession",
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textBody,
@@ -142,7 +142,7 @@ class EditProfilePage extends StatelessWidget {
                       ),
                       20.verticalSpace,
                       CustomTextView(
-                        "Location",
+                           text:     "Location",
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textBody,
@@ -154,7 +154,7 @@ class EditProfilePage extends StatelessWidget {
                       ),
                       20.verticalSpace,
                       CustomTextView(
-                        "Bio",
+                             text:   "Bio",
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textBody,

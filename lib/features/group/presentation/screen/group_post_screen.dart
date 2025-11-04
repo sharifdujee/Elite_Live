@@ -58,7 +58,7 @@ class GroupPostScreen extends StatelessWidget {
                       ),
                     ),
                     CustomTextView(
-                      "Group Post",
+                      text:     "Group Post",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -102,7 +102,7 @@ class GroupPostScreen extends StatelessWidget {
                               children: [
 
                                 SizedBox(width: 10.w),
-                                CustomTextView("Edit", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
+                                CustomTextView(  text:   "Edit", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
                               ],
                             ),
                           ),
@@ -112,7 +112,7 @@ class GroupPostScreen extends StatelessWidget {
                               children: [
 
                                 SizedBox(width: 10.w),
-                                CustomTextView("Delete", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
+                                CustomTextView(  text:   "Delete", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
                               ],
                             ),
                           ),
@@ -164,7 +164,7 @@ class GroupPostScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CustomTextView(
-                          "Dance Club",
+                           text:    "Dance Club",
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textHeader,
@@ -176,7 +176,7 @@ class GroupPostScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 24.h),
                     CustomTextView(
-                      "Join us for a special live stream where 🎶 Arif will be performing his favorite acoustic covers and interacting with fans in real time! Don’t miss the chance to request your song.",
+                       text:    "Join us for a special live stream where 🎶 Arif will be performing his favorite acoustic covers and interacting with fans in real time! Don’t miss the chance to request your song.",
                       fontWeight: FontWeight.w400,
                       fontSize: 14.sp,
                       color: AppColors.textBody,
@@ -258,11 +258,11 @@ class GroupPostScreen extends StatelessWidget {
                   ),
                 ),
               ),
-             CustomTextView("Leave Group", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,),
+             CustomTextView(  text:   "Leave Group", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,),
 
             ],
           ),
-          content: CustomTextView("Are you sure you want to leave group?", fontWeight: FontWeight.w500,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center,),
+          content: CustomTextView(  text:   "Are you sure you want to leave group?", fontWeight: FontWeight.w500,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center,),
           actions: [
             Row(
               children: [

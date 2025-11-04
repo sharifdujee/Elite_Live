@@ -200,7 +200,7 @@ class ProfilePage extends StatelessWidget {
 
                         return user.firstName.isNotEmpty
                             ? CustomTextView(
-                          "${user.firstName} ${user.lastName}",
+                               text:   "${user.firstName} ${user.lastName}",
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textBody,
@@ -220,7 +220,7 @@ class ProfilePage extends StatelessWidget {
 
                         if (user == null) {
                           return CustomTextView(
-                            'Jolie Topley',
+                                 text:   'Jolie Topley',
                             fontSize: 20.sp,
                             fontWeight: FontWeight.w500,
                             color: const Color(0xFF2D2D2D),
@@ -229,13 +229,13 @@ class ProfilePage extends StatelessWidget {
 
                         return user.profession.isNotEmpty
                             ? CustomTextView(
-                          user.profession,
+                               text:   user.profession,
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textBody,
                         )
                             : CustomTextView(
-                          'Model',
+                              text:    'Model',
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textBody,

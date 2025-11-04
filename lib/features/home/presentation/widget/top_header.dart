@@ -73,7 +73,7 @@ class TopHeader extends StatelessWidget {
 
                   return user.firstName.isNotEmpty
                       ? CustomTextView(
-                    "${user.firstName} ${user.lastName}",
+                      text:      "${user.firstName} ${user.lastName}",
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.white,
@@ -112,7 +112,7 @@ class TopHeader extends StatelessWidget {
 
                   return user.profession.isNotEmpty
                       ? CustomTextView(
-                    user.profession,
+                          text:  user.profession,
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.white.withOpacity(0.8),

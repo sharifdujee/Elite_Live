@@ -37,7 +37,7 @@ class FollowSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: CustomTextView(
-                "Follow",
+              text:       "Follow",
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w600,
                 textAlign: TextAlign.center,
@@ -72,7 +72,7 @@ class FollowSection extends StatelessWidget {
                     children: [
                       Icon(Icons.person_remove, size: 18.sp, color: AppColors.redColor),
                       SizedBox(width: 10.w),
-                      CustomTextView("Unfollow", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.redColor),
+                      CustomTextView(  text:   "Unfollow", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.redColor),
                     ],
                   ),
                 ),
@@ -86,7 +86,7 @@ class FollowSection extends StatelessWidget {
                   children: [
                     Icon(Icons.block, size: 18.sp, color: Colors.black87),
                     SizedBox(width: 10.w),
-                    CustomTextView("Not Interested", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
+                    CustomTextView(  text:   "Not Interested", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
                   ],
                 ),
               ),
@@ -96,7 +96,7 @@ class FollowSection extends StatelessWidget {
                   children: [
                     Icon(Icons.report_problem_outlined, size: 18.sp, color: Colors.black87),
                     SizedBox(width: 10.w),
-                    CustomTextView("Report Channel", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
+                    CustomTextView(  text:   "Report Channel", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
                   ],
                 ),
               ),

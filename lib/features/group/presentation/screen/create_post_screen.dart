@@ -43,7 +43,7 @@ class CreatePostScreen extends StatelessWidget {
                       ),
                     ),
                     CustomTextView(
-                      "Post Text",
+                     text:      "Post Text",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -54,7 +54,7 @@ class CreatePostScreen extends StatelessWidget {
                         color: AppColors.white,
                         border: Border.all(width: 1.5, color: AppColors.white),
                       ),
-                      child: CustomTextView("Post"),
+                      child: CustomTextView(  text:   "Post"),
                     ),
                   ],
                 ),

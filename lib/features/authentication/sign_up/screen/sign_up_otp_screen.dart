@@ -42,7 +42,7 @@ class SignUpOtpScreen extends StatelessWidget {
                 SizedBox(height: 30.h),
                 CustomTextView(
                   textAlign: TextAlign.center,
-                  "Verification Code",
+                 text:      "Verification Code",
                   fontWeight: FontWeight.w600,
                   fontSize: 24.sp,
                   color: Color(0xFF2D2D2D),
@@ -50,7 +50,7 @@ class SignUpOtpScreen extends StatelessWidget {
                 SizedBox(height: 10.h),
                 CustomTextView(
                     textAlign: TextAlign.center,
-                    "Enter the verification code that we have sent to your email",
+                    text:     "Enter the verification code that we have sent to your email",
                     fontWeight: FontWeight.w400,
                     fontSize: 14.sp,
                     color: Color(0xFF636F85),

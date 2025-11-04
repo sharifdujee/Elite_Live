@@ -45,7 +45,7 @@ class DiscoverGroup extends StatelessWidget {
                         child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp)),
                     SizedBox(width: 12.w),
                     CustomTextView(
-                      "Discover Group",
+                     text:      "Discover Group",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -90,7 +90,7 @@ class DiscoverGroup extends StatelessWidget {
                               children: [
 
                                 SizedBox(width: 10.w),
-                                CustomTextView("Edit", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
+                                CustomTextView(  text:   "Edit", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
                               ],
                             ),
                           ),
@@ -100,7 +100,7 @@ class DiscoverGroup extends StatelessWidget {
                               children: [
 
                                 SizedBox(width: 10.w),
-                                CustomTextView("Delete", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
+                                CustomTextView(  text:   "Delete", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
                               ],
                             ),
                           ),

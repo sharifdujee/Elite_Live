@@ -49,7 +49,7 @@ class VideoInteractionSection extends StatelessWidget {
       children: [
         Icon(icon, color: color, size: 20),
         SizedBox(width: 4),
-        CustomTextView(text),
+        CustomTextView(       text: text),
 
       ],
     );

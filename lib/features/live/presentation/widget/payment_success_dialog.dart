@@ -45,13 +45,13 @@ class PaymentSuccessDialog {
 
               // Title
               CustomTextView(
-                "Payment Successful",
+                     text:   "Payment Successful",
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textHeader,
               ),
               SizedBox(height: 8.h),
-              CustomTextView("Your payment has been done successfully.", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center
+              CustomTextView(       text: "Your payment has been done successfully.", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center
                 ,),
               SizedBox(height: 24.h),
 

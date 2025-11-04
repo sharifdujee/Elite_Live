@@ -70,7 +70,7 @@ class CardDetails extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: CustomTextView(
-                            "Card Details",
+                                text:    "Card Details",
                             fontSize: 16.sp,
                             color: AppColors.textColorBlack,
                             fontWeight: FontWeight.w500,

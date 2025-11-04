@@ -49,14 +49,14 @@ class GroupSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomTextView(
-                  groupName,
+                  text:     groupName,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textHeader,
                 ),
                 SizedBox(height: 4.h),
                 CustomTextView(
-                  "$groupMember Member",
+                text:       "$groupMember Member",
                   fontWeight: FontWeight.w400,
                   fontSize: 13.sp,
                   color: AppColors.textBody,

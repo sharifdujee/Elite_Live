@@ -292,7 +292,7 @@ class EditProfileController extends GetxController {
               ),
               SizedBox(height: 20.h),
               CustomTextView(
-                'Profile Updated Successfully',
+                    text:    'Profile Updated Successfully',
                 fontSize: 24,
                 textAlign: TextAlign.center,
                 fontWeight: FontWeight.bold,

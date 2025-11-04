@@ -273,7 +273,7 @@ class SetUpProfileController extends GetxController {
               ),
               SizedBox(height: 20.h),
               CustomTextView(
-                'Profile Created Successfully',
+                text:     'Profile Created Successfully',
                 fontSize: 24,
                 textAlign: TextAlign.center,
                 fontWeight: FontWeight.bold,
@@ -281,7 +281,7 @@ class SetUpProfileController extends GetxController {
               ),
               SizedBox(height: 8.h),
               CustomTextView(
-                'Welcome, ${firstNameController.text} ${lastNameController.text}! Your profile is now ready. Start exploring and make the most out of your experience.',
+             text:        'Welcome, ${firstNameController.text} ${lastNameController.text}! Your profile is now ready. Start exploring and make the most out of your experience.',
                 textAlign: TextAlign.center,
                 fontSize: 14,
                 color: Color(0xff636F85),

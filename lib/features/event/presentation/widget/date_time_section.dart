@@ -14,8 +14,8 @@ class DateTimeSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CustomTextView("Date: 25-08-2025", fontSize: 14.sp,fontWeight: FontWeight.w500,color: AppColors.textHeader,),
-        CustomTextView("11:00 PM", fontSize: 14.sp,fontWeight: FontWeight.w500,color: AppColors.textHeader,),
+        CustomTextView(  text:   "Date: 25-08-2025", fontSize: 14.sp,fontWeight: FontWeight.w500,color: AppColors.textHeader,),
+        CustomTextView(  text:   "11:00 PM", fontSize: 14.sp,fontWeight: FontWeight.w500,color: AppColors.textHeader,),
 
 
 

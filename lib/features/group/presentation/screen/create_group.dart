@@ -48,7 +48,7 @@ class CreateGroupScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 12.w),
                     CustomTextView(
-                      "Create Group",
+                       text:    "Create Group",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -74,7 +74,7 @@ class CreateGroupScreen extends StatelessWidget {
                   children: [
                     /// Group Name Field
                     CustomTextView(
-                      "Group name",
+                      text:     "Group name",
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
                       color: AppColors.textHeader,
@@ -88,7 +88,7 @@ class CreateGroupScreen extends StatelessWidget {
 
                     /// Upload Photo Section
                     CustomTextView(
-                      "Upload Photo",
+                       text:    "Upload Photo",
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
                       color: AppColors.textHeader,
@@ -107,7 +107,7 @@ class CreateGroupScreen extends StatelessWidget {
 
                     /// Description Field
                     CustomTextView(
-                      "Description",
+                       text:    "Description",
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
                       color: AppColors.textHeader,
