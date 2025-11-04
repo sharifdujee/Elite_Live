@@ -2,7 +2,7 @@ import 'package:elites_live/features/group/presentation/widget/gradient_button.d
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 
 class UserSection extends StatelessWidget {

@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/global/custom_elevated_button.dart';
+
+import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../controller/create_group_controller.dart';
 
 

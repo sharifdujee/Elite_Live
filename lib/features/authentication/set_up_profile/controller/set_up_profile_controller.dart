@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/global_widget/controller/custom_date_time_dialogue.dart';
 import '../../../../core/helper/shared_prefarenses_helper.dart';
 

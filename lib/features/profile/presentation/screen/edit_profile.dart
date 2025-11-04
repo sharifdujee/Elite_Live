@@ -1,12 +1,15 @@
-import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/global_widget/custom_text_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/global/custom_date_time_dialog.dart';
-import '../../../../core/global/custom_date_time_field.dart';
-import '../../../../core/global/custom_dropdown.dart';
+
+
+
+import '../../../../core/global_widget/custom_date_time_dialogue.dart';
+import '../../../../core/global_widget/custom_date_time_field.dart';
+import '../../../../core/global_widget/custom_drop_down.dart';
 import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/edit_profile_controller.dart';

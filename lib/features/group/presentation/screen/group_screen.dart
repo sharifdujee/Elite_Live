@@ -1,12 +1,13 @@
-import 'package:elites_live/core/global/custom_elevated_button.dart';
-import 'package:elites_live/core/global/custom_text_field.dart';
-import 'package:elites_live/core/global/custom_text_view.dart';
+
+import 'package:elites_live/core/global_widget/custom_text_field.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../widget/group_section.dart';
 

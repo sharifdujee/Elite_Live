@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/global/gradient_radio.dart';
+import '../../../../core/global_widget/gradient_radio.dart';
 
 class PaymentOptionTile extends StatelessWidget {
 

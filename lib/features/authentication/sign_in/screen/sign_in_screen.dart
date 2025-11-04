@@ -5,11 +5,13 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-import '../../../../core/global/custom_elevated_button.dart';
-import '../../../../core/global/custom_password_field.dart';
-import '../../../../core/global/custom_text_field.dart';
-import '../../../../core/global/custom_text_view.dart';
-import '../../../../core/global/social_login_button.dart';
+
+import '../../../../core/global_widget/custom_password_field.dart';
+import '../../../../core/global_widget/custom_text_field.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
+
+import '../../../../core/global_widget/custom_elevated_button.dart';
+import '../../../../core/global_widget/social_login_button.dart';
 import '../../../../core/services/google_signin_helper.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/image_path.dart';
