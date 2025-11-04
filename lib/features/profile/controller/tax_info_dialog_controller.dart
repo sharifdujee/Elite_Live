@@ -5,7 +5,7 @@ class TaxInfdialogController extends GetxController {
   TextEditingController einController = TextEditingController();
 
   void onNext() {
-    String ein = einController.text.trim();
+    // String ein = einController.text.trim();
     // Perform validation or save logic here
     Get.back(); // Close dialog for now
   }

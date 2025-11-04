@@ -1,6 +1,6 @@
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleSignInHelper {
+class GoogleSignInHelper2 {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
       'email',

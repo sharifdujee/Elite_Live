@@ -1,6 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer';
-import 'package:get/get.dart';
+
 
 /*
 class AuthService {
@@ -116,7 +115,7 @@ class AuthService {
 
 
 
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class AuthService {
   static final AuthService _instance =

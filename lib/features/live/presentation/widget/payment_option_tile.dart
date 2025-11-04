@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 import '../../../../core/global/gradient_radio.dart';
 class PaymentOptionTile extends StatelessWidget {
@@ -13,13 +12,13 @@ class PaymentOptionTile extends StatelessWidget {
   final Gradient gradient;
 
   const PaymentOptionTile({
-    Key? key,
+    super.key,
     required this.index,
     required this.image,
     required this.isSelected,
     required this.onTap,
     required this.gradient,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

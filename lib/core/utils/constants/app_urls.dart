@@ -19,6 +19,7 @@ class AppUrls {
    static const String createEvent = "$_baseUrl/event";
 
   static const String notifications = '$_baseUrl/notifications/my-notifications';
+  static const String googleAuth = '$_baseUrl/auth/google-login';
 
 
 }

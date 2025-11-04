@@ -12,7 +12,7 @@ import '../../../core/utility/app_urls.dart';
 import '../../../routes/app_routing.dart';
 
 class SignUpController extends GetxController {
-  final _helper = GoogleSignInHelper();
+  final _helper = GoogleSignInHelper2();
   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
   RxBool isLoading = false.obs;
   final firstNameController = TextEditingController();

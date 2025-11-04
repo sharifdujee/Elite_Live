@@ -10,6 +10,7 @@ import '../../../core/global_widget/custom_text_fields.dart';
 import '../../../core/global_widget/custom_text_view.dart';
 import '../../../core/global_widget/social_login_button.dart';
 
+import '../../../core/services/google_signin_helper.dart';
 import '../../../core/utils/constants/app_colors.dart';
 import '../../../core/utils/constants/image_path.dart';
 import '../../../core/validation/email_validation.dart';
@@ -132,7 +133,7 @@ class SignInScreen extends StatelessWidget {
                   ),
                   text: 'Continue with Google',
                   onPressed: () {
-                    // controller.continueWithGoogle();
+                    GoogleSignInHelper.instance.signInWithGoogle();
                   },
                 ),
                 SizedBox(height: 20.h),

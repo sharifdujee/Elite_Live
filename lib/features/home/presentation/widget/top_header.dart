@@ -8,21 +8,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/global/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../core/utils/constants/image_path.dart';
 import '../../../profile/controller/profile_controller.dart';
 
-import 'dart:developer';
 
-import 'package:elites_live/routes/app_routing.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/global/custom_text_view.dart';
-import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../core/utils/constants/image_path.dart';
-import '../../../profile/controller/profile_controller.dart';
 
 class TopHeader extends StatelessWidget {
   const TopHeader({

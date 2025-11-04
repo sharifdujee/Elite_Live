@@ -1,6 +1,5 @@
 import 'package:elites_live/features/home/presentation/widget/donation_sheet.dart';
 import 'package:elites_live/features/home/presentation/widget/share_sheet.dart';
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../../controller/live_controller.dart';
