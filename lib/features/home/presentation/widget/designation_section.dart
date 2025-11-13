@@ -6,34 +6,36 @@ import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/icon_path.dart';
 
 class DesignationSection extends StatelessWidget {
+  final String designation;
+  final String? timeAgo;
+
   const DesignationSection({
     super.key,
+    required this.designation,
+    this.timeAgo,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CustomTextView(
-         text:      "Influencer",
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textBody,
+        Text(
+          designation,
+          style: TextStyle(
+            fontSize: 10.sp,
+            color: Colors.grey[600],
+          ),
         ),
-        SizedBox(width: 3.w),
-        Image.asset(
-          IconPath.dot,
-          fit: BoxFit.cover,
-          width: 5.w,
-          height: 5.h,
-        ),
-        SizedBox(width: 3.w),
-        CustomTextView(
-         text:      "5h",
-          fontWeight: FontWeight.w400,
-          fontSize: 14.sp,
-          color: AppColors.textBody,
-        ),
+        if (timeAgo != null) ...[
+          SizedBox(width: 8.w),
+          Text(
+            '• $timeAgo',
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
       ],
     );
   }

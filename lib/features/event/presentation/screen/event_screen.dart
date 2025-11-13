@@ -12,7 +12,8 @@ import '../../../../core/utils/constants/app_colors.dart';
 import '../../../home/presentation/widget/top_header.dart';
 
 class EventScreen extends StatelessWidget {
-   const EventScreen({super.key});
+    EventScreen({super.key});
+   final EventController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {

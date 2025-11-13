@@ -1,5 +1,6 @@
 
 import 'package:elites_live/features/event/controller/event_controller.dart';
+import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/controller/live_controller.dart';
@@ -47,5 +48,7 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>ProfileController(), fenix: true);
     Get.lazyPut(()=>EditProfileController(), fenix: true);
     Get.lazyPut(()=>ProfileTabsController(), fenix: true);
+    Get.lazyPut(()=>ScheduleController(), fenix: true);
+    Get.lazyPut(()=>EventController(), fenix: true);
   }
 }

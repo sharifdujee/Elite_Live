@@ -10,10 +10,22 @@ import '../../../home/presentation/widget/share_sheet.dart';
 class UserInteractionSection extends StatelessWidget {
   const UserInteractionSection({
     super.key,
-    this.isTip = false
+    this.isTip = false,
+    required this.likeCount,
+    required this.commentCount,
+    this.onLikeTap,
+    required this.isLiked,
+    this.onCommentTap
+
   });
 
   final  bool isTip;
+  final String likeCount;
+  final int commentCount;
+  final VoidCallback? onLikeTap;
+  final bool isLiked;
+  final VoidCallback? onCommentTap;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +34,13 @@ class UserInteractionSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.favorite_outline),
+            GestureDetector(
+              onTap: (){
+                onLikeTap!();
+              },
+                child: Icon(Icons.favorite_outline, color: isLiked?AppColors.primaryColor:Colors.grey.withValues(alpha: 0.3),)),
             SizedBox(width: 4.w),
-            CustomTextView(  text:   "4.5M",
+            CustomTextView(  text:   likeCount,
                 fontWeight: FontWeight.w500,
                 fontSize: 14.sp,
                 color: AppColors.textHeader),
@@ -32,9 +48,13 @@ class UserInteractionSection extends StatelessWidget {
         ),
         Row(
           children: [
-            Icon(FontAwesomeIcons.comment),
+            GestureDetector(
+              onTap: (){
+                onCommentTap!();
+              },
+                child: Icon(FontAwesomeIcons.comment)),
             SizedBox(width: 4.w),
-            CustomTextView(  text:   "25.2k",
+            CustomTextView(  text:   commentCount.toString(),
                 fontWeight: FontWeight.w500,
                 fontSize: 14.sp,
                 color: AppColors.textHeader),

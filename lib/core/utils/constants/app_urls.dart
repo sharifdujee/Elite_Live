@@ -3,14 +3,13 @@ class AppUrls {
 
   //create
 
-
   //create
   static const String registerUrl = '$_baseUrl/users/create';
   static const String loginUrl = '$_baseUrl/auth/login';
+
   /// profile set up
   static const String setUpProfile = "$_baseUrl/auth/profile";
   static const String user = '$_baseUrl/auth/profile';
-
 
   static const String socialLogin = '$_baseUrl/auth/auth-login';
   static const String verifyOtp = '$_baseUrl/users/signup-verification';
@@ -22,14 +21,24 @@ class AppUrls {
   static const String setProfile = '$_baseUrl/auth/set-profile';
   static const String setProfilePic = '$_baseUrl/auth/update-profile-image';
 
-
-  static const String notifications = '$_baseUrl/notifications/my-notifications';
+  static const String notifications =
+      '$_baseUrl/notifications/my-notifications';
 
   /// event section
-   static const String createEvent = "$_baseUrl/event";
+  static const String createEvent = "$_baseUrl/event";
+  static String getAllEvent(int page, int limit) =>
+      "$_baseUrl/event/schedule/event?page=$page&limit=$limit";
+  static String getAllCrowdFunding(int page, int limit) =>
+      "$_baseUrl/event/funding/event?page=$page&limit=$limit";
+  /// like unlike
+  static String createLike(String eventId) => "$_baseUrl/event/like-unlike/$eventId";
+  static String createComment(String eventId) => "$_baseUrl/event/comment/$eventId";
+  static String getComment(String eventId) => "$_baseUrl/event/comment/$eventId";
+  static String createReply (String commentId) => "$_baseUrl/event/reply-comment/$commentId";
 
+  /// Group flow
+  static const String createGroup = "$_baseUrl/group/create";
+  static const String discoverGroup = "$_baseUrl/group/discover-groups";
 
   static const String googleAuth = '$_baseUrl/auth/google-login';
-
-
 }

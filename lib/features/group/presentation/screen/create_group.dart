@@ -174,7 +174,9 @@ class CreateGroupScreen extends StatelessWidget {
 
                     /// Create Button
                     CustomElevatedButton(
-                      ontap: controller.createGroup,
+                      ontap: (){
+                        controller.createGroup();
+                      },
                       text: "Create",
                       gradient: AppColors.primaryGradient,
                     ),

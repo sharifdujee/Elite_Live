@@ -38,7 +38,7 @@ class GroupSection extends StatelessWidget {
           // Avatar
           CircleAvatar(
             radius: 28.sp,
-            backgroundImage: AssetImage(groupImage), // Use the passed parameter
+            backgroundImage: NetworkImage(groupImage), // Use the passed parameter
           ),
 
           SizedBox(width: 12.w),

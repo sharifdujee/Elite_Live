@@ -1,8 +1,12 @@
 
+
+import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:elites_live/features/event/presentation/widget/cloud_funding_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../../core/global_widget/custom_comment_sheet.dart';
+import '../../../../core/global_widget/date_time_helper.dart';
 import '../../../home/controller/home_controller.dart';
 import '../../../home/presentation/widget/designation_section.dart';
 import '../../../home/presentation/widget/follow_section.dart';
@@ -13,6 +17,7 @@ import '../widget/user_interaction_section.dart';
 class CloudFundingScreen extends StatelessWidget {
    CloudFundingScreen({super.key});
    final HomeController controller = Get.find();
+   final ScheduleController scheduleController = Get.find();
    final RxString replyingToId = ''.obs;
    final RxString replyingToName = ''.obs;
 
@@ -20,15 +25,27 @@ class CloudFundingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
         physics: BouncingScrollPhysics(),
-        itemCount: controller.influencerName.length,
+        itemCount: scheduleController.crowdFundList.length,
         separatorBuilder: (context,index){
           return Divider();
         },
         shrinkWrap: true,
         itemBuilder: (context,index){
-          final userName = controller.influencerName[index];
-          final userImage = controller.influencerProfile[index];
+          final crowdFund = scheduleController.crowdFundList[index];
+
+          final firstName = crowdFund.user.firstName;
+          final lastName = crowdFund.user.lastName;
+
+          final userName = "$firstName $lastName";
+          final userImage = crowdFund.user.profileImage;
+          final designation = crowdFund.user.profession;
           final isLive = controller.eventLive[index];
+          final timeAgo = DateTimeHelper.getTimeAgo(crowdFund.createdAt.toIso8601String());
+          final crowdLike = crowdFund.count.eventLike;
+          final crowdComment = crowdFund.count.eventComment;
+          final about = crowdFund.text;
+          final eventId = crowdFund.id;
+          final likeStatus = crowdFund.isLiked;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -50,7 +67,7 @@ class CloudFundingScreen extends StatelessWidget {
                         SizedBox(height: 4.h),
 
                         /// designation and hours before live
-                        DesignationSection(),
+                        DesignationSection(designation: designation,timeAgo: timeAgo,),
                       ],
                     ),
                   ),
@@ -66,11 +83,22 @@ class CloudFundingScreen extends StatelessWidget {
               SizedBox(height: 10.h,),
 
               /// Event Details Section
-              CloudFundingDetails(),
+              CloudFundingDetails(eventDescription: about,),
 
               SizedBox(height: 10.h,),
               /// like comment and share Section
-              UserInteractionSection(isTip: true,),
+              UserInteractionSection(
+                isLiked: likeStatus,
+                isTip: true,
+                onLikeTap: (){
+                scheduleController.createLike(eventId);
+                },
+                onCommentTap: (){
+                  showModalBottomSheet(context: context, builder: (BuildContext context){
+                    return CommentSheet(scheduleController: scheduleController, eventId: eventId);
+                  });
+                },
+                likeCount: crowdLike.toString(),commentCount: crowdComment,),
               SizedBox(height: 20.h,),
 
 
@@ -81,3 +109,5 @@ class CloudFundingScreen extends StatelessWidget {
         });
   }
 }
+
+

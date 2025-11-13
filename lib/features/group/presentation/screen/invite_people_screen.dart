@@ -74,9 +74,10 @@ class InvitePeopleScreen extends StatelessWidget {
                   /// Group List
                   Expanded(
                     child: ListView.builder(
-                      itemCount: controller.groupName.length,
+                      itemCount: controller.discoverGroupList.length,
                       padding: EdgeInsets.zero,
                       itemBuilder: (context, index) {
+                        final group = controller.discoverGroupList[index];
                         final userName = controller.userName[index];
                         final userProfession = controller.userDescription[index];
                         final groupImage = controller.userPicture[index];

@@ -148,28 +148,31 @@ class DiscoverGroup extends StatelessWidget {
                   SizedBox(height: 16.h),
 
                   /// Group List
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: controller.groupName.length,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        final groupName = controller.groupName[index];
-                        final groupMember = controller.memberList[index];
-                        final groupImage = controller.groupPicture[index];
+                  Obx(()=>
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: controller.discoverGroupList.length,
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          final group = controller.discoverGroupList[index];
+                          final groupName = group.groupName;
+                          final groupMember = group.count.groupMember;
+                          final groupImage = group.photo;
 
-                        return GestureDetector(
-                          onTap: (){
-                            Get.toNamed(AppRoute.groupPost, arguments: 'groupName');
-                          },
-                          child: GroupSection(
-                            buttonText: "Join Now",
-                            groupName: groupName,
-                            groupMember: groupMember,
-                            groupImage: groupImage,
-                            groupStaus: false,
-                          ),
-                        );
-                      },
+                          return GestureDetector(
+                            onTap: (){
+                              Get.toNamed(AppRoute.groupPost, arguments: 'groupName');
+                            },
+                            child: GroupSection(
+                              buttonText: "Join Now",
+                              groupName: groupName,
+                              groupMember: groupMember.toString(),
+                              groupImage: groupImage,
+                              groupStaus: false,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
 

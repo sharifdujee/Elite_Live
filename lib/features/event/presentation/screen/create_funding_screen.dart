@@ -1,15 +1,19 @@
+import 'package:elites_live/features/event/controller/schedule_controller.dart';
+import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/global_widget/custom_text_field.dart';
 import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../core/utils/constants/image_path.dart';
+
 
 class CreateFundingScreen extends StatelessWidget {
-  const CreateFundingScreen({super.key});
+   CreateFundingScreen({super.key});
+  final ProfileController profileController = Get.find();
+  final ScheduleController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -70,26 +74,85 @@ class CreateFundingScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage(ImagePath.user),
-                        ),
+                        Obx(() {
+                          final user = profileController.userinfo.value;
+
+                          if (user == null) {
+                            return CircleAvatar(
+                              ///radius: 50.r,
+                              backgroundImage: const AssetImage('assets/images/profile_image.jpg'),
+                            );
+                          }
+
+                          return CircleAvatar(
+                            //radius: 50.r,
+                            backgroundImage: user.profileImage != null && user.profileImage!.isNotEmpty
+                                ? NetworkImage(user.profileImage!)
+                                : const AssetImage('assets/images/profile_image.jpg') as ImageProvider,
+                          );
+                        }),
                         SizedBox(width: 8.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomTextView(
-                              text:     "Jolie Topley",
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textHeader,
-                            ),
-                            SizedBox(height: 2.h),
-                            CustomTextView(
-                             text:      "Model",
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12.sp,
-                              color: AppColors.textBody,
-                            ),
+                            Obx(() {
+                              final user = profileController.userinfo.value;
+
+                              if (user == null) {
+                                return Text(
+                                  'Jolie Topley',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color(0xFF2D2D2D),
+                                  ),
+                                );
+                              }
+
+                              return user.firstName.isNotEmpty
+                                  ? CustomTextView(
+                                text:   "${user.firstName} ${user.lastName}",
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textBody,
+                              )
+                                  : Text(
+                                'Jolie Topley',
+                                style: GoogleFonts.inter(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF2D2D2D),
+                                ),
+                              );
+                            }),
+
+                            Obx(() {
+                              final user = profileController.userinfo.value;
+
+                              if (user == null) {
+                                return CustomTextView(
+                                  text:   'Jolie Topley',
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xFF2D2D2D),
+                                );
+                              }
+
+                              return user.profession.isNotEmpty
+                                  ? CustomTextView(
+                                text:   user.profession,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.textBody,
+                              )
+                                  : CustomTextView(
+                                text:    'Model',
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.textBody,
+                              );
+                            }),
+
                           ],
                         ),
                       ],
@@ -98,6 +161,7 @@ class CreateFundingScreen extends StatelessWidget {
                     // ... avatar and name ...
                     SizedBox(height: 32.h),
                     CustomTextField(
+                      controller: controller.descriptionController,
                       hintText: "Write something here",
                       maxLines: 10,
                     ),
@@ -110,6 +174,7 @@ class CreateFundingScreen extends StatelessWidget {
                     SizedBox(height: 32.h),
                     CustomElevatedButton(
                       ontap: () {
+                        controller.createCrowdFunding();
                         // Access the selected values
 
                       },

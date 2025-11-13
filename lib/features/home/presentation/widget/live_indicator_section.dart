@@ -19,7 +19,7 @@ class LiveIndicatorSection extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 30.r,
-          backgroundImage: AssetImage(influencerProfile),
+          backgroundImage: NetworkImage(influencerProfile),
         ),
         Positioned(
           bottom: -6.h, // Align to the bottom

@@ -56,7 +56,7 @@ class FollowingScreen extends StatelessWidget {
                                 SizedBox(height: 4.h),
 
                                 /// designation and hours before live
-                                DesignationSection(),
+                                DesignationSection(designation: "",),
                               ],
                             ),
                           ),

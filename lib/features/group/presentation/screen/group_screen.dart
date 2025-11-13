@@ -77,23 +77,26 @@ class GroupScreen extends StatelessWidget {
 
                       /// Group List
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: controller.groupName.length,
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            final groupName = controller.groupName[index];
-                            final groupMember = controller.memberList[index];
-                            final groupImage = controller.groupPicture[index];
+                        child: Obx(()=>
+                           ListView.builder(
+                            itemCount: controller.discoverGroupList.length,
+                            padding: EdgeInsets.zero,
+                            itemBuilder: (context, index) {
+                              final group = controller.discoverGroupList[index];
+                              final groupName = group.groupName;
+                              final groupMember = group.count.groupMember;
+                              final groupImage = group.photo;
 
-                            return GroupSection(
-                              groupName: groupName,
-                              groupMember: groupMember,
-                              groupImage: groupImage,
-                              buttonText: "Invite",
-                              groupStaus: true,
+                              return GroupSection(
+                                groupName: groupName,
+                                groupMember: groupMember.toString(),
+                                groupImage: groupImage,
+                                buttonText: "Invite",
+                                groupStaus: true,
 
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
 

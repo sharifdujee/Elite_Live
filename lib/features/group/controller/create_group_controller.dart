@@ -1,3 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:elites_live/core/utils/constants/app_urls.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+
+import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
+import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -5,13 +15,137 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 
+
 class CreateGroupController extends GetxController {
   final groupNameController = TextEditingController();
   final descriptionController = TextEditingController();
+  final NetworkCaller networkCaller = NetworkCaller();
+  var isLoading = false.obs;
+  final SharedPreferencesHelper helper = SharedPreferencesHelper();
 
   Rx<File?> selectedImage = Rx<File?>(null);
   RxBool isPublic = false.obs;
   final ImagePicker _picker = ImagePicker();
+
+
+  /// create Group
+  ///
+  /// need to update is public
+  Future<void> createGroup() async {
+    if (groupNameController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please enter group name',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (selectedImage.value == null) {
+      Get.snackbar(
+        'Error',
+        'Please select a group photo',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+    Get.dialog(CustomLoading(color: AppColors.primaryColor), barrierDismissible: false);
+
+    String? token = helper.getString("userToken");
+    log("token: $token");
+
+    try {
+      var request = http.MultipartRequest("POST", Uri.parse(AppUrls.createGroup));
+      request.headers.addAll({
+        "Accept": "application/json",
+        "Authorization": "$token",
+      });
+
+      request.fields['groupName'] = groupNameController.text.trim();
+      request.fields['description'] = descriptionController.text.trim();
+
+      String filePath = selectedImage.value!.path;
+      if (!await selectedImage.value!.exists()) throw Exception("File does not exist");
+
+      String ext = filePath.split('.').last.toLowerCase();
+      MediaType type = ['jpg', 'jpeg'].contains(ext)
+          ? MediaType('image', 'jpeg')
+          : ext == 'png'
+          ? MediaType('image', 'png')
+          : MediaType('image', 'jpeg');
+
+      request.files.add(await http.MultipartFile.fromPath('groupPhoto', filePath, contentType: type));
+
+      log("Sending request...");
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      log("Response status: ${response.statusCode}");
+      log("Response body: ${response.body}");
+
+      var responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // ✅ Close loading dialog safely
+        if (Get.isDialogOpen ?? false) Get.back();
+
+        log("Group created: $responseData");
+        Get.snackbar(
+          'Success',
+          responseData['message'] ?? 'Group created successfully',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+
+        groupNameController.clear();
+        descriptionController.clear();
+        selectedImage.value = null;
+        isPublic.value = false;
+      } else {
+        // ✅ Close loading dialog before showing error
+        if (Get.isDialogOpen ?? false) Get.back();
+
+        Get.snackbar(
+          'Error',
+          responseData['message'] ?? 'Failed to create group',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e, stackTrace) {
+      log("Exception: ${e.toString()}");
+      log("Stack trace: $stackTrace");
+
+      // ✅ Close loading before showing error
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      Get.snackbar(
+        'Error',
+        'An error occurred: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+
+
+  /// create Group - SOLUTION 2: Remove isPublic from request (use default or send separately)
+
+
+
 
   // Pick image from camera
   Future<void> pickImageFromCamera() async {
@@ -120,10 +254,7 @@ class CreateGroupController extends GetxController {
               onPressed: () => Get.back(),
               child: Text(
                 'Cancel',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 16.sp, color: Colors.grey[600]),
               ),
             ),
           ],
@@ -178,10 +309,7 @@ class CreateGroupController extends GetxController {
                   SizedBox(height: 4.h),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -193,31 +321,7 @@ class CreateGroupController extends GetxController {
     );
   }
 
-  // Create group
-  void createGroup() {
-    if (groupNameController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter group name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
 
-    // Add your create group logic here
-    Get.snackbar(
-      'Success',
-      'Group created successfully',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-    );
-
-    // Navigate back or to group screen
-    Get.back();
-  }
 
   @override
   void onClose() {
