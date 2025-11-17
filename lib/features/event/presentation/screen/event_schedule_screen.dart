@@ -15,7 +15,7 @@ import '../widget/user_interaction_section.dart';
 class EventScheduleScreen extends StatelessWidget {
    EventScheduleScreen({super.key});
 
-   final HomeController controller = Get.find();
+   final HomeController controller = Get.find<HomeController>();
    final RxString replyingToId = ''.obs;
    final RxString replyingToName = ''.obs;
 
