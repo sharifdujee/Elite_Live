@@ -2,8 +2,9 @@ import 'package:elites_live/core/utils/constants/image_path.dart';
 import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/global/custom_elevated_button.dart';
-import '../../../../core/global/custom_text_view.dart';
+
+import '../../../../core/global_widget/custom_text_view.dart';
+import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import 'package:get/get.dart';
 
@@ -44,13 +45,13 @@ class PaymentSuccessDialog {
 
               // Title
               CustomTextView(
-                "Payment Successful",
+                     text:   "Payment Successful",
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textHeader,
               ),
               SizedBox(height: 8.h),
-              CustomTextView("Your payment has been done successfully.", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center
+              CustomTextView(       text: "Your payment has been done successfully.", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center
                 ,),
               SizedBox(height: 24.h),
 

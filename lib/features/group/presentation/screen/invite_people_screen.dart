@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/global/custom_text_field.dart';
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_field.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/group_controller.dart';
 
@@ -44,7 +44,7 @@ class InvitePeopleScreen extends StatelessWidget {
                         child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp)),
                     SizedBox(width: 12.w),
                     CustomTextView(
-                      "Invite People",
+                       text:    "Invite People",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -74,9 +74,10 @@ class InvitePeopleScreen extends StatelessWidget {
                   /// Group List
                   Expanded(
                     child: ListView.builder(
-                      itemCount: controller.groupName.length,
+                      itemCount: controller.discoverGroupList.length,
                       padding: EdgeInsets.zero,
                       itemBuilder: (context, index) {
+                        final group = controller.discoverGroupList[index];
                         final userName = controller.userName[index];
                         final userProfession = controller.userDescription[index];
                         final groupImage = controller.userPicture[index];

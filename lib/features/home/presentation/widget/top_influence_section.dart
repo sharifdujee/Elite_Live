@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/image_path.dart';
 
@@ -118,7 +118,7 @@ class TopInfluenceSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomTextView(
-                  "Tell me what excites...",
+                       text:   "Tell me what excites...",
                   fontWeight: FontWeight.w500,
                   fontSize: 13.sp,
                   color: AppColors.textHeader,
@@ -127,7 +127,7 @@ class TopInfluenceSection extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 CustomTextView(
-                  "50k Watching",
+                     text:     "50k Watching",
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.textBody,

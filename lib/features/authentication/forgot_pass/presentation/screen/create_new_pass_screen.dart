@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../../core/global/custom_appbar.dart';
-import '../../../../../core/global/custom_elevated_button.dart';
-import '../../../../../core/global/custom_password_field.dart';
-import '../../../../../core/global/custom_text_view.dart';
+
+
+import '../../../../../core/global_widget/custom_password_field.dart';
+import '../../../../../core/global_widget/custom_text_view.dart';
+import '../../../../../core/global_widget/custom_appbar.dart';
+import '../../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/validation/password_validation.dart';
 import '../../../../../routes/app_routing.dart';
@@ -60,14 +62,14 @@ class CreateNewPassScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 20.h),
                 CustomTextView(
-                  "Create New Password",
+                 text:      "Create New Password",
                   fontWeight: FontWeight.w600,
                   fontSize: 20.sp,
                   color: Color(0xFF2D2D2D),
                 ),
                 SizedBox(height: 10.h),
                 CustomTextView(
-                  "Your password must be different from previous used password",
+                text:       "Your password must be different from previous used password",
                   fontWeight: FontWeight.w400,
                   fontSize: 14.sp,
                   color: Color(0xFF636F85),
@@ -76,7 +78,7 @@ class CreateNewPassScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Password",
+                text:     "Password",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,
@@ -92,7 +94,7 @@ class CreateNewPassScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Confirm Password",
+                     text:    "Confirm Password",
                     fontSize: 14.sp,
                     color: AppColors.textColorBlack,
                     fontWeight: FontWeight.w400,

@@ -2,7 +2,7 @@
 
 import 'dart:io';
 
-import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,7 +55,7 @@ class CommentSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomTextView(
-                        comment.userName,
+                       text:      comment.userName,
                         fontWeight: FontWeight.w600,
                         fontSize: 12.sp,
                         color: AppColors.textHeader,
@@ -67,7 +67,7 @@ class CommentSheet extends StatelessWidget {
                   // Comment text
                   if (comment.text.isNotEmpty)
                     CustomTextView(
-                      comment.text,
+                       text:    comment.text,
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w400,
                       color: AppColors.textBody,
@@ -94,7 +94,7 @@ class CommentSheet extends StatelessWidget {
                   Row(
                     children: [
                       CustomTextView(
-                        _getTimeAgo(comment.timestamp),
+                      text:       _getTimeAgo(comment.timestamp),
                         fontWeight: FontWeight.w400,
                         fontSize: 10.sp,
                         color: AppColors.textHeader,
@@ -103,7 +103,7 @@ class CommentSheet extends StatelessWidget {
                       GestureDetector(
                         onTap: () => controller.toggleLike(comment.id),
                         child: CustomTextView(
-                          comment.isLiked.value ? "Liked" : "Like",
+                         text:      comment.isLiked.value ? "Liked" : "Like",
                           color: AppColors.textHeader,
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w400,
@@ -116,7 +116,7 @@ class CommentSheet extends StatelessWidget {
                           replyingToName.value = comment.userName;
                         },
                         child: CustomTextView(
-                          "Reply",
+                           text:    "Reply",
                           color: AppColors.textHeader,
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w400,

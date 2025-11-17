@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/global/custom_text_field.dart';
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_field.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
 import '../../controller/group_controller.dart';
@@ -45,7 +45,7 @@ class DiscoverGroup extends StatelessWidget {
                         child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp)),
                     SizedBox(width: 12.w),
                     CustomTextView(
-                      "Discover Group",
+                     text:      "Discover Group",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -90,7 +90,7 @@ class DiscoverGroup extends StatelessWidget {
                               children: [
 
                                 SizedBox(width: 10.w),
-                                CustomTextView("Edit", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
+                                CustomTextView(  text:   "Edit", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
                               ],
                             ),
                           ),
@@ -100,7 +100,7 @@ class DiscoverGroup extends StatelessWidget {
                               children: [
 
                                 SizedBox(width: 10.w),
-                                CustomTextView("Delete", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
+                                CustomTextView(  text:   "Delete", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.textHeader),
                               ],
                             ),
                           ),
@@ -148,28 +148,31 @@ class DiscoverGroup extends StatelessWidget {
                   SizedBox(height: 16.h),
 
                   /// Group List
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: controller.groupName.length,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        final groupName = controller.groupName[index];
-                        final groupMember = controller.memberList[index];
-                        final groupImage = controller.groupPicture[index];
+                  Obx(()=>
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: controller.discoverGroupList.length,
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          final group = controller.discoverGroupList[index];
+                          final groupName = group.groupName;
+                          final groupMember = group.count.groupMember;
+                          final groupImage = group.photo;
 
-                        return GestureDetector(
-                          onTap: (){
-                            Get.toNamed(AppRoute.groupPost, arguments: 'groupName');
-                          },
-                          child: GroupSection(
-                            buttonText: "Join Now",
-                            groupName: groupName,
-                            groupMember: groupMember,
-                            groupImage: groupImage,
-                            groupStaus: false,
-                          ),
-                        );
-                      },
+                          return GestureDetector(
+                            onTap: (){
+                              Get.toNamed(AppRoute.groupPost, arguments: 'groupName');
+                            },
+                            child: GroupSection(
+                              buttonText: "Join Now",
+                              groupName: groupName,
+                              groupMember: groupMember.toString(),
+                              groupImage: groupImage,
+                              groupStaus: false,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
 

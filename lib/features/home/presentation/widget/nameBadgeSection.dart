@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/image_path.dart';
 
@@ -22,7 +22,7 @@ class NameBadgeSection extends StatelessWidget {
       children: [
         Flexible(
           child: CustomTextView(
-            userName,
+                 text:   userName,
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.textHeader,

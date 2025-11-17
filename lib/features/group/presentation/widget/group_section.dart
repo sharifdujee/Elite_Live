@@ -2,7 +2,7 @@ import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 
 import 'gradient_button.dart';
@@ -38,7 +38,7 @@ class GroupSection extends StatelessWidget {
           // Avatar
           CircleAvatar(
             radius: 28.sp,
-            backgroundImage: AssetImage(groupImage), // Use the passed parameter
+            backgroundImage: NetworkImage(groupImage), // Use the passed parameter
           ),
 
           SizedBox(width: 12.w),
@@ -49,14 +49,14 @@ class GroupSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomTextView(
-                  groupName,
+                  text:     groupName,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textHeader,
                 ),
                 SizedBox(height: 4.h),
                 CustomTextView(
-                  "$groupMember Member",
+                text:       "$groupMember Member",
                   fontWeight: FontWeight.w400,
                   fontSize: 13.sp,
                   color: AppColors.textBody,

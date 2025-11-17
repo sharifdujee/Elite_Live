@@ -70,7 +70,7 @@ class ChangePassword extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: CustomTextView(
-                            "Old Password",
+                             text:       "Old Password",
                             fontSize: 16.sp,
                             color: AppColors.textColorBlack,
                             fontWeight: FontWeight.w500,
@@ -86,7 +86,7 @@ class ChangePassword extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: CustomTextView(
-                            "New Password",
+                                text:    "New Password",
                             fontSize: 16.sp,
                             color: AppColors.textColorBlack,
                             fontWeight: FontWeight.w500,
@@ -102,7 +102,7 @@ class ChangePassword extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: CustomTextView(
-                            "Confirm New Password",
+                                  text: "Confirm New Password",
                             fontSize: 16.sp,
                             color: AppColors.textColorBlack,
                             fontWeight: FontWeight.w500,

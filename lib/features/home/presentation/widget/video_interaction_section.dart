@@ -4,7 +4,7 @@ import 'package:elites_live/features/home/presentation/widget/donation_sheet.dar
 import 'package:elites_live/features/home/presentation/widget/share_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 
 
 
@@ -49,7 +49,7 @@ class VideoInteractionSection extends StatelessWidget {
       children: [
         Icon(icon, color: color, size: 20),
         SizedBox(width: 4),
-        CustomTextView(text),
+        CustomTextView(       text: text),
 
       ],
     );

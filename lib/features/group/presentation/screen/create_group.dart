@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../core/global/custom_elevated_button.dart';
-import '../../../../core/global/custom_text_field.dart';
-import '../../../../core/global/custom_text_view.dart';
+
+import '../../../../core/global_widget/custom_text_field.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
+import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/create_group_controller.dart';
 import '../widget/group_image_upload_section.dart';
@@ -47,7 +48,7 @@ class CreateGroupScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 12.w),
                     CustomTextView(
-                      "Create Group",
+                       text:    "Create Group",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,
@@ -73,7 +74,7 @@ class CreateGroupScreen extends StatelessWidget {
                   children: [
                     /// Group Name Field
                     CustomTextView(
-                      "Group name",
+                      text:     "Group name",
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
                       color: AppColors.textHeader,
@@ -87,7 +88,7 @@ class CreateGroupScreen extends StatelessWidget {
 
                     /// Upload Photo Section
                     CustomTextView(
-                      "Upload Photo",
+                       text:    "Upload Photo",
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
                       color: AppColors.textHeader,
@@ -106,7 +107,7 @@ class CreateGroupScreen extends StatelessWidget {
 
                     /// Description Field
                     CustomTextView(
-                      "Description",
+                       text:    "Description",
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
                       color: AppColors.textHeader,
@@ -173,7 +174,9 @@ class CreateGroupScreen extends StatelessWidget {
 
                     /// Create Button
                     CustomElevatedButton(
-                      ontap: controller.createGroup,
+                      ontap: (){
+                        controller.createGroup();
+                      },
                       text: "Create",
                       gradient: AppColors.primaryGradient,
                     ),

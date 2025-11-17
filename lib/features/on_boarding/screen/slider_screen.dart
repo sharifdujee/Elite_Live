@@ -52,7 +52,7 @@ class SliderScreen extends StatelessWidget {
               onTap: () {
                 controller.completeOnBoarding();
               },
-              child: CustomTextView("Skip",color: const Color(0xFF191919),
+              child: CustomTextView(       text: "Skip",color: const Color(0xFF191919),
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w400),
             ),
@@ -86,7 +86,7 @@ class SliderScreen extends StatelessWidget {
                 carouselController: _carouselController,
                 itemCount: carouselData.length,
                 options: CarouselOptions(
-                  height: screenHeight, // Increased height to fit content
+                  height: screenHeight, 
                   viewportFraction: 1.0,
                   enlargeCenterPage: false,
                   onPageChanged: (index, reason) {

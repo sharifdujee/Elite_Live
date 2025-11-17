@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/global/custom_elevated_button.dart';
-import '../../../../core/global/custom_text_view.dart';
+
+import '../../../../core/global_widget/custom_text_view.dart';
+import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
 
@@ -44,7 +45,7 @@ class CreateLiveScreen extends StatelessWidget {
                               child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp)),
                           SizedBox(width: 12.w),
                           CustomTextView(
-                            "Back",
+                                 text:   "Back",
                             fontWeight: FontWeight.w600,
                             fontSize: 20.sp,
                             color: AppColors.white,
@@ -66,7 +67,7 @@ class CreateLiveScreen extends StatelessWidget {
                       children: [
                         SizedBox(height: 157.h,),
                         /// Search Bar
-                       CustomTextView("Get your suitable live session with us.", fontWeight: FontWeight.w600,fontSize: 24.sp,textAlign: TextAlign.center,color: AppColors.liveText,),
+                       CustomTextView(       text: "Get your suitable live session with us.", fontWeight: FontWeight.w600,fontSize: 24.sp,textAlign: TextAlign.center,color: AppColors.liveText,),
                         SizedBox(height: 32.h,),
 
                         /// Bottom Buttons

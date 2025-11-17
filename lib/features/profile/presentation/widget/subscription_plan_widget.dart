@@ -76,7 +76,7 @@ class SubscriptionPlanCard extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   CustomTextView(
-                    planName,
+                        text:    planName,
                     fontWeight: FontWeight.w600,
                     fontSize: 18.sp,
                     color: AppColors.textBody,
@@ -84,7 +84,7 @@ class SubscriptionPlanCard extends StatelessWidget {
                 ],
               ),
               CustomTextView(
-                price,
+                   text:     price,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textBody,

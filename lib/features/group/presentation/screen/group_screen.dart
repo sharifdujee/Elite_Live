@@ -1,12 +1,13 @@
-import 'package:elites_live/core/global/custom_elevated_button.dart';
-import 'package:elites_live/core/global/custom_text_field.dart';
-import 'package:elites_live/core/global/custom_text_view.dart';
+
+import 'package:elites_live/core/global_widget/custom_text_field.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../widget/group_section.dart';
 
@@ -47,7 +48,7 @@ class GroupScreen extends StatelessWidget {
                             child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp)),
                         SizedBox(width: 12.w),
                         CustomTextView(
-                          "Group",
+                          text:     "Group",
                           fontWeight: FontWeight.w600,
                           fontSize: 20.sp,
                           color: AppColors.white,
@@ -76,23 +77,26 @@ class GroupScreen extends StatelessWidget {
 
                       /// Group List
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: controller.groupName.length,
-                          padding: EdgeInsets.zero,
-                          itemBuilder: (context, index) {
-                            final groupName = controller.groupName[index];
-                            final groupMember = controller.memberList[index];
-                            final groupImage = controller.groupPicture[index];
+                        child: Obx(()=>
+                           ListView.builder(
+                            itemCount: controller.discoverGroupList.length,
+                            padding: EdgeInsets.zero,
+                            itemBuilder: (context, index) {
+                              final group = controller.discoverGroupList[index];
+                              final groupName = group.groupName;
+                              final groupMember = group.count.groupMember;
+                              final groupImage = group.photo;
 
-                            return GroupSection(
-                              groupName: groupName,
-                              groupMember: groupMember,
-                              groupImage: groupImage,
-                              buttonText: "Invite",
-                              groupStaus: true,
+                              return GroupSection(
+                                groupName: groupName,
+                                groupMember: groupMember.toString(),
+                                groupImage: groupImage,
+                                buttonText: "Invite",
+                                groupStaus: true,
 
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
 

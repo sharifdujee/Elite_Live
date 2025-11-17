@@ -1,27 +1,137 @@
+
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
+import 'package:elites_live/core/utils/constants/app_urls.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../routes/app_routing.dart';
 
 class GoogleSignInHelper {
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      'profile',
-    ],
-  );
+  static final GoogleSignInHelper instance = GoogleSignInHelper._internal();
+  SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
 
-  Future<Map<String, dynamic>?> signInWithGoogle() async {
+  GoogleSignInHelper._internal();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  RxBool isLoading = false.obs;
+
+  /*Future<User?> signInWithGoogle() async {
+    debugPrint("🔄 Initiating Google sign-in process...======>>>>>>>>");
     try {
-      final GoogleSignInAccount? account = await _googleSignIn.signIn();
-      if (account == null) return null;
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      // final GoogleSignInAuthentication auth = await account.authentication;
+      if (googleUser == null) {
+        return null; // User cancelled
+      }
 
-      return {
-        'name': account.displayName,
-        'email': account.email,
-        'photoUrl': account.photoUrl
-      };
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        debugPrint(
+          "✅ Google sign-in successful: ${user.displayName}, ${user.email}",
+        );
+        var userInfo = {
+          'email': user.email ?? '',
+          'firstName': user.displayName ?? '',
+          'photoUrl': user.photoURL ?? '',
+        };
+
+        final response = await NetworkCaller().postRequest(AppUrls.googleAuth, body: userInfo);
+        if (response.isSuccess) {
+          
+        } else {
+          debugPrint("❌ Backend Google auth failed.");
+        }
+      }
+
+      return user;
     } catch (e) {
+      debugPrint("❌ Error during Google sign-in: $e");
       return null;
     }
+  }*/
+
+  Future<Map<String, dynamic>?> signInWithGoogle() async {
+    debugPrint("🔄 Initiating Google sign-in process...======>>>>>>>>");
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return null; // User cancelled
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        isLoading.value = true;
+        debugPrint(
+          "✅ Google sign-in successful: ${user.displayName}, ${user.email}",
+        );
+        var userInfo = {
+          'email': user.email ?? '',
+          'firstName': user.displayName ?? '',
+          'lastName' : user.displayName ?? '',
+          'fcmToken': "e57w54w4e4w4ewerr",
+        };
+
+        final response = await NetworkCaller().postRequest(
+          AppUrls.googleAuth,
+          body: userInfo,
+        );
+        if (response.isSuccess) {
+          preferencesHelper.setString(
+            "userToken",
+            response.responseData['accessToken'],
+          );
+          debugPrint(
+            "the api response is =======>>>>>> ${response.responseData}",
+          );
+          Get.offAllNamed(AppRoute.setupProfile, arguments: {});
+          final isSetup = response.responseData['isSetup'];
+          if (isSetup) {
+            preferencesHelper.setBool("isSetup", isSetup);
+            Get.snackbar(
+              "Success",
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+              "User logged in successfully",
+              snackPosition: SnackPosition.TOP,
+            );
+
+            Get.offAllNamed(AppRoute.mainView);
+          } else {
+            debugPrint("❌ Backend Google auth failed.");
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("❌ Error during Google sign-in: $e");
+    }finally {
+      isLoading.value = false;
+    }
+    return null;
   }
 }

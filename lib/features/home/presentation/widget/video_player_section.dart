@@ -1,4 +1,4 @@
-import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/services/duration_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -110,7 +110,7 @@ class VideoPlayerSection extends StatelessWidget {
                     mainAxisAlignment:
                     MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomTextView(Format.formatDuration(pos)), 
+                      CustomTextView(       text: Format.formatDuration(pos)), 
                       Row(
                         children: [
                           GestureDetector(
@@ -124,7 +124,7 @@ class VideoPlayerSection extends StatelessWidget {
                             ),
                           ),
                           SizedBox(width: 10.w),
-                          CustomTextView(Format.formatDuration(dur))
+                          CustomTextView(       text: Format.formatDuration(dur))
 
                         ],
                       ),

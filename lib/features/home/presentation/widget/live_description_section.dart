@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 class LiveDescriptionSection extends StatelessWidget {
   const LiveDescriptionSection({
@@ -14,7 +14,7 @@ class LiveDescriptionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomTextView(
-      description,
+       text:    description,
       fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       color: AppColors.textBody,

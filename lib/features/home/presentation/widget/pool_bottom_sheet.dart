@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/live_controller.dart';
 
@@ -59,7 +59,7 @@ class PollBottomSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
 
                       children: [
-                        Center(child: CustomTextView("Pools", fontWeight: FontWeight.w600,fontSize: 16.sp,color: AppColors.textHeader,)),
+                        Center(child: CustomTextView(       text: "Pools", fontWeight: FontWeight.w600,fontSize: 16.sp,color: AppColors.textHeader,)),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
                           decoration: BoxDecoration(
@@ -103,12 +103,12 @@ class PollBottomSheet extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Center(child: CustomTextView(poll.question, fontSize: 16.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,)),
+                          Center(child: CustomTextView(       text: poll.question, fontSize: 16.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,)),
                           SizedBox(height: 10.h),
                           Divider(height: 1),
 
                            SizedBox(height: 20.h),
-                          CustomTextView("Options", fontWeight: FontWeight.w500,fontSize: 14.sp,color: AppColors.textHeader,),
+                          CustomTextView(       text: "Options", fontWeight: FontWeight.w500,fontSize: 14.sp,color: AppColors.textHeader,),
 
                           const SizedBox(height: 12),
 
@@ -186,7 +186,7 @@ class PollBottomSheet extends StatelessWidget {
                                         ),
                                         const SizedBox(width: 12),
                                         Expanded(
-                                          child: CustomTextView(poll.options[index].text, fontWeight: controller
+                                          child: CustomTextView(       text:  poll.options[index].text, fontWeight: controller
                                               .selectedPollOption
                                               .value ==
                                               index ||

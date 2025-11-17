@@ -1,4 +1,4 @@
-import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -126,13 +126,13 @@ class SettingsPage extends StatelessWidget {
 
                         if (user == null || user.bio.trim().isEmpty) {
                           return CustomTextView(
-                            "No bio available",
+                                  text:  "No bio available",
                             fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,
 
                           );
                         }
 
-                        return CustomTextView(user.bio, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
+                        return CustomTextView(       text: user.bio, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
                       }),
 
                       SizedBox(height: 40.h),
@@ -161,13 +161,13 @@ class SettingsPage extends StatelessWidget {
 
                               if (user == null || user.email.trim().isEmpty) {
                                 return CustomTextView(
-                                  "example@gmail.com",
+                                      text:    "example@gmail.com",
                                   fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,
 
                                 );
                               }
 
-                              return CustomTextView(user.email, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
+                              return CustomTextView(       text: user.email, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
                             }),
                           ),
                         ],
@@ -183,13 +183,13 @@ class SettingsPage extends StatelessWidget {
 
                               if (user == null || user.gender.trim().isEmpty) {
                                 return CustomTextView(
-                                  "example@gmail.com",
+                                      text:    "example@gmail.com",
                                   fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,
 
                                 );
                               }
 
-                              return CustomTextView(user.gender, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
+                              return CustomTextView(       text: user.gender, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
                             }),
                           ),
                         ],
@@ -206,7 +206,7 @@ class SettingsPage extends StatelessWidget {
 
                               if (user == null) {
                                 return CustomTextView(
-                                  "New York USA",
+                                        text:  "New York USA",
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18.sp,
                                   color: AppColors.textBody,
@@ -217,7 +217,7 @@ class SettingsPage extends StatelessWidget {
                               final age = calculateAge(user.dob);
 
                               return CustomTextView(
-                                "$formattedDob ($age)",
+                                   text:     "$formattedDob ($age)",
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18.sp,
                                 color: AppColors.textBody,
@@ -239,13 +239,13 @@ class SettingsPage extends StatelessWidget {
 
                               if (user == null || user.address.trim().isEmpty) {
                                 return CustomTextView(
-                                  "New York USA",
+                                     text:    "New York USA",
                                   fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,
 
                                 );
                               }
 
-                              return CustomTextView(user.address, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
+                              return CustomTextView(       text: user.address, fontWeight: FontWeight.w500,fontSize: 18.sp,color: AppColors.textBody,);
                             }),
                           ),
                         ],

@@ -2,7 +2,7 @@ import 'package:elites_live/features/live/presentation/widget/subscription_featu
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 
 
@@ -77,7 +77,7 @@ class SubscriptionPlanCard extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   CustomTextView(
-                    planName,
+                      text:      planName,
                     fontWeight: FontWeight.w600,
                     fontSize: 18.sp,
                     color: AppColors.textBody,
@@ -85,7 +85,7 @@ class SubscriptionPlanCard extends StatelessWidget {
                 ],
               ),
               CustomTextView(
-                price,
+                     text:   price,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textBody,

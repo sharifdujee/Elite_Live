@@ -1,5 +1,5 @@
 
-import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -95,9 +95,9 @@ class AdWidget extends StatelessWidget {
             child: Center(
               child: Column(
                 children: [
-                  CustomTextView('00:${secondsRemaining.toString().padLeft(2, '0')}',fontWeight: FontWeight.w600,fontSize: 18.sp,color: AppColors.white,),
+                  CustomTextView(  text:   '00:${secondsRemaining.toString().padLeft(2, '0')}',fontWeight: FontWeight.w600,fontSize: 18.sp,color: AppColors.white,),
                   SizedBox(height: 4.h,),
-                  CustomTextView('Remaining',fontWeight: FontWeight.w600,fontSize: 18.sp,color: AppColors.white,),
+                  CustomTextView(  text:   'Remaining',fontWeight: FontWeight.w600,fontSize: 18.sp,color: AppColors.white,),
                 ],
               )
 

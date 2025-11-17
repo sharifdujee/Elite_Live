@@ -6,23 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../core/utils/constants/image_path.dart';
 import '../../../profile/controller/profile_controller.dart';
 
-import 'dart:developer';
 
-import 'package:elites_live/routes/app_routing.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/global/custom_text_view.dart';
-import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../core/utils/constants/image_path.dart';
-import '../../../profile/controller/profile_controller.dart';
 
 class TopHeader extends StatelessWidget {
   const TopHeader({
@@ -85,7 +73,7 @@ class TopHeader extends StatelessWidget {
 
                   return user.firstName.isNotEmpty
                       ? CustomTextView(
-                    "${user.firstName} ${user.lastName}",
+                      text:      "${user.firstName} ${user.lastName}",
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.white,
@@ -124,7 +112,7 @@ class TopHeader extends StatelessWidget {
 
                   return user.profession.isNotEmpty
                       ? CustomTextView(
-                    user.profession,
+                          text:  user.profession,
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.white.withOpacity(0.8),

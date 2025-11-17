@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../core/utils/constants/image_path.dart';
+
 
 class LiveIndicatorSection extends StatelessWidget {
   const LiveIndicatorSection({
@@ -19,7 +19,7 @@ class LiveIndicatorSection extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 30.r,
-          backgroundImage: AssetImage(influencerProfile),
+          backgroundImage: NetworkImage(influencerProfile),
         ),
         Positioned(
           bottom: -6.h, // Align to the bottom
@@ -35,7 +35,7 @@ class LiveIndicatorSection extends StatelessWidget {
             ),
             child: isLive?
             CustomTextView(
-              'Live',
+              text:   'Live',
               color: AppColors.white,
               fontWeight: FontWeight.w500,
               fontSize: 14.sp,

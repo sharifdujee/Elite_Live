@@ -1,5 +1,6 @@
 
 import 'package:elites_live/features/event/controller/event_controller.dart';
+import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/controller/live_controller.dart';
@@ -14,11 +15,12 @@ import '../../features/authentication/forgot_pass/controller/forgot_otp_controll
 import '../../features/authentication/forgot_pass/controller/forgot_pass_controller.dart';
 
 import '../../features/authentication/set_up_profile/controller/set_up_profile_controller.dart';
+import '../../features/authentication/sign_in/controller/sign_in_controller.dart';
+import '../../features/authentication/sign_up/controller/sign_up_controller.dart';
+import '../../features/authentication/sign_up/controller/sign_up_otp_controller.dart';
 import '../../features/main_view/controller/main_view_controller.dart';
 import '../../features/on_boarding/controller/slider_controller.dart';
-import '../../features/sign_in/controller/sign_in_controller.dart';
-import '../../features/sign_up/controller/sign_up_controller.dart';
-import '../../features/sign_up/controller/sign_up_otp_controller.dart';
+
 import '../../features/splash/controller/splash_controller.dart';
 import '../global_widget/controller/custom_date_time_dialogue.dart';
 
@@ -46,5 +48,7 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>ProfileController(), fenix: true);
     Get.lazyPut(()=>EditProfileController(), fenix: true);
     Get.lazyPut(()=>ProfileTabsController(), fenix: true);
+    Get.lazyPut(()=>ScheduleController(), fenix: true);
+    Get.lazyPut(()=>EventController(), fenix: true);
   }
 }

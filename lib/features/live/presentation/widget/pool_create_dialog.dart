@@ -221,7 +221,7 @@ class CreatePollDialog {
             borderRadius: BorderRadius.circular(16),
           ),
           title:  CustomTextView(
-            "Add Option",
+                   text: "Add Option",
 
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,

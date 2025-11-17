@@ -1,4 +1,4 @@
-import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/presentation/widget/video_player_section.dart';
@@ -59,7 +59,7 @@ class AllLiveScreen extends StatelessWidget {
                                 SizedBox(height: 4.h),
 
                                 /// designation and hours before live
-                                DesignationSection(),
+                                DesignationSection(designation: "",),
                               ],
                             ),
                           ),
@@ -89,7 +89,7 @@ class AllLiveScreen extends StatelessWidget {
           ),
 
           SizedBox(height: 32.h,),
-          CustomTextView("Top Influencer Live", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,),
+          CustomTextView(  text:   "Top Influencer Live", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,),
           SizedBox(height: 16.h,),
           SizedBox(
             height: 260.h,

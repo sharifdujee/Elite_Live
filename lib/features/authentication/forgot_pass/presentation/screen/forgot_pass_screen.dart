@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../../core/global/custom_appbar.dart';
-import '../../../../../core/global/custom_elevated_button.dart';
-import '../../../../../core/global/custom_text_field.dart';
-import '../../../../../core/global/custom_text_view.dart';
+
+
+import '../../../../../core/global_widget/custom_text_field.dart';
+import '../../../../../core/global_widget/custom_text_view.dart';
+import '../../../../../core/global_widget/custom_appbar.dart';
+import '../../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/validation/email_validation.dart';
 import '../../../../../routes/app_routing.dart';
@@ -52,7 +54,7 @@ class ForgotPassScreen extends StatelessWidget {
               SizedBox(height: 20.h),
               CustomTextView(
                 textAlign: TextAlign.center,
-                "Forgot Password",
+               text:      "Forgot Password",
                 fontWeight: FontWeight.w700,
                 fontSize: 20.sp,
                 color: Color(0xFF2D2D2D),
@@ -60,7 +62,7 @@ class ForgotPassScreen extends StatelessWidget {
               SizedBox(height: 10.h),
               CustomTextView(
                 textAlign: TextAlign.center,
-                "Enter your email to get a verification code.",
+                 text:    "Enter your email to get a verification code.",
                 fontWeight: FontWeight.w400,
                 fontSize: 14.sp,
                 color: Color(0xFF636F85),
@@ -69,7 +71,7 @@ class ForgotPassScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Email Address",
+                   text:    "Email Address",
                   fontSize: 14.sp,
                   color: AppColors.textColorBlack,
                   fontWeight: FontWeight.w400,

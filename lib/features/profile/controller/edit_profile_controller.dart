@@ -8,17 +8,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import '../../../core/global/custom_elevated_button.dart';
-import '../../../core/global/custom_text_view.dart';
+import '../../../core/global_widget/custom_text_view.dart';
 import '../../../core/global_widget/controller/custom_date_time_dialogue.dart';
+import '../../../core/global_widget/custom_elevated_button.dart';
 import '../../../core/helper/shared_prefarenses_helper.dart';
-import '../../../core/utility/app_urls.dart';
-import '../../../core/utility/icon_path.dart';
+
+
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 
 import 'package:http_parser/http_parser.dart';
+
+import '../../../core/utils/constants/app_urls.dart';
+import '../../../core/utils/constants/icon_path.dart';
 
 class EditProfileController extends GetxController {
   final Rx<DateTime?> selectedDate = Rx<DateTime?>(DateTime(2004, 2, 12));
@@ -289,7 +292,7 @@ class EditProfileController extends GetxController {
               ),
               SizedBox(height: 20.h),
               CustomTextView(
-                'Profile Updated Successfully',
+                    text:    'Profile Updated Successfully',
                 fontSize: 24,
                 textAlign: TextAlign.center,
                 fontWeight: FontWeight.bold,

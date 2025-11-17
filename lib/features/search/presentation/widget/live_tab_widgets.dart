@@ -124,7 +124,7 @@ class LiveCardWidget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Image.asset(IconPath.live_group, // eye PNG icon
+                      Image.asset(IconPath.livegroup, // eye PNG icon
                         height: 10.h,
                         width: 10.w,
                         color: Colors.white,

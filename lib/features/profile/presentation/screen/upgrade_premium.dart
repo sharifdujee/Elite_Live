@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../routes/app_routing.dart';
-import '../../controller/edit_profile_controller.dart';
 
 class PremiumPage extends StatelessWidget {
   const PremiumPage({super.key});

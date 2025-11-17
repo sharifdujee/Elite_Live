@@ -1,7 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/global/custom_text_field.dart';
-import '../../../../core/global/custom_text_view.dart';
+import '../../../../core/global_widget/custom_text_field.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/image_path.dart';
 
@@ -30,7 +30,7 @@ class AddContributorDialog {
                     SizedBox(width: 10.w),
                     Expanded(
                       child: CustomTextView(
-                        "Add Contributor",
+                              text:  "Add Contributor",
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textHeader,
@@ -69,7 +69,7 @@ class AddContributorDialog {
                                 ),
                                 SizedBox(width: 8.w),
                                 CustomTextView(
-                                  "Guy Hawkins",
+                                      text:    "Guy Hawkins",
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16.sp,
                                   color: AppColors.textHeader,
@@ -87,7 +87,7 @@ class AddContributorDialog {
                                 ]),
                               ),
                               child: CustomTextView(
-                                "Add",
+                                     text:   "Add",
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.textWhite,

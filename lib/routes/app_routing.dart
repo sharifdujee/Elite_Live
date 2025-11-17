@@ -2,18 +2,17 @@
 
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
-
-import '../../features/forgot_pass/screen/create_new_pass_screen.dart';
-import '../../features/forgot_pass/screen/forgot_otp_screen.dart';
-import '../../features/forgot_pass/screen/forgot_pass_screen.dart';
-import '../../features/forgot_pass/screen/pass_changed_screen.dart';
 import '../../features/on_boarding/screen/slider_screen.dart';
 import '../../features/profile/presentation/screen/edit_profile.dart';
-import '../../features/sign_in/screen/sign_in_screen.dart';
-import '../../features/sign_up/screen/sign_up_otp_screen.dart';
-import '../../features/sign_up/screen/sign_up_screen.dart';
 import '../../features/splash/screen/splash_screen.dart';
+import '../features/authentication/forgot_pass/presentation/screen/create_new_pass_screen.dart';
+import '../features/authentication/forgot_pass/presentation/screen/forgot_otp_screen.dart';
+import '../features/authentication/forgot_pass/presentation/screen/forgot_pass_screen.dart';
+import '../features/authentication/forgot_pass/presentation/screen/pass_changed_screen.dart';
 import '../features/authentication/set_up_profile/screen/set_up_profile_screen.dart';
+import '../features/authentication/sign_in/screen/sign_in_screen.dart';
+import '../features/authentication/sign_up/screen/sign_up_otp_screen.dart';
+import '../features/authentication/sign_up/screen/sign_up_screen.dart';
 import '../features/event/presentation/screen/create_funding_screen.dart';
 import '../features/event/presentation/screen/create_schedule_screen.dart';
 import '../features/group/presentation/screen/create_group.dart';

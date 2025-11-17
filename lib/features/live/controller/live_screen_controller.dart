@@ -1,4 +1,4 @@
-import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -75,8 +75,8 @@ class LiveScreenController extends GetxController {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: CustomTextView("End Session", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
-          content: CustomTextView("Are you sure you want to end this live session?", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center,),
+          title: CustomTextView(       text: "End Session", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
+          content: CustomTextView(       text: "Are you sure you want to end this live session?", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center,),
 
           actions: <Widget>[
             Row(
@@ -106,9 +106,9 @@ class LiveScreenController extends GetxController {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: CustomTextView("Leave Live Session", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
+          title: CustomTextView(       text: "Leave Live Session", fontSize: 18.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
           ///Text(''),
-          content: CustomTextView("Are you sure you want to leave this live session?", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center,),
+          content: CustomTextView(       text: "Are you sure you want to leave this live session?", fontWeight: FontWeight.w400,fontSize: 14.sp,color: AppColors.textBody,textAlign: TextAlign.center,),
           ///Text(''),
           actions: <Widget>[
             Row(

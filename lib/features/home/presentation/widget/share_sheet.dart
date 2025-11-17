@@ -1,6 +1,6 @@
 
 
-import 'package:elites_live/core/global/custom_text_view.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,7 +52,7 @@ class ShareSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CustomTextView("Share To", fontSize: 20.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
+          CustomTextView(       text: "Share To", fontSize: 20.sp,fontWeight: FontWeight.w600,color: AppColors.textHeader,textAlign: TextAlign.center,),
            SizedBox(height: 24.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

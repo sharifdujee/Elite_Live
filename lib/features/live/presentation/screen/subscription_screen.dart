@@ -3,8 +3,9 @@ import 'package:elites_live/features/live/presentation/widget/payment_dialog.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../core/global/custom_elevated_button.dart';
-import '../../../../core/global/custom_text_view.dart';
+
+import '../../../../core/global_widget/custom_text_view.dart';
+import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 
 import '../../controller/subscription_controller.dart';
@@ -50,7 +51,7 @@ class SubscriptionScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 12.w),
                     CustomTextView(
-                      "Subscription",
+                           text:   "Subscription",
                       fontWeight: FontWeight.w600,
                       fontSize: 20.sp,
                       color: AppColors.white,

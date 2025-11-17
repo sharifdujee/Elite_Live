@@ -5,9 +5,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 
-import '../../../../../core/global/custom_appbar.dart';
-import '../../../../../core/global/custom_elevated_button.dart';
-import '../../../../../core/global/custom_text_view.dart';
+
+
+import '../../../../../core/global_widget/custom_text_view.dart';
+import '../../../../../core/global_widget/custom_appbar.dart';
+import '../../../../../core/global_widget/custom_elevated_button.dart';
 import '../../../../../core/utils/constants/app_colors.dart';
 import '../../../../../core/validation/pin_validation.dart';
 import '../../../../../routes/app_routing.dart';
@@ -54,7 +56,7 @@ class ForgotOtpScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
                     textAlign: TextAlign.center,
-                    "Verification Code",
+                   text:     "Verification Code",
                     fontWeight: FontWeight.w600,
                     fontSize: 20.sp,
                     color: Color(0xFF2D2D2D),
@@ -64,7 +66,7 @@ class ForgotOtpScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: CustomTextView(
-                    "Enter the verification code that we have sent to your email",
+                    text:     "Enter the verification code that we have sent to your email",
                     fontWeight: FontWeight.w400,
                     fontSize: 14.sp,
                     color: Color(0xFF636F85),

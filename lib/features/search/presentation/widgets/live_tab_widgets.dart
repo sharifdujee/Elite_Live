@@ -1,8 +1,9 @@
-import 'package:elites_live/core/utility/icon_path.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/utils/constants/icon_path.dart';
 import '../../controller/search_controller.dart';
 
 class LiveTabBody extends StatelessWidget {
@@ -123,7 +124,7 @@ class LiveCardWidget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Image.asset(IconPath.live_group, // eye PNG icon
+                      Image.asset(IconPath.livegroup, // eye PNG icon
                         height: 10.h,
                         width: 10.w,
                         color: Colors.white,

@@ -4,19 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../../../../../core/global/custom_appbar.dart';
-import '../../../../../core/global/custom_date_time_dialog.dart';
-import '../../../../../core/global/custom_date_time_field.dart';
-import '../../../../../core/global/custom_dropdown.dart';
-import '../../../../../core/global/custom_elevated_button.dart';
-import '../../../../../core/global/custom_text_field.dart';
-import '../../../../../core/global/custom_text_view.dart';
+
+
+
+
+import '../../../../core/global_widget/custom_text_field.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../../core/validation/email_validation.dart';
 import '../../../../../core/validation/name_validation.dart';
 import '../../../../../core/validation/phone_number_validation.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../core/global_widget/custom_appbar.dart';
+import '../../../../core/global_widget/custom_date_time_dialogue.dart';
+import '../../../../core/global_widget/custom_date_time_field.dart';
+import '../../../../core/global_widget/custom_drop_down.dart';
+import '../../../../core/global_widget/custom_elevated_button.dart';
 import '../controller/set_up_profile_controller.dart';
 
 class SetUpProfileScreen extends StatelessWidget {
@@ -54,7 +58,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "First Name",
+                  text: "First Name",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -69,7 +73,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Last Name",
+                 text:      "Last Name",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -84,7 +88,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Profession",
+                  text:     "Profession",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -105,7 +109,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Bio",
+                  text:     "Bio",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -120,7 +124,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Email",
+                  text:     "Email",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -136,7 +140,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Phone",
+                  text:     "Phone",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -152,7 +156,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Gender",
+                 text:      "Gender",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -173,7 +177,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Date of Birth",
+                 text:      "Date of Birth",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -202,7 +206,7 @@ class SetUpProfileScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: CustomTextView(
-                  "Address",
+                   text:    "Address",
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
