@@ -107,7 +107,7 @@ class EventScheduleScreen extends StatelessWidget {
                   children: [
                     /// Live indicator
                     LiveIndicatorSection(
-                      influencerProfile: userImage,
+                      influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B',
                       isLive: isLive,
                     ),
 
@@ -124,7 +124,7 @@ class EventScheduleScreen extends StatelessWidget {
 
                           /// Designation and time ago
                           DesignationSection(
-                            designation: profession,
+                            designation: profession??'',
                             timeAgo: timeAgo, // Pass time ago here
                           ),
                         ],

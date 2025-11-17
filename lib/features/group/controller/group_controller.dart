@@ -1,16 +1,20 @@
 import 'dart:developer';
 
+import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
+import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:elites_live/core/utils/constants/image_path.dart';
 import 'package:elites_live/features/group/data/discoverGroup_data_model.dart';
+import 'package:elites_live/features/group/data/joined_group_data_model.dart';
 import 'package:get/get.dart';
 
 class GroupController extends GetxController{
   final NetworkCaller networkCaller = NetworkCaller();
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
   RxList<DiscoverGroupResult> discoverGroupList = <DiscoverGroupResult>[].obs;
+  RxList<JoinedGroupResultResult> joinedGroupList = <JoinedGroupResultResult>[].obs;
 
 
   var isLoading = false.obs;
@@ -20,6 +24,28 @@ class GroupController extends GetxController{
     // TODO: implement onInit
     super.onInit();
     discoverGroup();
+  }
+  
+  Future<void> joinedGroup()async{
+    isLoading.value = true;
+    String?token = helper.getString("userToken");
+    log("the token during fetch my joined group  $token");
+    try{
+      var response = await networkCaller.getRequest(AppUrls.joinedGroup, token: token);
+      if(response.isSuccess){
+        log("the api response is ${response.responseData}");
+        final myGroup = JoinedGroupDataModel.fromJson(response.responseData);
+        joinedGroupList.assignAll(myGroup.result);
+      }
+
+    }
+
+    catch(e){
+      log("the exception is ${e.toString()}");
+    }
+    finally{
+      isLoading.value = false;
+    }
   }
 
   Future<void> discoverGroup() async {
@@ -63,11 +89,69 @@ class GroupController extends GetxController{
       isLoading.value = false;
     }
   }
+  
+  /// join group 
+  Future<void> joinGroup(String groupId) async {
+    isLoading.value = true;
+    Get.dialog(
+      CustomLoading(color: AppColors.primaryColor),
+      barrierDismissible: false,
+    );
 
-  List<String> groupName = ["Gaming", "Dancing Club", "Study Group 2", "Study Group 2", "Study Group 2"];
-  List<String> memberList = ["50", "24", "10", "20", "12"];
-  List<String> groupPicture = [ImagePath.gaming, ImagePath.dance, ImagePath.study, ImagePath.study, ImagePath.study];
-  List<String> userPicture = [ImagePath.user, ImagePath.one, ImagePath.three, ImagePath.two, ImagePath.one];
-  List<String> userName = ["Jane Cooper", "Theresa Webb", "Annette Black", "Robert Fox", "Albert Flores"];
-  List<String> userDescription = ["Restaurant Owner", "Actress", "Student", "Singer", "Biker"];
+    String? token = helper.getString("userToken");
+    log("token during join group is $token");
+
+    try {
+      var response = await networkCaller.postRequest(
+        AppUrls.joinGroup(groupId),
+        body: {},
+        token: token,
+      );
+
+      if (response.isSuccess) {
+        await discoverGroup();
+        // Close dialog on success
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+        // Optional: Show success message
+        Get.snackbar(
+          'Success',
+          'Successfully joined the group',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else {
+        // Close dialog on failure
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+        // Optional: Show error message
+        Get.snackbar(
+          'Error',
+          'Failed to join group',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      log("the exception is ${e.toString()}");
+      // Close dialog on exception
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+      // Optional: Show error message
+      Get.snackbar(
+        'Error',
+        'An error occurred: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+
+  List<String> userPicture = [ImagePath.user, ImagePath.one, ImagePath.three];
+  List<String> userName = ["Jane Cooper", "Theresa Webb", "Annette Black"];
+  List<String> userDescription = ["Restaurant Owner", "Actress", "Student"];
 }

@@ -6,10 +6,17 @@
 
 import 'dart:convert';
 
-CrowdFundingDataModel crowdFundingDataModelFromJson(String str) => CrowdFundingDataModel.fromJson(json.decode(str));
+import 'dart:convert';
 
-String crowdFundingDataModelToJson(CrowdFundingDataModel data) => json.encode(data.toJson());
+CrowdFundingDataModel crowdFundingDataModelFromJson(String str) =>
+    CrowdFundingDataModel.fromJson(json.decode(str));
 
+String crowdFundingDataModelToJson(CrowdFundingDataModel data) =>
+    json.encode(data.toJson());
+
+/// ===============================
+/// PARENT MODEL
+/// ===============================
 class CrowdFundingDataModel {
   bool? success;
   String? message;
@@ -21,11 +28,12 @@ class CrowdFundingDataModel {
     required this.result,
   });
 
-  factory CrowdFundingDataModel.fromJson(Map<String, dynamic> json) => CrowdFundingDataModel(
-    success: json["success"]??true,
-    message: json["message"]??'',
-    result: CrowdFundingResult.fromJson(json["result"]),
-  );
+  factory CrowdFundingDataModel.fromJson(Map<String, dynamic> json) =>
+      CrowdFundingDataModel(
+        success: json["success"] ?? true,
+        message: json["message"] ?? '',
+        result: CrowdFundingResult.fromJson(json["result"]),
+      );
 
   Map<String, dynamic> toJson() => {
     "success": success,
@@ -34,6 +42,9 @@ class CrowdFundingDataModel {
   };
 }
 
+/// ===============================
+/// RESULT MODEL
+/// ===============================
 class CrowdFundingResult {
   int totalCount;
   int totalPages;
@@ -47,12 +58,17 @@ class CrowdFundingResult {
     required this.events,
   });
 
-  factory CrowdFundingResult.fromJson(Map<String, dynamic> json) => CrowdFundingResult(
-    totalCount: json["totalCount"],
-    totalPages: json["totalPages"],
-    currentPage: json["currentPage"],
-    events: List<CrowdFundingEvent>.from(json["events"].map((x) => CrowdFundingEvent.fromJson(x))),
-  );
+  factory CrowdFundingResult.fromJson(Map<String, dynamic> json) =>
+      CrowdFundingResult(
+        totalCount: json["totalCount"] ?? 0,
+        totalPages: json["totalPages"] ?? 0,
+        currentPage: json["currentPage"] ?? 1,
+        events: json["events"] == null
+            ? []
+            : List<CrowdFundingEvent>.from(
+          json["events"].map((x) => CrowdFundingEvent.fromJson(x)),
+        ),
+      );
 
   Map<String, dynamic> toJson() => {
     "totalCount": totalCount,
@@ -62,18 +78,21 @@ class CrowdFundingResult {
   };
 }
 
+/// ===============================
+/// EVENT MODEL
+/// ===============================
 class CrowdFundingEvent {
   String id;
   String userId;
   String eventType;
   String text;
-  dynamic scheduleDate;
-  int payAmount;
+  DateTime? scheduleDate; // nullable
+  double payAmount;
   DateTime createdAt;
   DateTime updatedAt;
   User user;
   Count count;
-  List<dynamic> eventLike;
+  List<EventLike> eventLike;
   bool isLiked;
 
   CrowdFundingEvent({
@@ -91,37 +110,47 @@ class CrowdFundingEvent {
     required this.isLiked,
   });
 
-  factory CrowdFundingEvent.fromJson(Map<String, dynamic> json) => CrowdFundingEvent(
-    id: json["id"],
-    userId: json["userId"],
-    eventType: json["eventType"],
-    text: json["text"],
-    scheduleDate: json["scheduleDate"],
-    payAmount: json["payAmount"],
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
-    user: User.fromJson(json["user"]),
-    count: Count.fromJson(json["_count"]),
-    eventLike: List<dynamic>.from(json["EventLike"].map((x) => x)),
-    isLiked: json["isLiked"],
-  );
+  factory CrowdFundingEvent.fromJson(Map<String, dynamic> json) =>
+      CrowdFundingEvent(
+        id: json["id"] ?? '',
+        userId: json["userId"] ?? '',
+        eventType: json["eventType"] ?? '',
+        text: json["text"] ?? '',
+        scheduleDate: json["scheduleDate"] == null
+            ? null
+            : DateTime.tryParse(json["scheduleDate"]),
+        payAmount: (json["payAmount"] ?? 0).toDouble(),
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
+        user: User.fromJson(json["user"]),
+        count: Count.fromJson(json["_count"]),
+        eventLike: json["EventLike"] == null
+            ? []
+            : List<EventLike>.from(
+          json["EventLike"].map((x) => EventLike.fromJson(x)),
+        ),
+        isLiked: json["isLiked"] ?? false,
+      );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "userId": userId,
     "eventType": eventType,
     "text": text,
-    "scheduleDate": scheduleDate,
+    "scheduleDate": scheduleDate?.toIso8601String(),
     "payAmount": payAmount,
     "createdAt": createdAt.toIso8601String(),
     "updatedAt": updatedAt.toIso8601String(),
     "user": user.toJson(),
     "_count": count.toJson(),
-    "EventLike": List<dynamic>.from(eventLike.map((x) => x)),
+    "EventLike": List<dynamic>.from(eventLike.map((x) => x.toJson())),
     "isLiked": isLiked,
   };
 }
 
+/// ===============================
+/// LIKE COUNT MODEL
+/// ===============================
 class Count {
   int eventLike;
   int eventComment;
@@ -132,8 +161,8 @@ class Count {
   });
 
   factory Count.fromJson(Map<String, dynamic> json) => Count(
-    eventLike: json["EventLike"],
-    eventComment: json["EventComment"],
+    eventLike: json["EventLike"] ?? 0,
+    eventComment: json["EventComment"] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {
@@ -142,27 +171,44 @@ class Count {
   };
 }
 
+/// ===============================
+/// EVENT LIKE MODEL
+/// ===============================
+class EventLike {
+  String id;
+
+  EventLike({required this.id});
+
+  factory EventLike.fromJson(Map<String, dynamic> json) =>
+      EventLike(id: json["id"] ?? '');
+
+  Map<String, dynamic> toJson() => {"id": id};
+}
+
+/// ===============================
+/// USER MODEL
+/// ===============================
 class User {
   String id;
   String firstName;
   String lastName;
-  String profileImage;
-  String profession;
+  String? profileImage; // nullable
+  String? profession;  // nullable
 
   User({
     required this.id,
     required this.firstName,
     required this.lastName,
-    required this.profileImage,
-    required this.profession,
+    this.profileImage,
+    this.profession,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"],
-    firstName: json["firstName"],
-    lastName: json["lastName"],
-    profileImage: json["profileImage"],
-    profession: json["profession"],
+    id: json["id"] ?? '',
+    firstName: json["firstName"] ?? '',
+    lastName: json["lastName"] ?? '',
+    profileImage: json["profileImage"], // may be null
+    profession: json["profession"], // may be null
   );
 
   Map<String, dynamic> toJson() => {
@@ -173,3 +219,4 @@ class User {
     "profession": profession,
   };
 }
+

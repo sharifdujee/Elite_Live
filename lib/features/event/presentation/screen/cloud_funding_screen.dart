@@ -53,7 +53,7 @@ class CloudFundingScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// live indicator
-                  LiveIndicatorSection(influencerProfile: userImage, isLive: isLive,),
+                  LiveIndicatorSection(influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B', isLive: isLive,),
 
                   SizedBox(width: 12.w),
 
@@ -67,7 +67,7 @@ class CloudFundingScreen extends StatelessWidget {
                         SizedBox(height: 4.h),
 
                         /// designation and hours before live
-                        DesignationSection(designation: designation,timeAgo: timeAgo,),
+                        DesignationSection(designation: designation??'',timeAgo: timeAgo,),
                       ],
                     ),
                   ),

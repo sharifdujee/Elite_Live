@@ -161,9 +161,12 @@ class DiscoverGroup extends StatelessWidget {
 
                           return GestureDetector(
                             onTap: (){
-                              Get.toNamed(AppRoute.groupPost, arguments: 'groupName');
+                              Get.toNamed(AppRoute.groupPost, arguments: {'groupId': group.id});
                             },
                             child: GroupSection(
+                              onTap: (){
+                                controller.joinGroup(group.id);
+                              },
                               buttonText: "Join Now",
                               groupName: groupName,
                               groupMember: groupMember.toString(),

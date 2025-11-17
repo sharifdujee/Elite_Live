@@ -3,11 +3,19 @@
 //     final scheduleEventDataModel = scheduleEventDataModelFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:convert';
 
-ScheduleEventDataModel scheduleEventDataModelFromJson(String str) => ScheduleEventDataModel.fromJson(json.decode(str));
+/// Encoding / Decoding helpers
+ScheduleEventDataModel scheduleEventDataModelFromJson(String str) =>
+    ScheduleEventDataModel.fromJson(json.decode(str));
 
-String scheduleEventDataModelToJson(ScheduleEventDataModel data) => json.encode(data.toJson());
+String scheduleEventDataModelToJson(ScheduleEventDataModel data) =>
+    json.encode(data.toJson());
 
+
+/// ===============================
+/// MAIN DATA MODEL
+/// ===============================
 class ScheduleEventDataModel {
   bool? success;
   String? message;
@@ -19,11 +27,12 @@ class ScheduleEventDataModel {
     required this.result,
   });
 
-  factory ScheduleEventDataModel.fromJson(Map<String, dynamic> json) => ScheduleEventDataModel(
-    success: json["success"]??true,
-    message: json["message"]??'',
-    result: ScheduleEventResult.fromJson(json["result"]),
-  );
+  factory ScheduleEventDataModel.fromJson(Map<String, dynamic> json) =>
+      ScheduleEventDataModel(
+        success: json["success"] ?? true,
+        message: json["message"] ?? '',
+        result: ScheduleEventResult.fromJson(json["result"]),
+      );
 
   Map<String, dynamic> toJson() => {
     "success": success,
@@ -32,6 +41,9 @@ class ScheduleEventDataModel {
   };
 }
 
+/// ===============================
+/// RESULT DATA
+/// ===============================
 class ScheduleEventResult {
   int totalCount;
   int totalPages;
@@ -45,12 +57,17 @@ class ScheduleEventResult {
     required this.events,
   });
 
-  factory ScheduleEventResult.fromJson(Map<String, dynamic> json) => ScheduleEventResult(
-    totalCount: json["totalCount"],
-    totalPages: json["totalPages"],
-    currentPage: json["currentPage"],
-    events: List<LiveEvent>.from(json["events"].map((x) => LiveEvent.fromJson(x))),
-  );
+  factory ScheduleEventResult.fromJson(Map<String, dynamic> json) =>
+      ScheduleEventResult(
+        totalCount: json["totalCount"] ?? 0,
+        totalPages: json["totalPages"] ?? 0,
+        currentPage: json["currentPage"] ?? 1,
+        events: json["events"] == null
+            ? []
+            : List<LiveEvent>.from(
+          json["events"].map((x) => LiveEvent.fromJson(x)),
+        ),
+      );
 
   Map<String, dynamic> toJson() => {
     "totalCount": totalCount,
@@ -60,6 +77,9 @@ class ScheduleEventResult {
   };
 }
 
+/// ===============================
+/// LIVE EVENT
+/// ===============================
 class LiveEvent {
   String id;
   String userId;
@@ -90,18 +110,22 @@ class LiveEvent {
   });
 
   factory LiveEvent.fromJson(Map<String, dynamic> json) => LiveEvent(
-    id: json["id"],
-    userId: json["userId"],
-    eventType: json["eventType"],
-    text: json["text"],
+    id: json["id"] ?? '',
+    userId: json["userId"] ?? '',
+    eventType: json["eventType"] ?? '',
+    text: json["text"] ?? '',
     scheduleDate: DateTime.parse(json["scheduleDate"]),
     payAmount: (json["payAmount"] ?? 0).toDouble(),
     createdAt: DateTime.parse(json["createdAt"]),
     updatedAt: DateTime.parse(json["updatedAt"]),
     user: User.fromJson(json["user"]),
     count: Count.fromJson(json["_count"]),
-    eventLike: List<EventLike>.from(json["EventLike"].map((x) => EventLike.fromJson(x))),
-    isLiked: json["isLiked"] ?? false, // Handle null by defaulting to false
+    eventLike: (json["EventLike"] == null)
+        ? []
+        : List<EventLike>.from(
+      json["EventLike"].map((x) => EventLike.fromJson(x)),
+    ),
+    isLiked: json["isLiked"] ?? false,
   );
 
   Map<String, dynamic> toJson() => {
@@ -120,6 +144,9 @@ class LiveEvent {
   };
 }
 
+/// ===============================
+/// COUNT MODEL
+/// ===============================
 class Count {
   int eventLike;
   int eventComment;
@@ -130,8 +157,8 @@ class Count {
   });
 
   factory Count.fromJson(Map<String, dynamic> json) => Count(
-    eventLike: json["EventLike"],
-    eventComment: json["EventComment"],
+    eventLike: json["EventLike"] ?? 0,
+    eventComment: json["EventComment"] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {
@@ -140,6 +167,9 @@ class Count {
   };
 }
 
+/// ===============================
+/// EVENT LIKE
+/// ===============================
 class EventLike {
   String id;
 
@@ -148,7 +178,7 @@ class EventLike {
   });
 
   factory EventLike.fromJson(Map<String, dynamic> json) => EventLike(
-    id: json["id"],
+    id: json["id"] ?? '',
   );
 
   Map<String, dynamic> toJson() => {
@@ -156,27 +186,30 @@ class EventLike {
   };
 }
 
+/// ===============================
+/// USER MODEL
+/// ===============================
 class User {
   String id;
   String firstName;
   String lastName;
-  String profileImage;
-  String profession;
+  String? profileImage; // nullable
+  String? profession;  // nullable
 
   User({
     required this.id,
     required this.firstName,
     required this.lastName,
-    required this.profileImage,
-    required this.profession,
+    this.profileImage,
+    this.profession,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"],
-    firstName: json["firstName"],
-    lastName: json["lastName"],
-    profileImage: json["profileImage"],
-    profession: json["profession"],
+    id: json["id"] ?? '',
+    firstName: json["firstName"] ?? '',
+    lastName: json["lastName"] ?? '',
+    profileImage: json["profileImage"], // may be null
+    profession: json["profession"], // may be null
   );
 
   Map<String, dynamic> toJson() => {
@@ -187,3 +220,5 @@ class User {
     "profession": profession,
   };
 }
+
+

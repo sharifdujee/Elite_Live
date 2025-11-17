@@ -2,6 +2,9 @@
 import 'package:elites_live/features/event/controller/event_controller.dart';
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:elites_live/features/group/controller/group_controller.dart';
+import 'package:elites_live/features/group/controller/group_post_controller.dart';
+import 'package:elites_live/features/group/controller/invite_group_controller.dart';
+import 'package:elites_live/features/group/controller/my_group_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/controller/live_controller.dart';
 import 'package:elites_live/features/home/controller/video_player_controller.dart';
@@ -50,5 +53,8 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>ProfileTabsController(), fenix: true);
     Get.lazyPut(()=>ScheduleController(), fenix: true);
     Get.lazyPut(()=>EventController(), fenix: true);
+    Get.lazyPut(()=>MyGroupController(), fenix: true);
+    Get.lazyPut(()=>GroupPostController(), fenix: true);
+    Get.lazyPut(()=>InviteGroupController(), fenix: true);
   }
 }

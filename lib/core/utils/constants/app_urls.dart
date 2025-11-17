@@ -39,6 +39,19 @@ class AppUrls {
   /// Group flow
   static const String createGroup = "$_baseUrl/group/create";
   static const String discoverGroup = "$_baseUrl/group/discover-groups";
+  static String joinGroup(String groupId) => "$_baseUrl/group/join-group/$groupId";
+  static const String joinedGroup = "$_baseUrl/group/joined-groups";
+  static String groupInfo(String groupId) => "$_baseUrl/group/$groupId";
+  static String groupUser(String groupId) => "$_baseUrl/group/all-users/invite/$groupId";
+
+  static String searchUser(String groupId, String search) => "$_baseUrl/group/all-users/invite/$groupId?search=$search";
+  static String leaveGroup(String groupId) => "$_baseUrl/group/leave-group/$groupId";
+  static String inviteGroup(String groupId, String userId) => "$_baseUrl/group/invite-group/$groupId/$userId";
+  static String updateGroup(String groupId) => "$_baseUrl/group/$groupId";
+  static String deleteGroup(String groupId) => "$_baseUrl/group/$groupId";
+  static String createGroupPost(String groupId) => "$_baseUrl/group/create/post/$groupId";
+  static String deleteGroupPost(String postId) => "$_baseUrl/group/post/$postId";
+
 
   static const String googleAuth = '$_baseUrl/auth/google-login';
 }
