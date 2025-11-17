@@ -55,7 +55,10 @@ class CreateGroupController extends GetxController {
     }
 
     isLoading.value = true;
-    Get.dialog(CustomLoading(color: AppColors.primaryColor), barrierDismissible: false);
+    Get.dialog(
+      CustomLoading(color: AppColors.primaryColor),
+      barrierDismissible: false,
+    );
 
     String? token = helper.getString("userToken");
     log("token: $token");
@@ -67,20 +70,58 @@ class CreateGroupController extends GetxController {
         "Authorization": "$token",
       });
 
+      // Add fields
       request.fields['groupName'] = groupNameController.text.trim();
       request.fields['description'] = descriptionController.text.trim();
+      request.fields['isPublic'] = isPublic.value.toString();
 
+      // Add file
       String filePath = selectedImage.value!.path;
-      if (!await selectedImage.value!.exists()) throw Exception("File does not exist");
+      if (!await selectedImage.value!.exists()) {
+        throw Exception("File does not exist");
+      }
 
       String ext = filePath.split('.').last.toLowerCase();
       MediaType type = ['jpg', 'jpeg'].contains(ext)
           ? MediaType('image', 'jpeg')
-          : ext == 'png'
+          : (ext == 'png'
           ? MediaType('image', 'png')
-          : MediaType('image', 'jpeg');
+          : MediaType('image', 'jpeg'));
 
-      request.files.add(await http.MultipartFile.fromPath('groupPhoto', filePath, contentType: type));
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'groupPhoto',
+          filePath,
+          contentType: type,
+        ),
+      );
+
+      // ================================
+      //  🚀 LOG FULL REQUEST BODY HERE
+      // ================================
+      log("======= MULTIPART REQUEST LOG =======");
+
+      log("Headers:");
+      request.headers.forEach((key, value) {
+        log("  $key: $value");
+      });
+
+      log("Fields:");
+      request.fields.forEach((key, value) {
+        log("  $key: $value");
+      });
+
+      log("Files:");
+      for (var file in request.files) {
+        log("  Field: ${file.field}");
+        log("  Filename: ${file.filename}");
+        log("  Content-Type: ${file.contentType}");
+        log("  File length: ${file.length}");
+      }
+
+      log("======= END REQUEST LOG =======");
+
+      // ================================
 
       log("Sending request...");
       var streamedResponse = await request.send();
@@ -92,10 +133,10 @@ class CreateGroupController extends GetxController {
       var responseData = jsonDecode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // ✅ Close loading dialog safely
         if (Get.isDialogOpen ?? false) Get.back();
 
         log("Group created: $responseData");
+
         Get.snackbar(
           'Success',
           responseData['message'] ?? 'Group created successfully',
@@ -109,7 +150,6 @@ class CreateGroupController extends GetxController {
         selectedImage.value = null;
         isPublic.value = false;
       } else {
-        // ✅ Close loading dialog before showing error
         if (Get.isDialogOpen ?? false) Get.back();
 
         Get.snackbar(
@@ -124,7 +164,6 @@ class CreateGroupController extends GetxController {
       log("Exception: ${e.toString()}");
       log("Stack trace: $stackTrace");
 
-      // ✅ Close loading before showing error
       if (Get.isDialogOpen ?? false) Get.back();
 
       Get.snackbar(
@@ -142,7 +181,8 @@ class CreateGroupController extends GetxController {
 
 
 
-  /// create Group - SOLUTION 2: Remove isPublic from request (use default or send separately)
+
+
 
 
 
