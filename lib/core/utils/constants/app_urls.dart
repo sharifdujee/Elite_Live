@@ -51,6 +51,10 @@ class AppUrls {
   static String deleteGroup(String groupId) => "$_baseUrl/group/$groupId";
   static String createGroupPost(String groupId) => "$_baseUrl/group/create/post/$groupId";
   static String deleteGroupPost(String postId) => "$_baseUrl/group/post/$postId";
+  static String getPostInfo(String postId) => "$_baseUrl/group/postinfo/$postId";
+  static String createPostComment(String postId) => "$_baseUrl/group/comment/post/$postId";
+  static String likePost (String postId) => "$_baseUrl/group/like/post/$postId";
+  static String replyComment(String commentId) => "$_baseUrl/group/reply-comment/post/$commentId";
 
 
   static const String googleAuth = '$_baseUrl/auth/google-login';

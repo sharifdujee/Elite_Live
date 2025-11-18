@@ -7,6 +7,7 @@ import 'package:elites_live/core/services/network_caller/repository/network_call
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:elites_live/features/group/controller/my_group_controller.dart';
+import 'package:elites_live/features/group/data/post_info_data_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:http/http.dart'as http;
@@ -23,11 +24,14 @@ class GroupPostController extends GetxController {
   final TextEditingController groupNameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
+  final TextEditingController commentController = TextEditingController();
+  final TextEditingController replyController = TextEditingController();
   Rx<File?> selectedImage = Rx<File?>(null);
   RxBool isPublic = false.obs;
   final ImagePicker _picker = ImagePicker();
 
   Rx<GroupInfoResult?> groupInfo = Rx<GroupInfoResult?>(null);
+  Rx<PostInfoResult?> postInfo = Rx<PostInfoResult?>(null);
   final MyGroupController controller = Get.find();
 
   /// Get group information
@@ -433,6 +437,222 @@ class GroupPostController extends GetxController {
       isLoading.value = false;
     }
   }
+  /// delete group post
+  Future<void> createPostComment(String postId) async {
+    if (commentController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please write a comment',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+    String? token = helper.getString("userToken");
+
+    try {
+      var response = await networkCaller.postRequest(
+        AppUrls.createPostComment(postId),
+        body: {"comment": commentController.text.trim()},
+        token: token,
+      );
+
+      if (response.isSuccess) {
+        Get.snackbar(
+          'Success',
+          'Comment added successfully',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+
+        // Clear comment field
+        commentController.clear();
+
+        // Refresh post information to show new comment
+        await getPostInformation(postId);
+      }
+    } catch (e) {
+      log("Error creating comment: ${e.toString()}");
+      Get.snackbar(
+        'Error',
+        'Failed to add comment',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+   /// create Like Unlike
+   Future<void> likePost(String postId) async{
+    isLoading.value = true;
+    String?token = helper.getString("userToken");
+    log("the token during like post is $token");
+    try{
+      var response = await networkCaller.postRequest(AppUrls.likePost(postId), body: {}, token: token);
+      if(response.isSuccess){
+        log("the api response is ${response.responseData}");
+        Get.snackbar(
+          'Success',
+          'Comment created successfully',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        Get.back();
+        await getPostInformation(postId);
+      }
+      
+    }
+    catch(e){
+      log("the error is ${e.toString()}");
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      // Show error message
+      Get.snackbar(
+        'Error',
+        'An error occurred while creating the post',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+    
+    finally{
+      isLoading.value = false;
+    }
+   }
+
+   /// get post information
+  Future<void> getPostInformation(String postId)async{
+    isLoading.value = true;
+    String?token = helper.getString("userToken");
+    log("the token during like post is $token");
+
+    try{
+      var response = await networkCaller.getRequest(AppUrls.getPostInfo(postId), token: token);
+      log("Response isSuccess: ${response.isSuccess}");
+      log("Response data type: ${response.responseData.runtimeType}");
+
+      if (response.isSuccess && response.responseData != null) {
+        log("Raw API response: ${response.responseData}");
+
+        Map<String, dynamic> jsonData;
+
+        if (response.responseData is String) {
+          jsonData = json.decode(response.responseData);
+        } else if (response.responseData is Map<String, dynamic>) {
+          jsonData = response.responseData;
+        } else {
+          throw Exception(
+            "Unexpected response type: ${response.responseData.runtimeType}",
+          );
+        }
+
+        log("Parsed JSON data keys: ${jsonData.keys.toList()}");
+
+        final postResult = PostInfoResult.fromJson(jsonData);
+        postInfo.value = postResult;
+
+        log("SUCCESS! Post parsed: ${postResult..content}");
+        log("Total posts: ${postResult.commentGroupPost.length}");
+
+        if (postResult.commentGroupPost.isNotEmpty) {
+          log("First post by: ${postResult.commentGroupPost[0].user.firstName}");
+        }
+      } else {
+        log("API call failed or returned null data");
+        groupInfo.value = null;
+      }
+
+    }
+    catch(e){
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      // Show error message
+      Get.snackbar(
+        'Error',
+        'An error occurred while creating the post',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+
+    }
+
+    finally{
+      isLoading.value = false;
+    }
+
+  }
+
+   /// reply comment
+  /// reply comment
+  Future<void> createReply(String commentId, String postId) async {
+    if (replyController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please write a reply',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+    String? token = helper.getString("userToken");
+    log("token during reply comment: $token");
+
+    try {
+      var response = await networkCaller.postRequest(
+        AppUrls.replyComment(commentId),
+        body: {"replyComment": replyController.text.trim()},
+        token: token,
+      );
+
+      if (response.isSuccess) {
+        log("Reply created: ${response.responseData}");
+
+        Get.snackbar(
+          'Success',
+          'Reply added successfully',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+
+        // Clear reply field
+        replyController.clear();
+
+        // Close reply bottom sheet
+        Get.back();
+
+        // Refresh post information to show new reply
+        await getPostInformation(postId);
+      }
+    } catch (e) {
+      log("Error creating reply: ${e.toString()}");
+
+      Get.snackbar(
+        'Error',
+        'Failed to add reply',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
 
   Future<void> pickImageFromCamera() async {
     try {

@@ -31,7 +31,8 @@ class GroupPostScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Fetch group info when screen loads
     Future.microtask(() => groupPostController.getGroupInfo(groupId));
-    log("the Group id is $groupId");
+
+    log("the Group id is***** $groupId");
 
     return Scaffold(
       backgroundColor: AppColors.bgColor,
@@ -275,7 +276,6 @@ class GroupPostScreen extends StatelessWidget {
       },
     );
   }
-
   void _showLeaveConfirmation(BuildContext context) {
     showDialog(
       context: context,

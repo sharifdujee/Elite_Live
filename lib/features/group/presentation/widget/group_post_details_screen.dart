@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/features/group/controller/group_post_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import '../../../home/data/comment_data_model.dart';
 import '../../../home/presentation/widget/comment_input_box.dart';
 import '../../../home/presentation/widget/share_sheet.dart';
 import '../../data/group_info_data_model.dart';
+import '../../data/post_info_data_model.dart';
 class GroupPostDetailsSection extends StatelessWidget {
    GroupPostDetailsSection({
     super.key,
@@ -232,7 +234,8 @@ class GroupPostDetailsSection extends StatelessWidget {
               // Like Button
               GestureDetector(
                 onTap: () {
-                  log("Like post: ${post.id}");
+                  groupPostController.likePost(post.id);
+                  ///log("Like post: ${post.id}");
                   // Add like/unlike logic
                 },
                 child: Row(
@@ -256,8 +259,10 @@ class GroupPostDetailsSection extends StatelessWidget {
               // Comment Button
               GestureDetector(
                 onTap: () {
+                  _showPostCommentsBottomSheet(context, post.id);
+
                   log("View comments for post: ${post.id}");
-                  // Navigate to comments or expand comments
+
                 },
                 child: Row(
                   children: [
@@ -336,7 +341,9 @@ class GroupPostDetailsSection extends StatelessWidget {
           SizedBox(height: 10.h),
 
           // Comment Input Box
-          CommentInputBox(),
+          /*CommentInputBox(onTap: (){
+            groupPostController.createPostComment(post.id);
+          },),*/
         ],
       ),
     );
@@ -377,6 +384,475 @@ class GroupPostDetailsSection extends StatelessWidget {
     }
     return count.toString();
   }
+
+   void _showPostCommentsBottomSheet(BuildContext context, String postId) {
+
+     groupPostController.getPostInformation(postId);
+
+     Get.bottomSheet(
+       Container(
+         height: Get.height * 0.85,
+         decoration: BoxDecoration(
+           color: Colors.white,
+           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+         ),
+         child: Column(
+           children: [
+             // Handle bar and header
+             Container(
+               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+               decoration: BoxDecoration(
+                 border: Border(
+                   bottom: BorderSide(color: Color(0xFFEDEEF4), width: 1.w),
+                 ),
+               ),
+               child: Column(
+                 children: [
+                   // Handle bar
+                   Container(
+                     width: 40.w,
+                     height: 4.h,
+                     decoration: BoxDecoration(
+                       color: Colors.grey[300],
+                       borderRadius: BorderRadius.circular(2.r),
+                     ),
+                   ),
+                   SizedBox(height: 16.h),
+                   // Header
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                       CustomTextView(
+                         text: "Comments",
+                         fontSize: 18.sp,
+                         fontWeight: FontWeight.w600,
+                         color: AppColors.textHeader,
+                       ),
+                       IconButton(
+                         onPressed: () => Get.back(),
+                         icon: Icon(Icons.close, size: 24.sp),
+                       ),
+                     ],
+                   ),
+                 ],
+               ),
+             ),
+
+             // Content area
+             Expanded(
+               child: Obx(() {
+                 if (groupPostController.isLoading.value) {
+                   return Center(
+                     child: CustomLoading(
+                       color: AppColors.primaryColor,
+                     ),
+                   );
+                 }
+
+                 final postInfo = groupPostController.postInfo.value;
+
+                 if (postInfo == null) {
+                   return Center(
+                     child: CustomTextView(
+                       text: "No comments yet",
+                       fontSize: 14.sp,
+                       color: AppColors.textBody,
+                     ),
+                   );
+                 }
+
+                 return SingleChildScrollView(
+                   padding: EdgeInsets.all(16.w),
+                   child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       // Original Post
+                       _buildOriginalPost(postInfo),
+
+                       SizedBox(height: 24.h),
+
+                       // Comments count
+                       CustomTextView(
+                         text: "${postInfo.commentGroupPost.length} Comments",
+                         fontSize: 16.sp,
+                         fontWeight: FontWeight.w600,
+                         color: AppColors.textHeader,
+                       ),
+
+                       SizedBox(height: 16.h),
+
+                       // Comments List
+                       if (postInfo.commentGroupPost.isEmpty)
+                         Center(
+                           child: Padding(
+                             padding: EdgeInsets.symmetric(vertical: 40.h),
+                             child: Column(
+                               children: [
+                                 Icon(
+                                   FontAwesomeIcons.comment,
+                                   size: 48.sp,
+                                   color: Colors.grey[300],
+                                 ),
+                                 SizedBox(height: 16.h),
+                                 CustomTextView(
+                                   text: "No comments yet",
+                                   fontSize: 14.sp,
+                                   color: AppColors.textBody,
+                                 ),
+                               ],
+                             ),
+                           ),
+                         )
+                       else
+                         ListView.separated(
+                           shrinkWrap: true,
+                           physics: NeverScrollableScrollPhysics(),
+                           itemCount: postInfo.commentGroupPost.length,
+                           separatorBuilder: (context, index) => Divider(
+                             height: 32.h,
+                             color: Color(0xFFEDEEF4),
+                           ),
+                           itemBuilder: (context, index) {
+                             final comment = postInfo.commentGroupPost[index];
+                             return _buildCommentItem(comment, postId);
+                           },
+                         ),
+                     ],
+                   ),
+                 );
+               }),
+             ),
+
+             // Comment Input at bottom
+             Container(
+               padding: EdgeInsets.all(16.w),
+               decoration: BoxDecoration(
+                 color: Colors.white,
+                 border: Border(
+                   top: BorderSide(color: Color(0xFFEDEEF4), width: 1.w),
+                 ),
+               ),
+               child: Row(
+                 children: [
+                   Expanded(
+                     child: TextField(
+                       controller: groupPostController.commentController,
+                       decoration: InputDecoration(
+                         hintText: "Write a comment...",
+                         hintStyle: TextStyle(
+                           fontSize: 14.sp,
+                           color: Colors.grey[400],
+                         ),
+                         filled: true,
+                         fillColor: Color(0xFFF5F5F5),
+                         border: OutlineInputBorder(
+                           borderRadius: BorderRadius.circular(24.r),
+                           borderSide: BorderSide.none,
+                         ),
+                         contentPadding: EdgeInsets.symmetric(
+                           horizontal: 16.w,
+                           vertical: 12.h,
+                         ),
+                       ),
+                       maxLines: null,
+                     ),
+                   ),
+                   SizedBox(width: 8.w),
+                   GestureDetector(
+                     onTap: () {
+                       if (groupPostController.commentController.text.trim().isNotEmpty) {
+                         groupPostController.createPostComment(postId);
+                       }
+                     },
+                     child: Container(
+                       padding: EdgeInsets.all(12.w),
+                       decoration: BoxDecoration(
+                         color: AppColors.primaryColor,
+                         shape: BoxShape.circle,
+                       ),
+                       child: Icon(
+                         Icons.send,
+                         color: Colors.white,
+                         size: 20.sp,
+                       ),
+                     ),
+                   ),
+                 ],
+               ),
+             ),
+           ],
+         ),
+       ),
+       isScrollControlled: true,
+       isDismissible: true,
+       enableDrag: true,
+     );
+   }
+
+   Widget _buildOriginalPost(PostInfoResult postInfo) {
+     return Container(
+       padding: EdgeInsets.all(16.w),
+       decoration: BoxDecoration(
+         color: Color(0xFFF5F5F5),
+         borderRadius: BorderRadius.circular(12.r),
+       ),
+       child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+           Row(
+             children: [
+               CircleAvatar(
+                 backgroundImage: postInfo.user.profileImage != null
+                     ? NetworkImage(postInfo.user.profileImage!)
+                     : AssetImage(ImagePath.dance) as ImageProvider,
+                 radius: 20.r,
+               ),
+               SizedBox(width: 12.w),
+               Expanded(
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     CustomTextView(
+                       text: "${postInfo.user.firstName} ${postInfo.user.lastName}",
+                       fontSize: 16.sp,
+                       fontWeight: FontWeight.w600,
+                       color: AppColors.textHeader,
+                     ),
+                     SizedBox(height: 4.h),
+                     CustomTextView(
+                       text: _formatDate(postInfo.createdAt),
+                       fontSize: 12.sp,
+                       fontWeight: FontWeight.w400,
+                       color: AppColors.textBody,
+                     ),
+                   ],
+                 ),
+               ),
+             ],
+           ),
+           SizedBox(height: 12.h),
+           CustomTextView(
+             text: postInfo.content,
+             fontSize: 14.sp,
+             fontWeight: FontWeight.w400,
+             color: AppColors.textBody,
+           ),
+         ],
+       ),
+     );
+   }
+
+   Widget _buildCommentItem(CommentGroupPost comment, String postId) {
+     return Column(
+       crossAxisAlignment: CrossAxisAlignment.start,
+       children: [
+         Row(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+             CircleAvatar(
+               backgroundImage: AssetImage(ImagePath.dance),
+               radius: 18.r,
+             ),
+             SizedBox(width: 12.w),
+             Expanded(
+               child: Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   CustomTextView(
+                     text: "${comment.user.firstName} ${comment.user.lastName}",
+                     fontSize: 14.sp,
+                     fontWeight: FontWeight.w600,
+                     color: AppColors.textHeader,
+                   ),
+                   SizedBox(height: 4.h),
+                   if (comment.comment.isNotEmpty)
+                     CustomTextView(
+                       text: comment.comment,
+                       fontSize: 13.sp,
+                       fontWeight: FontWeight.w400,
+                       color: AppColors.textBody,
+                     ),
+                   SizedBox(height: 8.h),
+                   Row(
+                     children: [
+                       CustomTextView(
+                         text: _getTimeAgo(comment.createdAt),
+                         fontSize: 12.sp,
+                         fontWeight: FontWeight.w400,
+                         color: Colors.grey[500]!,
+                       ),
+                       SizedBox(width: 16.w),
+                       GestureDetector(
+                         onTap: () {
+                           _showReplyBottomSheet(comment.id, comment.user.firstName, postId);
+                         },
+                         child: CustomTextView(
+                           text: "Reply",
+                           fontSize: 12.sp,
+                           fontWeight: FontWeight.w500,
+                           color: AppColors.primaryColor,
+                         ),
+                       ),
+                     ],
+                   ),
+
+                   // Replies section
+                   if (comment.replyCommentGroupPost.isNotEmpty) ...[
+                     SizedBox(height: 12.h),
+                     ...comment.replyCommentGroupPost.map((reply) =>
+                         Padding(
+                           padding: EdgeInsets.only(left: 32.w, top: 12.h),
+                           child: Row(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                             children: [
+                               CircleAvatar(
+                                 backgroundImage: AssetImage(ImagePath.dance),
+                                 radius: 14.r,
+                               ),
+                               SizedBox(width: 8.w),
+                               Expanded(
+                                 child: Column(
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                   children: [
+                                     CustomTextView(
+                                       text: "${reply.user.firstName} ${reply.user.lastName}",
+                                       fontSize: 13.sp,
+                                       fontWeight: FontWeight.w600,
+                                       color: AppColors.textHeader,
+                                     ),
+                                     SizedBox(height: 4.h),
+                                     CustomTextView(
+                                       text: reply.replyComment,
+                                       fontSize: 12.sp,
+                                       fontWeight: FontWeight.w400,
+                                       color: AppColors.textBody,
+                                     ),
+                                     SizedBox(height: 4.h),
+                                     CustomTextView(
+                                       text: _getTimeAgo(reply.createdAt),
+                                       fontSize: 11.sp,
+                                       fontWeight: FontWeight.w400,
+                                       color: Colors.grey[500]!,
+                                     ),
+                                   ],
+                                 ),
+                               ),
+                             ],
+                           ),
+                         ),
+                     ),
+                   ],
+                 ],
+               ),
+             ),
+           ],
+         ),
+       ],
+     );
+   }
+
+   void _showReplyBottomSheet(String commentId, String userName, String postId) {
+     Get.bottomSheet(
+       Container(
+         padding: EdgeInsets.all(16.w),
+         decoration: BoxDecoration(
+           color: Colors.white,
+           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+         ),
+         child: Column(
+           mainAxisSize: MainAxisSize.min,
+           children: [
+             // Handle bar
+             Container(
+               width: 40.w,
+               height: 4.h,
+               decoration: BoxDecoration(
+                 color: Colors.grey[300],
+                 borderRadius: BorderRadius.circular(2.r),
+               ),
+             ),
+             SizedBox(height: 16.h),
+
+             // Header
+             Row(
+               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                 CustomTextView(
+                   text: "Reply to $userName",
+                   fontSize: 16.sp,
+                   fontWeight: FontWeight.w600,
+                   color: AppColors.textHeader,
+                 ),
+                 IconButton(
+                   onPressed: () {
+                     groupPostController.replyController.clear();
+                     Get.back();
+                   },
+                   icon: Icon(Icons.close, size: 24.sp),
+                 ),
+               ],
+             ),
+
+             SizedBox(height: 16.h),
+
+             // Reply Input
+             Row(
+               children: [
+                 Expanded(
+                   child: TextField(
+                     controller: groupPostController.replyController,
+                     decoration: InputDecoration(
+                       hintText: "Write a reply...",
+                       hintStyle: TextStyle(
+                         fontSize: 14.sp,
+                         color: Colors.grey[400],
+                       ),
+                       filled: true,
+                       fillColor: Color(0xFFF5F5F5),
+                       border: OutlineInputBorder(
+                         borderRadius: BorderRadius.circular(24.r),
+                         borderSide: BorderSide.none,
+                       ),
+                       contentPadding: EdgeInsets.symmetric(
+                         horizontal: 16.w,
+                         vertical: 12.h,
+                       ),
+                     ),
+                     maxLines: null,
+                     autofocus: true,
+                   ),
+                 ),
+                 SizedBox(width: 8.w),
+                 GestureDetector(
+                   onTap: () {
+                     if (groupPostController.replyController.text.trim().isNotEmpty) {
+                       groupPostController.createReply(commentId, postId);
+                     }
+                   },
+                   child: Container(
+                     padding: EdgeInsets.all(12.w),
+                     decoration: BoxDecoration(
+                       color: AppColors.primaryColor,
+                       shape: BoxShape.circle,
+                     ),
+                     child: Icon(
+                       Icons.send,
+                       color: Colors.white,
+                       size: 20.sp,
+                     ),
+                   ),
+                 ),
+               ],
+             ),
+           ],
+         ),
+       ),
+       isScrollControlled: true,
+       isDismissible: true,
+     );
+   }
+
+
 
   /// Build Comment Tile
   Widget _buildCommentTile(
