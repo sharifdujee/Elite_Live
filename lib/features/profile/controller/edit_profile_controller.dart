@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:elites_live/features/profile/presentation/screen/profile.dart';
@@ -28,6 +30,7 @@ class EditProfileController extends GetxController {
   final TextEditingController professionController = TextEditingController();
   SharedPreferencesHelper preferencesHelper = SharedPreferencesHelper();
   final ProfileController controller = Get.find();
+  final NetworkCaller networkCaller = NetworkCaller();
   RxBool isLoading = false.obs;
   Rx<File?> selectedImage = Rx<File?>(null);
   var selectedGender = RxnString();
@@ -51,6 +54,11 @@ class EditProfileController extends GetxController {
   TextEditingController addressController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   CustomDateTimeController dateTimeController = Get.find();
+ /// final TextEditingController oldPassword
+
+
+  /// change password
+
 
   // Pick image from camera
   Future<void> pickImageFromCamera() async {

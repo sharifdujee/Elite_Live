@@ -17,6 +17,7 @@ class AppUrls {
   static const String sendOtp = '$_baseUrl/auth/send-otp';
   static const String verifyForgotOtp = '$_baseUrl/auth/verify-otp';
   static const String resetPass = '$_baseUrl/auth/reset-password';
+  static const String changePassword = "$_baseUrl/auth/change-password";
 
   static const String setProfile = '$_baseUrl/auth/set-profile';
   static const String setProfilePic = '$_baseUrl/auth/update-profile-image';
