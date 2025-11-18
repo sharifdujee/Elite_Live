@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class EventScheduleTab extends StatelessWidget {
-  const EventScheduleTab({
+class FundingScheduleTab extends StatelessWidget {
+  const FundingScheduleTab({
     super.key,
   });
 
@@ -47,7 +47,7 @@ class EventScheduleTab extends StatelessWidget {
         SizedBox(height: 8.h),
 
         Text(
-          "We’re excited to announce the official schedule for our upcoming Event.\n\n"
+          "We’re excited to announce the official schedule for our upcoming Crowd Funding .\n\n"
               "Mark your calendars and get ready — it’s going to be an amazing experience! "
               "Stay tuned for more updates and don’t forget to share with your friends!",
           style: GoogleFonts.inter(

@@ -9,7 +9,7 @@ class LiveIndicatorSection extends StatelessWidget {
   const LiveIndicatorSection({
     super.key,
     required this.influencerProfile,
-    required this.isLive,
+     this.isLive = false,
   });
   final String influencerProfile;
   final bool isLive;

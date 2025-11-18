@@ -1,4 +1,5 @@
 import 'package:elites_live/features/profile/controller/profile_controller.dart';
+import 'package:elites_live/features/profile/presentation/widget/funding_schedule_tab.dart';
 import 'package:elites_live/features/profile/presentation/widget/scheduleTab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,8 +38,13 @@ class ProfileTabsWidget extends StatelessWidget {
                 ),
                 _buildTabItem(
                   index: 1,
-                  activeIcon: controller.calendarActive,
-                  inactiveIcon: controller.calendarInactive,
+                  activeIcon: controller.scheduleActive,
+                  inactiveIcon: controller.scheduleInactive,
+                ),
+                _buildTabItem(
+                  index: 2,
+                  activeIcon: controller.crowdActive,
+                  inactiveIcon: controller.crowdInactive,
                 ),
               ],
             ),
@@ -47,7 +53,7 @@ class ProfileTabsWidget extends StatelessWidget {
           // Tab Content
           controller.selectedIndex.value == 0
               ? BuildGridTab(imageList: profileController.imageList)
-              : ScheduleTab(),
+              : controller.selectedIndex.value ==1?EventScheduleTab():FundingScheduleTab(),
         ],
       ),
     );

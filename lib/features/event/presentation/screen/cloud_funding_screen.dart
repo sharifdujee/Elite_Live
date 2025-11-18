@@ -39,7 +39,7 @@ class CloudFundingScreen extends StatelessWidget {
           final userName = "$firstName $lastName";
           final userImage = crowdFund.user.profileImage;
           final designation = crowdFund.user.profession;
-          final isLive = controller.eventLive[index];
+          ///final isLive = controller.eventLive[index];
           final timeAgo = DateTimeHelper.getTimeAgo(crowdFund.createdAt.toIso8601String());
           final crowdLike = crowdFund.count.eventLike;
           final crowdComment = crowdFund.count.eventComment;
@@ -53,7 +53,7 @@ class CloudFundingScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// live indicator
-                  LiveIndicatorSection(influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B', isLive: isLive,),
+                  LiveIndicatorSection(influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B',),
 
                   SizedBox(width: 12.w),
 

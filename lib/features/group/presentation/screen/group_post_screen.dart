@@ -16,8 +16,6 @@ import '../../data/group_info_data_model.dart';
 import '../widget/gradient_button.dart';
 import '../widget/group_post_details_screen.dart';
 
-
-
 class GroupPostScreen extends StatelessWidget {
   GroupPostScreen({super.key});
 
@@ -161,14 +159,46 @@ class GroupPostScreen extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
 
-            /// Post Section
-            GroupPostDetailsSection(
-              groupId: groupPostController.groupInfo.value!.groupPost.first.id,
-              replyingToId: replyingToId,
-              replyingToName: replyingToName,
-              controller: controller,
-              groupPosts: groupData.groupPost,
-            ),
+            /// Post Section - Only show if there are posts
+            if (groupData.groupPost.isNotEmpty)
+              GroupPostDetailsSection(
+                groupId: groupData.groupPost.first.id,
+                replyingToId: replyingToId,
+                replyingToName: replyingToName,
+                controller: controller,
+                groupPosts: groupData.groupPost,
+              )
+            else
+            // Show empty state when no posts
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40.h),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.post_add,
+                        size: 64.sp,
+                        color: Colors.grey[400],
+                      ),
+                      SizedBox(height: 16.h),
+                      CustomTextView(
+                        text: "No posts yet",
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[600]!,
+                      ),
+                      SizedBox(height: 8.h),
+                      CustomTextView(
+                        text: "Be the first to create a post in this group",
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey[500]!,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -276,6 +306,7 @@ class GroupPostScreen extends StatelessWidget {
       },
     );
   }
+
   void _showLeaveConfirmation(BuildContext context) {
     showDialog(
       context: context,
@@ -464,7 +495,7 @@ class GroupPostScreen extends StatelessWidget {
     );
   }
 
-// Add this handler method for delete action
+  // Add this handler method for delete action
   Future<void> _handleDelete(
       GroupPostController groupPostController, String groupId) async {
     await groupPostController.deleteGroup(groupId);
@@ -542,7 +573,8 @@ class GroupPostScreen extends StatelessWidget {
                                   groupPostController.selectedImage.value!)
                                   : (groupData.photo.isNotEmpty
                                   ? NetworkImage(groupData.photo)
-                                  : AssetImage(ImagePath.dance)) as ImageProvider,
+                                  : AssetImage(ImagePath.dance))
+                              as ImageProvider,
                             );
                           }),
                           Positioned(
@@ -712,4 +744,3 @@ class GroupPostScreen extends StatelessWidget {
     await groupPostController.getGroupInfo(groupId);
   }
 }
-

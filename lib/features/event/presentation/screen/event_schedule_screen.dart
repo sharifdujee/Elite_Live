@@ -95,9 +95,7 @@ class EventScheduleScreen extends StatelessWidget {
             final commentCount = event.count.eventComment;
 
             // Live status (you may need to adjust this based on your logic)
-            final isLive = index < controller.eventLive.length
-                ? controller.eventLive[index]
-                : false;
+
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +106,7 @@ class EventScheduleScreen extends StatelessWidget {
                     /// Live indicator
                     LiveIndicatorSection(
                       influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B',
-                      isLive: isLive,
+
                     ),
 
                     SizedBox(width: 12.w),
