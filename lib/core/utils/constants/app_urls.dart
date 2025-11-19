@@ -10,6 +10,9 @@ class AppUrls {
   /// profile set up
   static const String setUpProfile = "$_baseUrl/auth/profile";
   static const String user = '$_baseUrl/auth/profile';
+  /// setting flow
+  static const String getMyEvent = "$_baseUrl/event/my-schedule/event";
+  static const String getMyCrowdFund = "$_baseUrl/event/my-funding/event";
 
   static const String socialLogin = '$_baseUrl/auth/auth-login';
   static const String verifyOtp = '$_baseUrl/users/signup-verification';
@@ -18,6 +21,7 @@ class AppUrls {
   static const String verifyForgotOtp = '$_baseUrl/auth/verify-otp';
   static const String resetPass = '$_baseUrl/auth/reset-password';
   static const String changePassword = "$_baseUrl/auth/change-password";
+  static const String deleteAccount = "$_baseUrl/auth/delete-account";
 
   static const String setProfile = '$_baseUrl/auth/set-profile';
   static const String setProfilePic = '$_baseUrl/auth/update-profile-image';
@@ -56,6 +60,8 @@ class AppUrls {
   static String createPostComment(String postId) => "$_baseUrl/group/comment/post/$postId";
   static String likePost (String postId) => "$_baseUrl/group/like/post/$postId";
   static String replyComment(String commentId) => "$_baseUrl/group/reply-comment/post/$commentId";
+
+
 
 
   static const String googleAuth = '$_baseUrl/auth/google-login';

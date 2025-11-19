@@ -22,6 +22,7 @@ class SignUpController extends GetxController {
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPassword = TextEditingController();
 
   @override
   Future<void> onInit() async {

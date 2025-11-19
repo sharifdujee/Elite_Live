@@ -64,7 +64,7 @@ class CustomTextField extends StatelessWidget {
             }
           },
         )
-            : Icon(Icons.search, color: Color(0xFF9BA4B0), size: 20.sp),
+            : SizedBox.shrink(),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
           borderSide: const BorderSide(color: Color(0xFFEDEEF4), width: 1),

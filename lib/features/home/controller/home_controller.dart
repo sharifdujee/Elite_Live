@@ -27,14 +27,14 @@ class HomeController extends GetxController {
     "Marvin",
   ];
   List<String> influencerProfile = [
-    ImagePath.two,
-    ImagePath.one,
-    ImagePath.user,
-    ImagePath.three,
-    ImagePath.one
+    "https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg",
+    "https://www.wilsoncenter.org/sites/default/files/media/images/person/james-person-1.jpg",
+    "https://www.fluentu.com/blog/wp-content/uploads/site//4/african-american-young-mom-with-curly-hair-in-stylish-outfit-feeling-grateful-and-happy-receiving-surprise-gift-from-kid-holding-palms-on-heart-smiling.jpg",
+    "https://www.viewbug.com/media/mediafiles/2017/11/16/76191533_large.jpg",
+    "https://www.newdirectionsforwomen.org/wp-content/uploads/2021/02/Woman-smiling-sunlight.jpg"
   ];
   List<bool> isLive = [true, false, true, true, true];
- /// List<bool> eventLive = [false, false, false, false, false, true];
+
   List<bool> isFollow = [true, false, true, true, true, false, true];
   var commentImage = Rx<File?>(null); // Selected image
   var isEmojiVisible = false.obs;

@@ -1,19 +1,22 @@
-import 'package:elites_live/features/profile/controller/my_crowd_funding_controller.dart';
+import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
+import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/features/profile/controller/my_schedule_event_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
-import 'dart:developer';
-import '../../../../core/global_widget/custom_loading.dart';
-import '../../../../core/global_widget/custom_text_view.dart';
-import '../../../../core/utils/constants/app_colors.dart';
+import 'package:intl/intl.dart';
 
-class FundingScheduleTab extends StatelessWidget {
-  const FundingScheduleTab({super.key});
+import 'dart:developer';
+
+class EventScheduleTab extends StatelessWidget {
+  const EventScheduleTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final MyCrowdFundController controller = Get.find<MyCrowdFundController>();
+    final MyScheduleEventController controller =
+        Get.find<MyScheduleEventController>();
 
     return Obx(() {
       log(
@@ -47,7 +50,7 @@ class FundingScheduleTab extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey[600],
+                      color: AppColors.primaryColor,
                     ),
                   ),
                   SizedBox(height: 8.h),
@@ -91,6 +94,12 @@ class FundingScheduleTab extends StatelessWidget {
           final event = scheduleResult.events[index];
 
           // Format date and time
+          String formattedDate = DateFormat(
+            'dd-MM-yyyy',
+          ).format(event.scheduleDate);
+          String formattedTime = DateFormat(
+            'hh:mm a',
+          ).format(event.scheduleDate);
 
           return Container(
             padding: EdgeInsets.all(16.w),
@@ -105,7 +114,22 @@ class FundingScheduleTab extends StatelessWidget {
                 /// Date and Time Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [],
+                  children: [
+                    CustomTextView(
+                      text: formattedDate,
+
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textHeader,
+                    ),
+                    CustomTextView(
+                      text: formattedTime,
+
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textHeader,
+                    ),
+                  ],
                 ),
 
                 SizedBox(height: 12.h),
@@ -114,23 +138,63 @@ class FundingScheduleTab extends StatelessWidget {
                 CustomTextView(
                   text: event.eventType,
 
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.textHeader,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.textHeader,
+
                 ),
 
                 SizedBox(height: 8.h),
 
                 /// Event Description
                 CustomTextView(
-                  text: event.text,
+                text:   event.text,
 
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.textBody,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.textBody,
+
+
                 ),
 
                 SizedBox(height: 12.h),
+
+                /// Pay Amount
+                if (event.payAmount > 0) ...[
+                  Text(
+                    "Pay \$${event.payAmount.toStringAsFixed(event.payAmount % 1 == 0 ? 0 : 2)}",
+                    style: GoogleFonts.inter(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF191919),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                ],
+
+                /// Go to Live Event Link (if available - you can add a field for this)
+                // For now, showing a placeholder
+                RichText(
+                  text: TextSpan(
+                    text: "Go to Live Event: ",
+                    style: GoogleFonts.inter(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF191919),
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "Click here to join",
+                        style: GoogleFonts.inter(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF007AFF),
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
                 SizedBox(height: 16.h),
 
@@ -154,11 +218,12 @@ class FundingScheduleTab extends StatelessWidget {
                           ),
                           SizedBox(width: 6.w),
                           CustomTextView(
-                            text: _formatCount(event.count.eventLike),
+                          text:   _formatCount(event.count.eventLike),
 
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF191919),
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF191919),
+
                           ),
                         ],
                       ),
@@ -180,11 +245,12 @@ class FundingScheduleTab extends StatelessWidget {
                           ),
                           SizedBox(width: 6.w),
                           CustomTextView(
-                            text: _formatCount(event.count.eventComment),
+                          text:   _formatCount(event.count.eventComment),
 
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF191919),
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF191919),
+
                           ),
                         ],
                       ),
@@ -206,11 +272,12 @@ class FundingScheduleTab extends StatelessWidget {
                           ),
                           SizedBox(width: 6.w),
                           CustomTextView(
-                            text: "Share",
+                           text:  "Share",
 
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF191919),
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF191919),
+
                           ),
                         ],
                       ),

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,6 +25,7 @@ class GroupPostScreen extends StatelessWidget {
   final RxString replyingToName = ''.obs;
   final String groupId = Get.arguments['groupId'];
   final GroupPostController groupPostController = Get.find<GroupPostController>();
+  final ProfileController profileController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +140,7 @@ class GroupPostScreen extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage(ImagePath.three),
+                  backgroundImage:NetworkImage(profileController.userinfo.value!.profileImage),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
@@ -424,7 +426,7 @@ class GroupPostScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(

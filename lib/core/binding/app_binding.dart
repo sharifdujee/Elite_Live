@@ -9,6 +9,8 @@ import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/controller/live_controller.dart';
 import 'package:elites_live/features/home/controller/video_player_controller.dart';
 import 'package:elites_live/features/profile/controller/edit_profile_controller.dart';
+import 'package:elites_live/features/profile/controller/my_crowd_funding_controller.dart';
+import 'package:elites_live/features/profile/controller/my_schedule_event_controller.dart';
 import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:elites_live/features/profile/controller/profile_tab_controller.dart';
 import 'package:get/get.dart';
@@ -56,5 +58,8 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>MyGroupController(), fenix: true);
     Get.lazyPut(()=>GroupPostController(), fenix: true);
     Get.lazyPut(()=>InviteGroupController(), fenix: true);
+    Get.lazyPut(()=>MyScheduleEventController(), fenix: true);
+    Get.lazyPut(()=>MyCrowdFundController(), fenix: true);
+
   }
 }
