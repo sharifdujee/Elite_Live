@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/features/event/controller/event_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,10 +15,15 @@ class FollowSection extends StatelessWidget {
   FollowSection({super.key, required this.index});
 
   final HomeController controller = Get.find();
+  final EventController eventController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final bool isFollowing = controller.isFollow[index];
+
+
+    final event = eventController.eventList[index];
+    final bool isFollowing = event.user.isFollow;
+    final userId = event.userId;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -25,6 +31,7 @@ class FollowSection extends StatelessWidget {
         if (!isFollowing)
           GestureDetector(
             onTap: () {
+              eventController.followUnFlow(userId);
               log("start following");
               // Update state logic here, e.g.:
               // controller.isFollow[index] = true;
@@ -72,7 +79,11 @@ class FollowSection extends StatelessWidget {
                     children: [
                       Icon(Icons.person_remove, size: 18.sp, color: AppColors.redColor),
                       SizedBox(width: 10.w),
-                      CustomTextView(  text:   "Unfollow", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.redColor),
+                      GestureDetector(
+                        onTap: (){
+                          eventController.followUnFlow(userId);
+                        },
+                          child: CustomTextView(  text:   "Unfollow", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.redColor)),
                     ],
                   ),
                 ),

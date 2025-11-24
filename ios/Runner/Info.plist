@@ -14,6 +14,36 @@
 	<string>628281445808-k25kto9ln6ge4f3vopoaulhsmsq7gtll.apps.googleusercontent.com</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Scan your card to add it automatically</string>
+    <key>NSCameraUsageDescription</key>
+    <string>To scan cards</string>
+    <!-- Add these entries to your Info.plist file -->
+
+    <!-- Camera Permission -->
+    <key>NSCameraUsageDescription</key>
+    <string>We need camera access for live streaming</string>
+
+    <!-- Microphone Permission -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need microphone access for live streaming</string>
+
+    <!-- Photo Library (for saving recordings) -->
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>We need access to save your recordings to photo library</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to save your recordings</string>
+
+    <!-- Local Network (for streaming) -->
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>We need local network access for live streaming</string>
+
+    <!-- Background Modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+        <string>voip</string>
+    </array>
 
 	<key>CFBundleURLTypes</key>
 	<array>

@@ -7,48 +7,72 @@ import '../../../core/utils/constants/app_urls.dart';
 import '../data/my_crowd_funding_data_model.dart';
 
 
-class MyCrowdFundController extends GetxController{
-  var isLoading = false.obs;
-  final NetworkCaller networkCaller = NetworkCaller();
-  final SharedPreferencesHelper helper = SharedPreferencesHelper();
 
-  RxList<MyCrowdResult> myEventScheduleList = <MyCrowdResult>[].obs;
+// my_crowd_funding_controller.dart
+
+import 'dart:developer';
+import 'package:get/get.dart';
+
+class MyCrowdFundController extends GetxController {
+  var isLoading = false.obs;
+
+  // THIS IS THE KEY: We store only the List<Event> directly!
+  // No more wrapping in MyCrowdResult → eliminates all confusion
+  var events = <Event>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    log("Controller initialized → calling API");
     getMyCrowdFunding();
   }
 
-  /// get my schedule event
   Future<void> getMyCrowdFunding() async {
+    log("getMyCrowdFunding() STARTED");
+
     isLoading.value = true;
-    String? token = helper.getString("userToken");
+    events.clear(); // Start fresh
+
+    String? token = SharedPreferencesHelper().getString("userToken");
 
     try {
-      var response = await networkCaller.getRequest(AppUrls.getMyCrowdFund, token: token);
+      final response = await NetworkCaller().getRequest(
+        AppUrls.getMyCrowdFund,
+        token: token,
+      );
 
-      if (response.isSuccess) {
-        log("=== RAW RESPONSE ===");
-        log("${response.responseData}");
+      log("API CALL SUCCESS: ${response.isSuccess}");
 
-        Map<String, dynamic> data = response.responseData;
-
-        // Parse API directly into your model
-        final scheduleResult = MyCrowdResult.fromJson(data);
-
-        // Assign to your list
-        myEventScheduleList.assignAll([scheduleResult]);
-
-        log("Parsed events count: ${scheduleResult.events.length}");
-      } else {
-        log("API Failed: ${response.errorMessage}");
+      if (!response.isSuccess || response.responseData == null) {
+        log("API FAILED or null data");
+        return;
       }
-    } catch (e) {
-      log("Exception: $e");
+
+      // FULL RAW RESPONSE LOG
+      log("RAW JSON RESPONSE:");
+      log("${response.responseData}");
+
+      final model = MyCrowdFundingDataModel.fromJson(
+          response.responseData as Map<String, dynamic>);
+
+      log("Parsed success: ${model.success}");
+      log("Message: ${model.message}");
+      log("Total events in result: ${model.result.events.length}");
+
+      // DIRECTLY assign events — this triggers Obx perfectly
+      events.assignAll(model.result.events);
+
+      log("events list updated → length: ${events.length}");
+      if (events.isNotEmpty) {
+        log("First event text: ${events.first.text}");
+        log("First event user: ${events.first.user.firstName} ${events.first.user.lastName}");
+      }
+    } catch (e, s) {
+      log("EXCEPTION in getMyCrowdFunding", error: e, stackTrace: s);
+      events.clear();
     } finally {
       isLoading.value = false;
+      log("getMyCrowdFunding() FINISHED | isLoading = false | events.length = ${events.length}");
     }
   }
-
 }

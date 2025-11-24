@@ -3,12 +3,17 @@
 // To parse this JSON data, do
 //
 //     final myCrowdFundingDataModel = myCrowdFundingDataModelFromJson(jsonString);
+// To parse this JSON data, do
+//
+//     final myCrowdFundingDataModel = myCrowdFundingDataModelFromJson(jsonString);
 
 import 'dart:convert';
 
-MyCrowdFundingDataModel myCrowdFundingDataModelFromJson(String str) => MyCrowdFundingDataModel.fromJson(json.decode(str));
+MyCrowdFundingDataModel myCrowdFundingDataModelFromJson(String str) =>
+    MyCrowdFundingDataModel.fromJson(json.decode(str));
 
-String myCrowdFundingDataModelToJson(MyCrowdFundingDataModel data) => json.encode(data.toJson());
+String myCrowdFundingDataModelToJson(MyCrowdFundingDataModel data) =>
+    json.encode(data.toJson());
 
 class MyCrowdFundingDataModel {
   bool success;
@@ -21,11 +26,12 @@ class MyCrowdFundingDataModel {
     required this.result,
   });
 
-  factory MyCrowdFundingDataModel.fromJson(Map<String, dynamic> json) => MyCrowdFundingDataModel(
-    success: json["success"]??'true',
-    message: json["message"]??'',
-    result: MyCrowdResult.fromJson(json["result"]),
-  );
+  factory MyCrowdFundingDataModel.fromJson(Map<String, dynamic> json) =>
+      MyCrowdFundingDataModel(
+        success: json["success"] ?? true,  // Fixed: was returning string 'true'
+        message: json["message"] ?? '',
+        result: MyCrowdResult.fromJson(json["result"] ?? {}),
+      );
 
   Map<String, dynamic> toJson() => {
     "success": success,
@@ -48,10 +54,12 @@ class MyCrowdResult {
   });
 
   factory MyCrowdResult.fromJson(Map<String, dynamic> json) => MyCrowdResult(
-    totalCount: json["totalCount"],
-    totalPages: json["totalPages"],
-    currentPage: json["currentPage"],
-    events: List<Event>.from(json["events"].map((x) => Event.fromJson(x))),
+    totalCount: json["totalCount"] ?? 0,
+    totalPages: json["totalPages"] ?? 0,
+    currentPage: json["currentPage"] ?? 0,
+    events: json["events"] != null
+        ? List<Event>.from(json["events"].map((x) => Event.fromJson(x)))
+        : [],
   );
 
   Map<String, dynamic> toJson() => {
@@ -92,18 +100,24 @@ class Event {
   });
 
   factory Event.fromJson(Map<String, dynamic> json) => Event(
-    id: json["id"],
-    userId: json["userId"],
-    eventType: json["eventType"],
-    text: json["text"],
+    id: json["id"] ?? '',
+    userId: json["userId"] ?? '',
+    eventType: json["eventType"] ?? '',
+    text: json["text"] ?? '',
     scheduleDate: json["scheduleDate"],
-    payAmount: json["payAmount"],
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
-    user: User.fromJson(json["user"]),
-    count: Count.fromJson(json["_count"]),
-    eventLike: List<EventLike>.from(json["EventLike"].map((x) => EventLike.fromJson(x))),
-    isLiked: json["isLiked"],
+    payAmount: json["payAmount"] ?? 0,
+    createdAt: json["createdAt"] != null
+        ? DateTime.parse(json["createdAt"])
+        : DateTime.now(),
+    updatedAt: json["updatedAt"] != null
+        ? DateTime.parse(json["updatedAt"])
+        : DateTime.now(),
+    user: User.fromJson(json["user"] ?? {}),
+    count: Count.fromJson(json["_count"] ?? {}),
+    eventLike: json["EventLike"] != null
+        ? List<EventLike>.from(json["EventLike"].map((x) => EventLike.fromJson(x)))
+        : [],
+    isLiked: json["isLiked"] ?? false,
   );
 
   Map<String, dynamic> toJson() => {
@@ -132,8 +146,8 @@ class Count {
   });
 
   factory Count.fromJson(Map<String, dynamic> json) => Count(
-    eventLike: json["EventLike"],
-    eventComment: json["EventComment"],
+    eventLike: json["EventLike"] ?? 0,
+    eventComment: json["EventComment"] ?? 0,
   );
 
   Map<String, dynamic> toJson() => {
@@ -150,7 +164,7 @@ class EventLike {
   });
 
   factory EventLike.fromJson(Map<String, dynamic> json) => EventLike(
-    id: json["id"],
+    id: json["id"] ?? '',
   );
 
   Map<String, dynamic> toJson() => {
@@ -162,23 +176,23 @@ class User {
   String id;
   String firstName;
   String lastName;
-  String profileImage;
+  String? profileImage;  // Changed to nullable
   String profession;
 
   User({
     required this.id,
     required this.firstName,
     required this.lastName,
-    required this.profileImage,
+    this.profileImage,
     required this.profession,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"],
-    firstName: json["firstName"],
-    lastName: json["lastName"],
+    id: json["id"] ?? '',
+    firstName: json["firstName"] ?? '',
+    lastName: json["lastName"] ?? '',
     profileImage: json["profileImage"],
-    profession: json["profession"],
+    profession: json["profession"] ?? '',
   );
 
   Map<String, dynamic> toJson() => {

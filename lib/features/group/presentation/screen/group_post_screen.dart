@@ -101,10 +101,12 @@ class GroupPostScreen extends StatelessWidget {
             // Group Image
             CircleAvatar(
               radius: 50.r,
-              backgroundImage: groupData.photo.isNotEmpty
-                  ? NetworkImage(groupData.photo)
-                  : AssetImage(ImagePath.dance) as ImageProvider,
+              backgroundImage: (groupData.photo != null && groupData.photo!.isNotEmpty)
+                  ? NetworkImage(groupData.photo!)
+                  : const AssetImage(ImagePath.dance),
             ),
+
+
             SizedBox(height: 7.h),
 
             // Group Name and Leave Button
@@ -140,8 +142,13 @@ class GroupPostScreen extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage:NetworkImage(profileController.userinfo.value!.profileImage),
+                  backgroundImage:
+                  (profileController.userinfo.value?.profileImage != null &&
+                      profileController.userinfo.value!.profileImage!.isNotEmpty)
+                      ? NetworkImage(profileController.userinfo.value!.profileImage!)
+                      : const AssetImage(ImagePath.dance),
                 ),
+
                 SizedBox(width: 12.w),
                 Expanded(
                   child: GestureDetector(
@@ -569,14 +576,12 @@ class GroupPostScreen extends StatelessWidget {
                           Obx(() {
                             return CircleAvatar(
                               radius: 60.r,
-                              backgroundImage:
-                              groupPostController.selectedImage.value != null
-                                  ? FileImage(
-                                  groupPostController.selectedImage.value!)
-                                  : (groupData.photo.isNotEmpty
-                                  ? NetworkImage(groupData.photo)
-                                  : AssetImage(ImagePath.dance))
-                              as ImageProvider,
+                              backgroundImage: groupPostController.selectedImage.value != null
+                                  ? FileImage(groupPostController.selectedImage.value!)
+                                  : ((groupData.photo != null && groupData.photo!.isNotEmpty)
+                                  ? NetworkImage(groupData.photo!)
+                                  : const AssetImage(ImagePath.dance)),
+
                             );
                           }),
                           Positioned(

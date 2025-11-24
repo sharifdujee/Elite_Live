@@ -192,8 +192,9 @@ class User {
   String id;
   String firstName;
   String lastName;
-  String? profileImage; // nullable
-  String? profession;  // nullable
+  String? profileImage;
+  String? profession;
+  bool isFollow;     // <-- NEW FIELD
 
   User({
     required this.id,
@@ -201,14 +202,16 @@ class User {
     required this.lastName,
     this.profileImage,
     this.profession,
+    required this.isFollow,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json["id"] ?? '',
     firstName: json["firstName"] ?? '',
     lastName: json["lastName"] ?? '',
-    profileImage: json["profileImage"], // may be null
-    profession: json["profession"], // may be null
+    profileImage: json["profileImage"],
+    profession: json["profession"],
+    isFollow: json["isFollow"] ?? false,  // <-- MAPPED FROM API
   );
 
   Map<String, dynamic> toJson() => {
@@ -217,6 +220,8 @@ class User {
     "lastName": lastName,
     "profileImage": profileImage,
     "profession": profession,
+    "isFollow": isFollow,     // <-- ADD THIS
   };
 }
+
 

@@ -1,7 +1,9 @@
 
+import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/event/controller/event_controller.dart';
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
-import 'package:elites_live/features/home/controller/home_controller.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -20,7 +22,7 @@ import '../widget/user_interaction_section.dart';
 class EventScheduleScreen extends StatelessWidget {
   EventScheduleScreen({super.key});
 
-  final HomeController controller = Get.find();
+
   final EventController eventController = Get.find();
   final ScheduleController scheduleController = Get.find();
 
@@ -31,7 +33,7 @@ class EventScheduleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (eventController.isLoading.value && eventController.eventList.isEmpty) {
-        return Center(child: CircularProgressIndicator());
+        return Center(child: CustomLoading(color: AppColors.primaryColor,));
       }
 
       if (eventController.eventList.isEmpty) {
@@ -82,13 +84,13 @@ class EventScheduleScreen extends StatelessWidget {
             final joiningFee = event.payAmount.toString();
 
             // Format date and time
-            final scheduleDateTime = DateTimeHelper.formatScheduleDateTime(event.scheduleDate.toIso8601String());
+            final scheduleDateTime = DateTimeHelper.formatScheduleDateTime(event.scheduleDate!.toIso8601String());
             final eventDate = scheduleDateTime['date']!;
             final eventTime = scheduleDateTime['time']!;
             final likeStatus = event.isLiked;
 
             // Calculate time ago
-            final timeAgo = DateTimeHelper.getTimeAgo(event.createdAt.toIso8601String());
+            final timeAgo = DateTimeHelper.getTimeAgo(event.createdAt!.toIso8601String());
 
             // Counts
             final likeCount = event.count.eventLike;

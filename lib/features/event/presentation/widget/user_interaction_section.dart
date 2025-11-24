@@ -77,7 +77,7 @@ class UserInteractionSection extends StatelessWidget {
         ),
         isTip?GestureDetector(
           onTap: (){
-            DonationSheet().show(context);
+            DonationSheet.show(context);
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),

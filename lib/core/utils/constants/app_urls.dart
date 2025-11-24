@@ -1,5 +1,12 @@
 class AppUrls {
-  static const String _baseUrl = 'http://206.162.244.144:5020/api/v1';
+
+  /// vps
+  ////static const String _baseUrl = 'http://206.162.244.144:5020/api/v1';
+  static const String _baseUrl = 'http://10.0.20.169:5020/api/v1';
+  /// local socket
+   static const String _socketUrl = "ws://10.0.20.169:5020";
+
+  /// local
 
   //create
 
@@ -61,8 +68,22 @@ class AppUrls {
   static String likePost (String postId) => "$_baseUrl/group/like/post/$postId";
   static String replyComment(String commentId) => "$_baseUrl/group/reply-comment/post/$commentId";
 
+  /// follow unfollow section
+  static String followUser(String userId) => "$_baseUrl/group/follow-unfollow/$userId";
+  static const String myFollowing = "$_baseUrl/group/my/following";
+  static const String myFollower = "$_baseUrl/group/my/followers";
+  static String searchFollowing(String search) => "$_baseUrl/group/my/following?search=$search";
 
+/// payment gateway integration
+  static const String createPayment = "$_baseUrl/";
 
 
   static const String googleAuth = '$_baseUrl/auth/google-login';
+
+  /// live flow
+  static const String  createLive = "$_baseUrl/live/create/streaming";
+  static String createPool(String streamId) => "$_baseUrl/polls/$streamId";
+  static String getSinglePool(String streamId) => "$_baseUrl/polls";
+
+
 }

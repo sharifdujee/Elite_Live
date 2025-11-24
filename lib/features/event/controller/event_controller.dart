@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:elites_live/features/event/data/schedule_event_data_model.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +56,66 @@ class EventController extends GetxController {
       }
     }
   }
+
+  /// follow unfollow
+  Future<void> followUnFlow(String userId) async {
+    isLoading.value = true;
+
+    // SHOW LOADER
+    Get.dialog(
+      CustomLoading(color: AppColors.primaryColor),
+      barrierDismissible: false,
+    );
+
+    String? token = sharedPreferencesHelper.getString("userToken");
+    log("token during follow user is $token");
+
+    try {
+      var response = await networkCaller.postRequest(
+        AppUrls.followUser(userId),
+        body: {},
+        token: token,
+      );
+
+      // ALWAYS CLOSE LOADING
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      if (response.isSuccess) {
+        log("the api response is ${response.responseData}");
+
+        // SUCCESS SNACK
+
+
+        // REFRESH LIST
+        await getAllEvent(currentPage.value, limit.value);
+      } else {
+        // ERROR SNACK
+        Get.snackbar(
+          "Failed",
+          response.errorMessage ?? "Something went wrong",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      log("Exception: ${e.toString()}");
+
+      // ENSURE LOADING CLOSED ON ERROR
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 
   /// Get all events (initial load)
   Future<void> getAllEvent(int page, int limit) async {

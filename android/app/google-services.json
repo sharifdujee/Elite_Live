@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "628281445808",
-    "project_id": "elitelive-81772",
-    "storage_bucket": "elitelive-81772.firebasestorage.app"
+    "project_number": "245104862316",
+    "project_id": "elitelive-da4fb",
+    "storage_bucket": "elitelive-da4fb.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:628281445808:android:4506d0168041e15d1c9a75",
+        "mobilesdk_app_id": "1:245104862316:android:dfd7918760ea187d716449",
         "android_client_info": {
           "package_name": "com.example.elite_lives"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAijNl4y_5YVJMCFLvs8xANJl_UoIqTg00"
+          "current_key": "AIzaSyDOtK_q_hpQIcqhmQB3KNtY31FyKz3PFuY"
         }
       ],
       "services": {

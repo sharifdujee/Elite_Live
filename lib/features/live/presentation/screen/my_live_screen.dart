@@ -1,11 +1,13 @@
 import 'package:elites_live/features/live/presentation/widget/contributor_dialog.dart';
-import 'package:elites_live/features/live/presentation/widget/live_comment_sheet.dart';
 import 'package:elites_live/features/live/presentation/widget/pool_create_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'dart:developer';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 import '../../controller/live_screen_controller.dart';
-
-
+import '../../../../core/utils/constants/app_colors.dart';
 
 
 class MyLiveScreen extends StatelessWidget {
@@ -15,497 +17,660 @@ class MyLiveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get arguments passed from CreateLiveScreen
+    final Map<String, dynamic>? data = Get.arguments as Map<String, dynamic>?;
+
+    if (data == null) {
+      log("❌ No data received in MyLiveScreen");
+      return _buildErrorScreen("Error: No live session data");
+    }
+
+    // Extract data from arguments
+    final String liveId = data["liveId"] ?? data["roomId"] ?? "";
+    final String roomId = data["roomId"] ?? liveId;
+    final String hostId = data["hostId"] ?? "";
+    final String hostLink = data["hostLink"] ?? "";
+    final String audienceLink = data["audienceLink"] ?? "";
+    final String _ = data["coHostLink"] ?? "";
+    final bool isHost = data["isHost"] ?? true;
+    final bool isPaid = data["isPaid"] ?? false;
+    final double cost = (data["cost"] ?? 0.0).toDouble();
+
+    log("=== MyLiveScreen Data ===");
+    log("Live ID: $liveId");
+    log("Room ID: $roomId");
+    log("Host ID: $hostId");
+    log("Host Link: $hostLink");
+    log("Audience Link: $audienceLink");
+    log("Is Host: $isHost");
+    log("Is Paid: $isPaid");
+    log("Cost: $cost");
+
+    // Validate required data
+    if (liveId.isEmpty || roomId.isEmpty) {
+      log("❌ Invalid live session data");
+      return _buildErrorScreen("Invalid live session data");
+    }
+
     return Scaffold(
       body: Stack(
         children: [
-          // Background video feed or screen share
-          Obx(() => controller.isScreenSharing.value
-              ? Container(
-            color: Colors.grey[800],
-            child: const Center(
-              child: Text(
-                'Screen Sharing Content',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          )
-              : Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.grey[900]!,
-                  Colors.black,
+          // Main Zego Live Streaming UI
+          ZegoUIKitPrebuiltLiveStreaming(
+            appID: 1071350787,
+            appSign: "657d70a56532ec960b9fc671ff05d44b498910b5668a1b3f1f1241bede47af71",
+            userName: "User ${hostId.length >= 6 ? hostId.substring(0, 6) : hostId}",
+            userID: hostId.isNotEmpty && hostId.length >= 8 ? hostId.substring(0, 8) : "user123",
+            liveID: roomId,
+            config: (isHost
+                ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
+                : ZegoUIKitPrebuiltLiveStreamingConfig.audience())
+              ..audioVideoView = ZegoLiveStreamingAudioVideoViewConfig(
+                showAvatarInAudioMode: true,
+                showSoundWavesInAudioMode: true,
+                useVideoViewAspectFill: true,
+              )
+              ..topMenuBar = ZegoLiveStreamingTopMenuBarConfig(
+                buttons: [
+                  ZegoLiveStreamingMenuBarButtonName.minimizingButton,
                 ],
+                backgroundColor: Colors.transparent,
+                height: 80.h,
+              )
+              ..bottomMenuBar = ZegoLiveStreamingBottomMenuBarConfig(
+                hostButtons: [
+                  ZegoLiveStreamingMenuBarButtonName.toggleCameraButton,
+                  ZegoLiveStreamingMenuBarButtonName.toggleMicrophoneButton,
+                  ZegoLiveStreamingMenuBarButtonName.switchCameraButton,
+                ],
+                audienceButtons: [
+                  ZegoLiveStreamingMenuBarButtonName.chatButton,
+                ],
+                backgroundColor: Colors.transparent,
+                height: 80.h,
+              )
+              ..duration = ZegoLiveStreamingDurationConfig(
+                isVisible: true,
+              )
+              ..memberList = ZegoLiveStreamingMemberListConfig(
+                showFakeUser: false,
+              )
+              ..confirmDialogInfo = ZegoLiveStreamingDialogInfo(
+                title: "Leave Live",
+                message: "Are you sure you want to leave?",
+                cancelButtonName: "Cancel",
+                confirmButtonName: "Leave",
               ),
-            ),
-            child: Obx(() => controller.isCameraOn.value
-                ? Container(
-              width: double.infinity,
-              height: double.infinity,
-              child: Image.network(
-                'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[800],
-                          child: const Center(
-                  child: Icon(
-                  Icons.person,
-                    size: 100,
-                    color: Colors.white54,
-                  ),
-                  ),
-                  );
+            events: ZegoUIKitPrebuiltLiveStreamingEvents(
+              onEnded: (
+                  ZegoLiveStreamingEndEvent event,
+                  VoidCallback defaultAction,
+                  ) {
+                log("Live streaming ended: ${event.reason}");
+                Get.back();
+              },
+              user: ZegoLiveStreamingUserEvents(
+                onEnter: (ZegoUIKitUser user) {
+                  log("User entered: ${user.name}");
+                  controller.viewerCount.value++;
+                },
+                onLeave: (ZegoUIKitUser user) {
+                  log("User left: ${user.name}");
+                  if (controller.viewerCount.value > 0) {
+
+                    controller.viewerCount.value--;
+                  }
                 },
               ),
-            )
-                : Container(
-              color: Colors.black,
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.videocam_off,
-                      size: 80,
-                      color: Colors.white54,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Camera is off',
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )),
-          )),
+            ),
+          ),
 
-          // Video feed in top-left corner when screen sharing
-          Obx(() => controller.isScreenSharing.value
-              ? Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
-            left: 16,
-            child: Container(
-              width: 120,
-              height: 160,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white54, width: 2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: controller.isCameraOn.value
-                    ? Image.network(
-                  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[800],
-                      child: const Center(
-                        child: Icon(
-                          Icons.person,
-                          size: 50,
-                          color: Colors.white54,
-                        ),
-                      ),
-                    );
-                  },
-                )
-                    : Container(
-                  color: Colors.black,
-                  child: const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.videocam_off,
-                          size: 40,
-                          color: Colors.white54,
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Camera off',
-                          style: TextStyle(
-                            color: Colors.white54,
-                            fontSize: 12,
-                          ),
-                        ),
+          // Professional Overlay UI
+          SafeArea(
+            child: Column(
+              children: [
+                // Top Bar with Gradient
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.7),
+                        Colors.black.withValues(alpha: 0.3),
+                        Colors.transparent,
                       ],
                     ),
                   ),
-                ),
-              ),
-            ),
-          )
-              : const SizedBox.shrink()),
-
-          // Top bar with viewer count and back button
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 8,
-                left: 16,
-                right: 16,
-                bottom: 8,
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withValues(alpha: 0.7),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+                  child: Row(
                     children: [
-                      _buildControlButton(
-                        icon: Icons.arrow_back,
-                        onPressed: (){
-                          controller.goBack(context);
-                        }
+                      // Back Button
+                      GestureDetector(
+                        onTap: () => controller.goBack(context),
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 20.sp,
+                          ),
+                        ),
                       ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                      SizedBox(width: 12.w),
+
+                      // Live Badge & Viewer Count
+                      Expanded(
                         child: Row(
                           children: [
-                            const Icon(
-                              Icons.circle,
-                              color: Colors.white,
-                              size: 8,
+                            // Live Badge
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 6.h,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [Colors.red, Colors.redAccent],
+                                ),
+                                borderRadius: BorderRadius.circular(20.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.red.withValues(alpha: 0.4),
+                                    blurRadius: 8,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 6.w,
+                                    height: 6.h,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Text(
+                                    "LIVE",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(width: 6),
-                            Obx(() => Text(
-                              '${controller.viewerCount.value}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                            SizedBox(width: 8.w),
+
+                            // Viewer Count
+                            Obx(() => Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 12.w,
+                                vertical: 6.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.6),
+                                borderRadius: BorderRadius.circular(20.r),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.visibility,
+                                    color: Colors.white,
+                                    size: 14.sp,
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Text(
+                                    "${controller.viewerCount.value}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
                             )),
                           ],
+                        ),
+                      ),
+
+                      // Three Dot Menu Button
+                      GestureDetector(
+                        onTap: () => _showMenuOptions(context, isHost, roomId),
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.more_vert,
+                            color: Colors.white,
+                            size: 20.sp,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      '00:45',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Bottom control panel
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).padding.bottom + 16,
-                top: 16,
-                left: 16,
-                right: 16,
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Colors.black.withValues(alpha: 0.8),
-                    Colors.transparent,
-                  ],
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildControlButton(
-                    icon: Icons.flip_camera_ios,
-                    onPressed: () {
-                      Get.snackbar(
-                        'Camera',
-                        'Switching camera...',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.black87,
-                        colorText: Colors.white,
-                        duration: const Duration(seconds: 1),
-                      );
-                    },
-                  ),
-                  Obx(() => _buildControlButton(
-                    icon: controller.isMicOn.value
-                        ? Icons.mic
-                        : Icons.mic_off,
-                    onPressed: controller.toggleMic,
-                  )),
-                  Obx(() => _buildControlButton(
-                    icon: controller.isCameraOn.value
-                        ? Icons.videocam
-                        : Icons.videocam_off,
-                    onPressed: controller.toggleCamera,
-                  )),
-                  _buildControlButton(
-                    icon: Icons.more_vert,
-                    onPressed: controller.toggleMenu,
-                  ),
-                  _buildControlButton(
-                    icon: Icons.call_end,
-                    backgroundColor: Colors.red,
-                    onPressed: (){
-                      controller.endCall(context);
-                    }
-                  ),
-                ],
-              ),
-            ),
-          ),
 
-          // Popup menu
-          Obx(() => controller.showMenu.value
-              ? GestureDetector(
-            onTap: controller.closeMenu,
-            child: Container(
-              color: Colors.black54,
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: MediaQuery.of(context).padding.bottom + 90,
-                    right: 16,
-                    child: TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 0, end: 1),
-                      duration: const Duration(milliseconds: 200),
-                      builder: (context, double value, child) {
-                        return Transform.scale(
-                          scale: value,
-                          alignment: Alignment.bottomRight,
-                          child: Opacity(
-                            opacity: value,
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1C1C1E),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildMenuItem(
-                              icon: Icons.person_add_outlined,
-                              text: 'Add Contributor',
-                              onTap: () {
-                                AddContributorDialog.show(context);
-                              },
-                            ),
-                            const Divider(
-                              color: Colors.white12,
-                              height: 1,
-                            ),
-                            _buildMenuItem(
-                              icon: Icons.chat_bubble_outline,
-                              text: 'Comment',
-                              onTap: () {
-                                LiveCommentSheet().show(context);
-                              },
-                            ),
-                            const Divider(
-                              color: Colors.white12,
-                              height: 1,
-                            ),
-                            Obx(() => _buildMenuItem(
-                              icon: Icons.screen_share_outlined,
-                              text: 'Screen Share',
-                              onTap: controller.toggleScreenShare,
-                              trailing: Switch(
-                                value: controller.isScreenSharing.value,
-                                onChanged: (value) {
-                                  controller.toggleScreenShare();
-                                },
-                                activeThumbColor: Colors.blue,
-                              ),
-                            )),
-                            const Divider(
-                              color: Colors.white12,
-                              height: 1,
-                            ),
-                            _buildMenuItem(
-                              icon: Icons.poll_outlined,
-                              text: 'Polls',
-                              onTap: () {
-                                CreatePollDialog.show(context);
-                              },
-                            ),
-                          ],
+                // Recording Indicator
+                Obx(() => controller.isRecording.value
+                    ? Container(
+                  margin: EdgeInsets.only(top: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 6.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.9),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.fiber_manual_record,
+                        color: Colors.white,
+                        size: 12.sp,
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        "Recording...",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          )
-              : const SizedBox.shrink()),
+                )
+                    : SizedBox.shrink()),
 
-          // Screen sharing indicator
-          Obx(() => controller.isScreenSharing.value
-              ? Positioned(
-            top: MediaQuery.of(context).padding.top + 60,
-            left: 150,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 8,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.screen_share,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Screen Sharing',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                Spacer(),
+
+                // Bottom Gradient Overlay
+                Container(
+                  padding: EdgeInsets.only(bottom: 20.h),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.7),
+                        Colors.black.withValues(alpha: 0.3),
+                        Colors.transparent,
+                      ],
                     ),
                   ),
-                ],
-              ),
+                  child: SizedBox(height: 80.h),
+                ),
+              ],
             ),
-          )
-              : const SizedBox.shrink()),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildControlButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-    Color backgroundColor = const Color(0xFF2C2C2E),
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(30),
-        child: Container(
-          width: 56,
-          height: 56,
+  // Show Menu Options Bottom Sheet
+  void _showMenuOptions(BuildContext context, bool isHost, String?roomId) {
+    final Map<String, dynamic>? data = Get.arguments;
+
+    final String hostLink = data?["hostLink"] ?? "";
+    final String coHostLink = data?["coHostLink"] ?? "";
+    final String audienceLink = data?["audienceLink"] ?? "";
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Container(
           decoration: BoxDecoration(
-            color: backgroundColor,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            icon,
             color: Colors.white,
-            size: 28,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(24.r),
+            ),
           ),
+          padding: EdgeInsets.symmetric(vertical: 20.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle Bar
+              Container(
+                width: 40.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2.r),
+                ),
+              ),
+              SizedBox(height: 20.h),
+
+              // Title
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Row(
+                  children: [
+                    Text(
+                      "Live Options",
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.h),
+
+              // ====== 🔥 SHARE LINKS SECTION (Only for Host) ======
+              if (isHost)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildLinkBox(
+                        title: "Host Join Link",
+                        value: hostLink,
+                      ),
+                      SizedBox(height: 10.h),
+                      _buildLinkBox(
+                        title: "Co-Host Join Link",
+                        value: coHostLink,
+                      ),
+                      SizedBox(height: 10.h),
+                      _buildLinkBox(
+                        title: "Audience Join Link",
+                        value: audienceLink,
+                      ),
+                      SizedBox(height: 20.h),
+                    ],
+                  ),
+                ),
+
+              // ====== OTHER MENU OPTIONS ======
+              _buildMenuOption(
+                icon: Icons.screen_share,
+                title: "Screen Share",
+                subtitle: controller.isScreenSharing.value
+                    ? "Stop sharing screen"
+                    : "Share your screen",
+                color: Colors.blue,
+                onTap: () {
+                  Get.back();
+                  controller.toggleScreenShare();
+                },
+              ),
+
+              _buildMenuOption(
+                icon: Icons.fiber_manual_record,
+                title: "Recording",
+                subtitle: controller.isRecording.value
+                    ? "Stop recording session"
+                    : "Record live session",
+                color: Colors.red,
+                onTap: () {
+                  Get.back();
+                  controller.toggleRecording();
+                },
+              ),
+
+              _buildMenuOption(
+                icon: Icons.person_add,
+                title: "Add Contributor",
+                subtitle: "Invite someone to join",
+                color: Colors.green,
+                onTap: () {
+                  Get.back();
+                  AddContributorDialog.show(context);
+                },
+              ),
+
+              _buildMenuOption(
+                icon: Icons.poll,
+                title: "Create Poll",
+                subtitle: "Engage with audience",
+                color: Colors.orange,
+                onTap: () {
+                  log("the button is pressed");
+                  Get.back();            // Close bottom sheet first
+                  CreatePollDialog.show(context, roomId!);
+                },
+              ),
+
+              if (isHost)
+                _buildMenuOption(
+                  icon: Icons.call_end,
+                  title: "End Live",
+                  subtitle: "Stop live streaming",
+                  color: Colors.red[700]!,
+                  onTap: () {
+                    Get.back();
+                    controller.endCall(context);
+                  },
+                  isDanger: true,
+                ),
+
+              SizedBox(height: 20.h),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  Widget _buildLinkBox({
+    required String title,
+    required String value,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: value));
+                  Get.snackbar(
+                    "Copied",
+                    "$title copied to clipboard",
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                },
+                child: Icon(Icons.copy, color: Colors.blue, size: 20.sp),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  // Build Menu Option Item
+  Widget _buildMenuOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+    bool isDanger = false,
+
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        child: Row(
+          children: [
+            // Icon Container
+            Container(
+              width: 48.w,
+              height: 48.h,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 24.sp,
+              ),
+            ),
+            SizedBox(width: 16.w),
+
+            // Text Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: isDanger ? Colors.red[700] : Colors.black87,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Arrow Icon
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16.sp,
+              color: Colors.grey[400],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String text,
-    required VoidCallback onTap,
-    Widget? trailing,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                color: Colors.white,
-                size: 22,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  text,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
+  // Build Error Screen
+  Widget _buildErrorScreen(String message) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(24.w),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.error_outline,
+                    size: 64.sp,
+                    color: Colors.red,
                   ),
                 ),
-              ),
-              if (trailing != null) trailing,
-            ],
+                SizedBox(height: 24.h),
+                Text(
+                  "Oops!",
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                SizedBox(height: 32.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Get.back(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: Text(
+                      "Go Back",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
-
-

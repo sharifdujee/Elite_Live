@@ -1,8 +1,7 @@
-// To parse this JSON data, do
+// To parse this JSON data:
 //
 //     final scheduleEventDataModel = scheduleEventDataModelFromJson(jsonString);
 
-import 'dart:convert';
 import 'dart:convert';
 
 /// Encoding / Decoding helpers
@@ -19,7 +18,7 @@ String scheduleEventDataModelToJson(ScheduleEventDataModel data) =>
 class ScheduleEventDataModel {
   bool? success;
   String? message;
-  ScheduleEventResult result;
+  ScheduleEventResult? result;
 
   ScheduleEventDataModel({
     required this.success,
@@ -29,15 +28,17 @@ class ScheduleEventDataModel {
 
   factory ScheduleEventDataModel.fromJson(Map<String, dynamic> json) =>
       ScheduleEventDataModel(
-        success: json["success"] ?? true,
-        message: json["message"] ?? '',
-        result: ScheduleEventResult.fromJson(json["result"]),
+        success: json["success"] ?? false,
+        message: json["message"] ?? "",
+        result: json["result"] == null
+            ? null
+            : ScheduleEventResult.fromJson(json["result"]),
       );
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": message,
-    "result": result.toJson(),
+    "result": result?.toJson(),
   };
 }
 
@@ -85,10 +86,10 @@ class LiveEvent {
   String userId;
   String eventType;
   String text;
-  DateTime scheduleDate;
+  DateTime? scheduleDate;
   double payAmount;
-  DateTime createdAt;
-  DateTime updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   User user;
   Count count;
   List<EventLike> eventLike;
@@ -110,21 +111,26 @@ class LiveEvent {
   });
 
   factory LiveEvent.fromJson(Map<String, dynamic> json) => LiveEvent(
-    id: json["id"] ?? '',
-    userId: json["userId"] ?? '',
-    eventType: json["eventType"] ?? '',
-    text: json["text"] ?? '',
-    scheduleDate: DateTime.parse(json["scheduleDate"]),
+    id: json["id"] ?? "",
+    userId: json["userId"] ?? "",
+    eventType: json["eventType"] ?? "",
+    text: json["text"] ?? "",
+    scheduleDate: json["scheduleDate"] == null
+        ? null
+        : DateTime.parse(json["scheduleDate"]),
     payAmount: (json["payAmount"] ?? 0).toDouble(),
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
+    createdAt: json["createdAt"] == null
+        ? null
+        : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null
+        ? null
+        : DateTime.parse(json["updatedAt"]),
     user: User.fromJson(json["user"]),
-    count: Count.fromJson(json["_count"]),
-    eventLike: (json["EventLike"] == null)
+    count: Count.fromJson(json["_count"] ?? {}),
+    eventLike: json["EventLike"] == null
         ? []
         : List<EventLike>.from(
-      json["EventLike"].map((x) => EventLike.fromJson(x)),
-    ),
+        json["EventLike"].map((x) => EventLike.fromJson(x))),
     isLiked: json["isLiked"] ?? false,
   );
 
@@ -133,10 +139,10 @@ class LiveEvent {
     "userId": userId,
     "eventType": eventType,
     "text": text,
-    "scheduleDate": scheduleDate.toIso8601String(),
+    "scheduleDate": scheduleDate?.toIso8601String(),
     "payAmount": payAmount,
-    "createdAt": createdAt.toIso8601String(),
-    "updatedAt": updatedAt.toIso8601String(),
+    "createdAt": createdAt?.toIso8601String(),
+    "updatedAt": updatedAt?.toIso8601String(),
     "user": user.toJson(),
     "_count": count.toJson(),
     "EventLike": List<dynamic>.from(eventLike.map((x) => x.toJson())),
@@ -173,12 +179,10 @@ class Count {
 class EventLike {
   String id;
 
-  EventLike({
-    required this.id,
-  });
+  EventLike({required this.id});
 
   factory EventLike.fromJson(Map<String, dynamic> json) => EventLike(
-    id: json["id"] ?? '',
+    id: json["id"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {
@@ -193,8 +197,9 @@ class User {
   String id;
   String firstName;
   String lastName;
-  String? profileImage; // nullable
-  String? profession;  // nullable
+  String? profileImage;
+  String? profession;
+  bool isFollow;
 
   User({
     required this.id,
@@ -202,14 +207,16 @@ class User {
     required this.lastName,
     this.profileImage,
     this.profession,
+    required this.isFollow,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"] ?? '',
-    firstName: json["firstName"] ?? '',
-    lastName: json["lastName"] ?? '',
-    profileImage: json["profileImage"], // may be null
-    profession: json["profession"], // may be null
+    id: json["id"] ?? "",
+    firstName: json["firstName"] ?? "",
+    lastName: json["lastName"] ?? "",
+    profileImage: json["profileImage"],
+    profession: json["profession"],
+    isFollow: json["isFollow"] ?? false,
   );
 
   Map<String, dynamic> toJson() => {
@@ -218,7 +225,6 @@ class User {
     "lastName": lastName,
     "profileImage": profileImage,
     "profession": profession,
+    "isFollow": isFollow,
   };
 }
-
-

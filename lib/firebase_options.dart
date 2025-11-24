@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAijNl4y_5YVJMCFLvs8xANJl_UoIqTg00',
-    appId: '1:628281445808:android:4506d0168041e15d1c9a75',
-    messagingSenderId: '628281445808',
-    projectId: 'elitelive-81772',
-    storageBucket: 'elitelive-81772.firebasestorage.app',
+    apiKey: 'AIzaSyDOtK_q_hpQIcqhmQB3KNtY31FyKz3PFuY',
+    appId: '1:245104862316:android:dfd7918760ea187d716449',
+    messagingSenderId: '245104862316',
+    projectId: 'elitelive-da4fb',
+    storageBucket: 'elitelive-da4fb.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBW79PG54mvvA6SxuSDz-fzXbn26xoBHWw',
-    appId: '1:628281445808:ios:178adde49dc3fcf41c9a75',
-    messagingSenderId: '628281445808',
-    projectId: 'elitelive-81772',
-    storageBucket: 'elitelive-81772.firebasestorage.app',
+    apiKey: 'AIzaSyAYaoQPXGvWKQBJ-axf9izgXjXFvJigSTI',
+    appId: '1:245104862316:ios:864266f2fbed4963716449',
+    messagingSenderId: '245104862316',
+    projectId: 'elitelive-da4fb',
+    storageBucket: 'elitelive-da4fb.firebasestorage.app',
     iosBundleId: 'com.example.eliteLives',
   );
+
 }
