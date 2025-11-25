@@ -1,16 +1,20 @@
+import 'package:elites_live/features/profile/controller/earning_overview_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class EarningListCard extends StatelessWidget {
   final String title;
   final List<Map<String, dynamic>> items;
 
-  const EarningListCard({
+  EarningListCard({
     super.key,
     required this.title,
     required this.items,
   });
+
+  final EarningsController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
