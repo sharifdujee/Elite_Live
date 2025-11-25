@@ -40,6 +40,7 @@ class UserResult {
   DateTime dob;
   String bio;
   Count count;
+  String stripeAccountId;
   int followingCount;
   int followersCount;
 
@@ -55,6 +56,7 @@ class UserResult {
     required this.dob,
     required this.bio,
     required this.count,
+    required this.stripeAccountId,
     required this.followingCount,
     required this.followersCount,
   });
@@ -71,6 +73,7 @@ class UserResult {
     dob: DateTime.parse(json["dob"]),
     bio: json["bio"],
     count: Count.fromJson(json["_count"] ?? {}),
+    stripeAccountId: json['stripeAccountId']??'',
     followingCount: json["followingCount"] ?? 0,
     followersCount: json["followersCount"] ?? 0,
   );
@@ -87,6 +90,7 @@ class UserResult {
     "dob": dob.toIso8601String(),
     "bio": bio,
     "_count": count.toJson(),
+    "stripeAccountId": stripeAccountId,
     "followingCount": followingCount,
     "followersCount": followersCount,
   };

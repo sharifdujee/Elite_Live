@@ -15,7 +15,8 @@ class UserInteractionSection extends StatelessWidget {
     required this.commentCount,
     this.onLikeTap,
     required this.isLiked,
-    this.onCommentTap
+    this.onCommentTap,
+    this.onTipsTap
 
   });
 
@@ -25,7 +26,8 @@ class UserInteractionSection extends StatelessWidget {
   final VoidCallback? onLikeTap;
   final bool isLiked;
   final VoidCallback? onCommentTap;
-  
+  final VoidCallback? onTipsTap;
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +79,8 @@ class UserInteractionSection extends StatelessWidget {
         ),
         isTip?GestureDetector(
           onTap: (){
-            DonationSheet.show(context);
+            onTipsTap!();
+
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),

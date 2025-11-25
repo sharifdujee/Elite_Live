@@ -7,13 +7,13 @@ import '../../controller/earning_overview_controller.dart';
 import '../widget/earnings_card.dart';
 import '../widget/earnings_users_data.dart';
 
-
 class EarningsPage extends StatelessWidget {
-  const EarningsPage({super.key});
+  EarningsPage({super.key});
+
+  final EarningsController controller = Get.find();
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(EarningsController());
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -21,7 +21,7 @@ class EarningsPage extends StatelessWidget {
           children: [
             Stack(
               children: [
-                // Top gradient section
+                // Gradient Header
                 Container(
                   height: 190.h,
                   width: double.infinity,
@@ -29,7 +29,8 @@ class EarningsPage extends StatelessWidget {
                     gradient: AppColors.primaryGradient,
                   ),
                 ),
-                // Back button + title
+
+                // Back Button
                 Positioned(
                   top: 50.h,
                   left: 20.w,
@@ -51,7 +52,8 @@ class EarningsPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Main white container
+
+                // Main Body
                 Container(
                   margin: EdgeInsets.only(top: 160.h),
                   padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h),
@@ -67,17 +69,34 @@ class EarningsPage extends StatelessWidget {
                     children: [
                       _buildTabs(controller),
                       SizedBox(height: 20.h),
-                      EarningSummaryCard(controller: controller),
+
+                      EarningsSummaryCard(),
                       SizedBox(height: 20.h),
-                      Obx(() => controller.selectedTab.value == 0
-                          ? EarningListCard(
-                        title: "Ads Revenue",
-                        items: controller.adsRevenueList,
-                      )
-                          : EarningListCard(
-                        title: "Crowdfunding",
-                        items: controller.fundingList,
-                      )),
+
+                      Obx(() {
+                        if (controller.selectedTab.value == 0) {
+                          return EarningListCard(
+                            title: "Ads Revenue",
+                            items: controller.adsRevenueList,
+                          );
+                        } else {
+                          // Convert API model --> Map
+                          final fundingItems = controller
+                              .balanceHistory.first.transactionHistory
+                              .map((tx) => {
+                            "image": "assets/images/live1.png",
+                            "title": tx.event.title,
+                            "subtitle": tx.event.text,
+                            "amount": "\$${tx.amount}",
+                          })
+                              .toList();
+
+                          return EarningListCard(
+                            title: "Crowdfunding",
+                            items: fundingItems,
+                          );
+                        }
+                      }),
                     ],
                   ),
                 ),

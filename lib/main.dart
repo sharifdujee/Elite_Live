@@ -10,6 +10,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'app.dart';
 import 'core/binding/app_binding.dart';
 import 'core/helper/stripe_key_helper.dart';
+import 'core/services/socket_service.dart';
 
 
 Future<void> main() async {
@@ -21,7 +22,9 @@ await Firebase.initializeApp(
   await AuthService().init();
   // Get.put(NotificationService());
   AppBinding().dependencies();
-  await initializeStripe();
+  ///await initializeStripe();
+  Get.put(WebSocketClientService(), permanent: true);
+
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,

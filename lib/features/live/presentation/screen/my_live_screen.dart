@@ -1,3 +1,5 @@
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/services/socket_service.dart';
 import 'package:elites_live/features/live/presentation/widget/contributor_dialog.dart';
 import 'package:elites_live/features/live/presentation/widget/pool_create_dialog.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +12,155 @@ import '../../controller/live_screen_controller.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 
 
-class MyLiveScreen extends StatelessWidget {
-  MyLiveScreen({super.key});
 
+class MyLiveScreen extends StatefulWidget {
+  const MyLiveScreen({super.key});
+
+  @override
+  State<MyLiveScreen> createState() => _MyLiveScreenState();
+}
+
+class _MyLiveScreenState extends State<MyLiveScreen> {
   final LiveScreenController controller = Get.put(LiveScreenController());
+  final WebSocketClientService webSocketService = WebSocketClientService.to;
+  final SharedPreferencesHelper helper = SharedPreferencesHelper();
+
+  String? liveId;
+  String? roomId;
+  String? coHostLink;
+  bool isWebSocketInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeWebSocket();
+  }
+
+  Future<void> _initializeWebSocket() async {
+    try {
+      log("🚀 Initializing WebSocket for live stream...");
+
+      // Get auth token
+      final authToken = await _getAuthToken();
+
+      if (authToken == null || authToken.isEmpty) {
+        log("❌ No auth token available");
+        return;
+      }
+
+      // Connect to WebSocket
+      final socketUrl = "ws://10.0.20.169:5020";
+      await webSocketService.connect(socketUrl, authToken);
+
+      // Wait for connection with timeout
+      int attempts = 0;
+      const maxAttempts = 10;
+
+      while (attempts < maxAttempts && !webSocketService.isConnected.value) {
+        await Future.delayed(Duration(milliseconds: 500));
+        attempts++;
+      }
+
+      if (webSocketService.isConnected.value) {
+        log("✅ WebSocket connected successfully");
+        isWebSocketInitialized = true;
+
+        // Set up message handler
+        webSocketService.setOnMessageReceived((message) {
+          _handleWebSocketMessage(message);
+        });
+      } else {
+        log("❌ WebSocket connection timeout");
+      }
+    } catch (e) {
+      log("❌ WebSocket initialization error: $e");
+    }
+  }
+
+  Future<String?> _getAuthToken() async {
+    try {
+      final token = helper.getString('userToken');
+      return token;
+    } catch (e) {
+      log("❌ Error getting auth token: $e");
+      return null;
+    }
+  }
+
+  void _handleWebSocketMessage(String message) {
+    try {
+      log("📨 Received WebSocket message: $message");
+      // Handle different message types here
+    } catch (e) {
+      log("❌ Error handling message: $e");
+    }
+  }
+
+  void _openAddContributorDialog() {
+    log("🎯 Opening Add Contributor Dialog");
+    log("🔍 WebSocket connected: ${webSocketService.isConnected.value}");
+    log("🔍 Room ID: $roomId");
+    log("🔍 Co-Host Link: $coHostLink");
+
+    // Check if WebSocket is connected
+    if (!webSocketService.isConnected.value) {
+      Get.snackbar(
+        "Connecting",
+        "Please wait while we establish connection...",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+      );
+
+      // Try to reconnect
+      _initializeWebSocket().then((_) {
+        if (webSocketService.isConnected.value) {
+          _showContributorDialog();
+        } else {
+          Get.snackbar(
+            "Connection Failed",
+            "Unable to connect to server. Please try again.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      });
+      return;
+    }
+
+    // Check if roomId is available
+    if (roomId == null || roomId!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Stream ID not available",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    _showContributorDialog();
+  }
+
+  void _showContributorDialog() {
+    AddContributorDialog.show(
+      context,
+      streamId: roomId!,
+      coHostLink: coHostLink ?? "https://join.com",
+      webSocketService: webSocketService,
+    );
+  }
+
+  @override
+  void dispose() {
+    // Disconnect WebSocket when leaving the screen
+    log("🔌 Disconnecting WebSocket...");
+    webSocketService.disconnect();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +173,12 @@ class MyLiveScreen extends StatelessWidget {
     }
 
     // Extract data from arguments
-    final String liveId = data["liveId"] ?? data["roomId"] ?? "";
-    final String roomId = data["roomId"] ?? liveId;
+    liveId = data["liveId"] ?? data["roomId"] ?? "";
+    roomId = data["roomId"] ?? liveId;
     final String hostId = data["hostId"] ?? "";
     final String hostLink = data["hostLink"] ?? "";
     final String audienceLink = data["audienceLink"] ?? "";
-    final String _ = data["coHostLink"] ?? "";
+    coHostLink = data["coHostLink"] ?? "";
     final bool isHost = data["isHost"] ?? true;
     final bool isPaid = data["isPaid"] ?? false;
     final double cost = (data["cost"] ?? 0.0).toDouble();
@@ -42,12 +189,13 @@ class MyLiveScreen extends StatelessWidget {
     log("Host ID: $hostId");
     log("Host Link: $hostLink");
     log("Audience Link: $audienceLink");
+    log("Co-Host Link: $coHostLink");
     log("Is Host: $isHost");
     log("Is Paid: $isPaid");
     log("Cost: $cost");
 
-    // Validate required data
-    if (liveId.isEmpty || roomId.isEmpty) {
+    /// Validate required data
+    if (liveId?.isEmpty ?? true) {
       log("❌ Invalid live session data");
       return _buildErrorScreen("Invalid live session data");
     }
@@ -61,10 +209,16 @@ class MyLiveScreen extends StatelessWidget {
             appSign: "657d70a56532ec960b9fc671ff05d44b498910b5668a1b3f1f1241bede47af71",
             userName: "User ${hostId.length >= 6 ? hostId.substring(0, 6) : hostId}",
             userID: hostId.isNotEmpty && hostId.length >= 8 ? hostId.substring(0, 8) : "user123",
-            liveID: roomId,
+            liveID: roomId!,
             config: (isHost
                 ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
                 : ZegoUIKitPrebuiltLiveStreamingConfig.audience())
+              ..layout = ZegoLayout.gallery(
+                  showScreenSharingFullscreenModeToggleButtonRules:
+                  ZegoShowFullscreenModeToggleButtonRules.alwaysShow,
+                  showNewScreenSharingViewInFullscreenMode:
+                  true
+              )
               ..audioVideoView = ZegoLiveStreamingAudioVideoViewConfig(
                 showAvatarInAudioMode: true,
                 showSoundWavesInAudioMode: true,
@@ -117,7 +271,6 @@ class MyLiveScreen extends StatelessWidget {
                 onLeave: (ZegoUIKitUser user) {
                   log("User left: ${user.name}");
                   if (controller.viewerCount.value > 0) {
-
                     controller.viewerCount.value--;
                   }
                 },
@@ -147,7 +300,7 @@ class MyLiveScreen extends StatelessWidget {
                     children: [
                       // Back Button
                       GestureDetector(
-                        onTap: () => controller.goBack(context),
+                        onTap: () => controller.goBack(context, roomId!),
                         child: Container(
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
@@ -246,13 +399,42 @@ class MyLiveScreen extends StatelessWidget {
                                 ],
                               ),
                             )),
+
+                            SizedBox(width: 8.w),
+
+                            // WebSocket Status Indicator
+                            Obx(() => webSocketService.isConnected.value
+                                ? Container(
+                              padding: EdgeInsets.all(6.w),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.wifi,
+                                color: Colors.green,
+                                size: 12.sp,
+                              ),
+                            )
+                                : Container(
+                              padding: EdgeInsets.all(6.w),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.wifi_off,
+                                color: Colors.red,
+                                size: 12.sp,
+                              ),
+                            )),
                           ],
                         ),
                       ),
 
                       // Three Dot Menu Button
                       GestureDetector(
-                        onTap: () => _showMenuOptions(context, isHost, roomId),
+                        onTap: () => _showMenuOptions(context, isHost),
                         child: Container(
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
@@ -331,11 +513,10 @@ class MyLiveScreen extends StatelessWidget {
   }
 
   // Show Menu Options Bottom Sheet
-  void _showMenuOptions(BuildContext context, bool isHost, String?roomId) {
+  void _showMenuOptions(BuildContext context, bool isHost) {
     final Map<String, dynamic>? data = Get.arguments;
 
     final String hostLink = data?["hostLink"] ?? "";
-    final String coHostLink = data?["coHostLink"] ?? "";
     final String audienceLink = data?["audienceLink"] ?? "";
 
     showModalBottomSheet(
@@ -383,7 +564,7 @@ class MyLiveScreen extends StatelessWidget {
               ),
               SizedBox(height: 20.h),
 
-              // ====== 🔥 SHARE LINKS SECTION (Only for Host) ======
+              // ====== SHARE LINKS SECTION (Only for Host) ======
               if (isHost)
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -397,7 +578,7 @@ class MyLiveScreen extends StatelessWidget {
                       SizedBox(height: 10.h),
                       _buildLinkBox(
                         title: "Co-Host Join Link",
-                        value: coHostLink,
+                        value: coHostLink ?? "",
                       ),
                       SizedBox(height: 10.h),
                       _buildLinkBox(
@@ -443,7 +624,7 @@ class MyLiveScreen extends StatelessWidget {
                 color: Colors.green,
                 onTap: () {
                   Get.back();
-                  AddContributorDialog.show(context);
+                  _openAddContributorDialog();
                 },
               ),
 
@@ -454,7 +635,7 @@ class MyLiveScreen extends StatelessWidget {
                 color: Colors.orange,
                 onTap: () {
                   log("the button is pressed");
-                  Get.back();            // Close bottom sheet first
+                  Get.back();
                   CreatePollDialog.show(context, roomId!);
                 },
               ),
@@ -467,7 +648,7 @@ class MyLiveScreen extends StatelessWidget {
                   color: Colors.red[700]!,
                   onTap: () {
                     Get.back();
-                    controller.endCall(context);
+                    controller.endCall(context, roomId!);
                   },
                   isDanger: true,
                 ),
@@ -479,10 +660,20 @@ class MyLiveScreen extends StatelessWidget {
       },
     );
   }
+
+  // UPDATED: Build Link Box with liveId prepended for audience link
   Widget _buildLinkBox({
     required String title,
     required String value,
   }) {
+    // IMPORTANT: For audience link, prepend liveId so users can join the same room
+    String displayValue = value;
+
+    if (title == "Audience Join Link" && liveId != null && liveId!.isNotEmpty) {
+      // Format: "liveId|audienceLink"
+      displayValue = "$liveId|$value";
+    }
+
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
@@ -506,7 +697,7 @@ class MyLiveScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  value,
+                  displayValue,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -517,11 +708,14 @@ class MyLiveScreen extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  Clipboard.setData(ClipboardData(text: value));
+                  Clipboard.setData(ClipboardData(text: displayValue));
                   Get.snackbar(
                     "Copied",
                     "$title copied to clipboard",
                     snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                    duration: Duration(seconds: 2),
                   );
                 },
                 child: Icon(Icons.copy, color: Colors.blue, size: 20.sp),
@@ -533,7 +727,6 @@ class MyLiveScreen extends StatelessWidget {
     );
   }
 
-
   // Build Menu Option Item
   Widget _buildMenuOption({
     required IconData icon,
@@ -542,7 +735,6 @@ class MyLiveScreen extends StatelessWidget {
     required Color color,
     required VoidCallback onTap,
     bool isDanger = false,
-
   }) {
     return InkWell(
       onTap: onTap,

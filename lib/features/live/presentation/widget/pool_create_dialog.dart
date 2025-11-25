@@ -6,18 +6,13 @@ import 'package:get/get.dart';
 
 import '../../controller/create_pool_controller.dart';
 
-import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
-import 'package:elites_live/core/global_widget/custom_text_view.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
-import '../../controller/create_pool_controller.dart';
 
 class CreatePollDialog {
   static void show(BuildContext context, String streamId) {
     final controller = Get.put(CreatePollController());
     Future.microtask(() => controller.getPool(streamId));
+
 
     showDialog(
       context: context,
@@ -124,6 +119,7 @@ class CreatePollDialog {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
+                                          controller.updatePool(poll.id, streamId);
                                           // controller.prepareUpdatePoll(poll);
                                         },
                                         child: Container(
@@ -144,7 +140,7 @@ class CreatePollDialog {
                                       const SizedBox(width: 8),
                                       GestureDetector(
                                         onTap: () {
-                                          // controller.deletePoll(poll.id, streamId);
+                                           controller.deletePool(poll.id, streamId);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
@@ -161,15 +157,18 @@ class CreatePollDialog {
                                           ),
                                         ),
                                       ),
+                                      const SizedBox(width: 8),
+
                                     ],
                                   ),
                                 ],
                               ),
                             );
-                          }).toList(),
+                          }),
                           const SizedBox(height: 20),
                         ],
                       ),
+
 
                     // New Poll Question
                     const Text(
@@ -302,6 +301,28 @@ class CreatePollDialog {
                         ),
                         child: const Text(
                           "Save",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: (){},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          "See Result",
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

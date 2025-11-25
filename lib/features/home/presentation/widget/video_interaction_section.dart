@@ -29,7 +29,7 @@ class VideoInteractionSection extends StatelessWidget {
           SizedBox(width: 19),
           GestureDetector(
             onTap: () {
-              DonationSheet.show(context);
+              DonationSheet.show(context, eventId: '');
             },
             child: _buildItem(FontAwesomeIcons.donate, "Donate"),
           ),

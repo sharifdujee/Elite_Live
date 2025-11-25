@@ -3,10 +3,7 @@ class AppUrls {
   /// vps
   ////static const String _baseUrl = 'http://206.162.244.144:5020/api/v1';
   static const String _baseUrl = 'http://10.0.20.169:5020/api/v1';
-  /// local socket
-   static const String _socketUrl = "ws://10.0.20.169:5020";
 
-  /// local
 
   //create
 
@@ -76,14 +73,23 @@ class AppUrls {
 
 /// payment gateway integration
   static const String createPayment = "$_baseUrl/";
+  static const String createPayoutAccount = "$_baseUrl/donation/connected/account";
+  static String giveDonation(String eventId)=> "$_baseUrl/donation/$eventId";
+  static String getConnectedAccountBalance = "$_baseUrl/donation/stripe/balance";
+
 
 
   static const String googleAuth = '$_baseUrl/auth/google-login';
 
   /// live flow
   static const String  createLive = "$_baseUrl/live/create/streaming";
+  static  String endLive(String streamId) => "$_baseUrl//live/close/streaming/$streamId";
   static String createPool(String streamId) => "$_baseUrl/polls/$streamId";
   static String getSinglePool(String streamId) => "$_baseUrl/polls";
+  static String updatePool(String poolId) => "$_baseUrl/polls/$poolId";
+  static String deletePool(String poolId) => "$_baseUrl/polls/$poolId";
+  static String votePool(String poolId) => "$_baseUrl/polls/submit/vote/$poolId";
+  static  String poolResult(String streamId) => "$_baseUrl/polls/result/$streamId";
 
 
 }

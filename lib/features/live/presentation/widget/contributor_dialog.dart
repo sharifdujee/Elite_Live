@@ -1,13 +1,30 @@
+import 'dart:developer';
+
 import 'package:elites_live/features/profile/controller/following_follwer_controller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/global_widget/custom_text_field.dart';
 import '../../../../core/global_widget/custom_text_view.dart';
+import '../../../../core/services/socket_service.dart';
+import '../../../../core/utils/constants/app_colors.dart';
+import 'package:get/get.dart';
+
+import 'dart:developer';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/material.dart';
+import '../../../../core/global_widget/custom_text_field.dart';
+import '../../../../core/global_widget/custom_text_view.dart';
+import '../../../../core/services/socket_service.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import 'package:get/get.dart';
 
 class AddContributorDialog {
-  static void show(BuildContext context) {
+  static void show(
+      BuildContext context, {
+        required String streamId,
+        required String coHostLink,
+        required WebSocketClientService webSocketService,
+      }) {
     final FollowingFollwerController controller = Get.find();
 
     // Initialize filteredFollowing with full list if not already done
@@ -28,7 +45,7 @@ class AddContributorDialog {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Title Row
+                // Title Row with Connection Status
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -38,11 +55,61 @@ class AddContributorDialog {
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
-                      child: CustomTextView(
-                        text: "Add Contributor",
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textHeader,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextView(
+                            text: "Add Contributor",
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textHeader,
+                          ),
+                          // Real-time connection status
+                          Obx(() {
+                            final isConnected = webSocketService.isConnected.value;
+                            final isConnecting = webSocketService.isConnecting.value;
+
+                            if (isConnecting) {
+                              return Row(
+                                children: [
+                                  SizedBox(
+                                    width: 12.w,
+                                    height: 12.h,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation(Colors.orange),
+                                    ),
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  CustomTextView(
+                                    text: "Connecting...",
+                                    fontSize: 12.sp,
+                                    color: Colors.orange,
+                                  ),
+                                ],
+                              );
+                            }
+
+                            return Row(
+                              children: [
+                                Container(
+                                  width: 8.w,
+                                  height: 8.h,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: isConnected ? Colors.green : Colors.red,
+                                  ),
+                                ),
+                                SizedBox(width: 6.w),
+                                CustomTextView(
+                                  text: isConnected ? "Connected" : "Disconnected",
+                                  fontSize: 12.sp,
+                                  color: isConnected ? Colors.green : Colors.red,
+                                ),
+                              ],
+                            );
+                          }),
+                        ],
                       ),
                     ),
                     SizedBox(width: 10.w),
@@ -68,6 +135,7 @@ class AddContributorDialog {
                 Flexible(
                   child: Obx(() {
                     final followingList = controller.filteredFollowing;
+                    final isConnected = webSocketService.isConnected.value;
 
                     if (followingList.isEmpty) {
                       return Center(
@@ -88,6 +156,7 @@ class AddContributorDialog {
                         final firstName = following.user.firstName ?? "";
                         final lastName = following.user.lastName ?? "";
                         final name = "$firstName $lastName";
+                        final receiverId = following.user.id ?? "";
 
                         return Container(
                           padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -117,32 +186,46 @@ class AddContributorDialog {
                                 ],
                               ),
 
-                              // Add Button
+                              // Add Button - Disabled when not connected
                               GestureDetector(
-                                onTap: () {
-                                  // TODO: implement contributor addition logic
-                                  Get.snackbar(
-                                    "Contributor Added",
-                                    "$name has been added",
-                                    snackPosition: SnackPosition.BOTTOM,
+                                onTap: isConnected
+                                    ? () {
+                                  _addContributor(
+                                    webSocketService: webSocketService,
+                                    receiverId: receiverId,
+                                    streamId: streamId,
+                                    coHostLink: coHostLink,
+                                    userName: name,
                                   );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40.r),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.secondaryColor,
-                                        AppColors.primaryColor,
-                                      ],
+                                }
+                                    : null,
+                                child: Opacity(
+                                  opacity: isConnected ? 1.0 : 0.5,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 10.h,
                                     ),
-                                  ),
-                                  child: CustomTextView(
-                                    text: "Add",
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.textWhite,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(40.r),
+                                      gradient: LinearGradient(
+                                        colors: isConnected
+                                            ? [
+                                          AppColors.secondaryColor,
+                                          AppColors.primaryColor,
+                                        ]
+                                            : [
+                                          Colors.grey.shade400,
+                                          Colors.grey.shade500,
+                                        ],
+                                      ),
+                                    ),
+                                    child: CustomTextView(
+                                      text: isConnected ? "Add" : "Offline",
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.textWhite,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -159,5 +242,78 @@ class AddContributorDialog {
         );
       },
     );
+  }
+
+  static void _addContributor({
+    required WebSocketClientService webSocketService,
+    required String receiverId,
+    required String streamId,
+    required String coHostLink,
+    required String userName,
+  }) {
+    log("🎯 Attempting to add contributor: $userName");
+    log("🔍 WebSocket connected: ${webSocketService.isConnected.value}");
+    log("🔍 Receiver ID: $receiverId");
+    log("🔍 Stream ID: $streamId");
+
+    // Double-check connection status
+    if (!webSocketService.isConnected.value) {
+      Get.snackbar(
+        "Connection Error",
+        "WebSocket is not connected. Please try again.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      log("❌ Cannot add contributor: WebSocket not connected");
+      return;
+    }
+
+    // Validate required fields
+    if (receiverId.isEmpty || streamId.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Missing required information",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      log("❌ Missing receiverId or streamId");
+      return;
+    }
+
+    try {
+      // Send add-contributor message via WebSocket
+      final message = {
+        "type": "add-contributor",
+        "receiverId": receiverId,
+        "streamId": streamId,
+        "coHostLink": coHostLink,
+      };
+
+      log("📤 Sending message: $message");
+      webSocketService.sendMessage(message);
+
+      // Show success feedback
+      Get.snackbar(
+        "Contributor Added",
+        "$userName has been invited to the live stream",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+      );
+
+      log("✅ Contributor added: $userName (ID: $receiverId)");
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to add contributor: $e",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      log("❌ Error adding contributor: $e");
+    }
   }
 }

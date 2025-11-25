@@ -5,14 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'dart:developer';
 import '../../../../core/global_widget/custom_loading.dart';
-import '../../../../core/global_widget/custom_text_view.dart';
+
 import '../../../../core/utils/constants/app_colors.dart';
 
 
 
 import '../../data/my_crowd_funding_data_model.dart';
 
-// funding_schedule_tab.dart
+
 
 class FundingScheduleTab extends StatelessWidget {
   const FundingScheduleTab({super.key});

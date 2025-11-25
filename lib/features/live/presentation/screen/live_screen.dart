@@ -6,6 +6,8 @@ import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/live/controller/live_screen_controller.dart';
 
+import '../../../../routes/app_routing.dart';
+
 class CreateLiveScreen extends StatelessWidget {
   const CreateLiveScreen({super.key});
 
@@ -90,7 +92,7 @@ class CreateLiveScreen extends StatelessWidget {
                       controller.createAndNavigateToLive(
                         isPaid: true,
                         isHost: true,
-                        cost: 100.0, // Set your cost here
+                        cost: 100.0,
                       );
                     },
                     text: "Go to Paid Live",
@@ -117,12 +119,113 @@ class CreateLiveScreen extends StatelessWidget {
                   )),
 
                   SizedBox(height: 16.h),
+
+                  /// Join Now Button - Opens Dialog
+                  CustomElevatedButton(
+                      ontap: () {
+                        _showJoinLiveDialog(context, controller);
+                      },
+                      text: "Join Now"
+                  )
                 ],
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _showJoinLiveDialog(BuildContext context, LiveScreenController controller) {
+    final TextEditingController audienceLinkController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          title: CustomTextView(
+            text: "Join Live Session",
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textHeader,
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomTextView(
+                text: "Enter the audience link to join the live session",
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.textBody,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.h),
+              TextField(
+                controller: audienceLinkController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  hintText: "Paste audience link here",
+                  prefixIcon: Icon(Icons.link),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 14.h,
+                  ),
+                ),
+                maxLines: 1,
+              ),
+            ],
+          ),
+          actions: [
+            Row(
+              children: [
+                Expanded(
+                  child: CustomElevatedButton(
+                    ontap: () {
+                      Get.back();
+                    },
+                    text: "Cancel",
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Obx(() => CustomElevatedButton(
+                    ontap: controller.isLoading.value
+                        ? () {} // Disabled during loading
+                        : () {
+                      String link = audienceLinkController.text.trim();
+
+                      if (link.isEmpty) {
+                        Get.snackbar(
+                          "Error",
+                          "Please enter a valid audience link",
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          duration: const Duration(seconds: 2),
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                        return;
+                      }
+
+                      Get.back(); // close dialog
+
+                      // Join live session via audience link
+                      controller.joinLiveAsAudience(audienceLink: link);
+                    },
+                    text: "Join",
+                    gradient: AppColors.primaryGradient,
+                  )),
+                ),
+              ],
+            )
+          ],
+        );
+      },
     );
   }
 }

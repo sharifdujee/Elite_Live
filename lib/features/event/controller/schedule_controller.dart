@@ -24,6 +24,7 @@ class ScheduleController extends GetxController {
   RxList<CrowdFundingEvent> crowdFundList = <CrowdFundingEvent>[].obs;
   RxList<EventCommentResult> commentResult = <EventCommentResult>[].obs;
   RxList<EventComment> commentList = <EventComment>[].obs;
+  final TextEditingController amountController = TextEditingController();
 
   RxInt currentPage = 1.obs;
 
@@ -62,7 +63,7 @@ class ScheduleController extends GetxController {
   final NetworkCaller networkCaller = NetworkCaller();
 
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController amountController = TextEditingController();
+
 
   Future<void> createLiveEvent({String eventType = "Schedule"}) async {
     isLoading.value = true;
@@ -372,6 +373,26 @@ class ScheduleController extends GetxController {
   }
 
   // ---------------- Date & Time Pickers ---------------- //
+    /// create donation
+     Future<void> createDonation(String eventId)async{
+       String?token = sharedPreferencesHelper.getString("userToken");
+       log("token during create donation payment$token");
+       try{
+         var response = await networkCaller.postRequest(AppUrls.giveDonation(eventId), body: {
+           "amount": amountController.text.trim()
+         }, token: token);
+         if(response.isSuccess){
+           log("the api response is ${response.responseData}");
+         }
+
+       }
+       catch(e){
+         log("the exception is ${e.toString()}");
+       }
+       finally{
+         isLoading.value = false;
+       }
+     }
 
   void pickDate(BuildContext context) {
     showModalBottomSheet(

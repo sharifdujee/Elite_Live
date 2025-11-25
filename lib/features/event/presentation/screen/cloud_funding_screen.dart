@@ -9,6 +9,7 @@ import '../../../../core/global_widget/custom_comment_sheet.dart';
 import '../../../../core/global_widget/date_time_helper.dart';
 import '../../../home/controller/home_controller.dart';
 import '../../../home/presentation/widget/designation_section.dart';
+import '../../../home/presentation/widget/donation_sheet.dart';
 import '../../../home/presentation/widget/follow_section.dart';
 import '../../../home/presentation/widget/live_indicator_section.dart';
 import '../../../home/presentation/widget/nameBadgeSection.dart';
@@ -20,6 +21,7 @@ class CloudFundingScreen extends StatelessWidget {
    final ScheduleController scheduleController = Get.find();
    final RxString replyingToId = ''.obs;
    final RxString replyingToName = ''.obs;
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +99,11 @@ class CloudFundingScreen extends StatelessWidget {
                   showModalBottomSheet(context: context, builder: (BuildContext context){
                     return CommentSheet(scheduleController: scheduleController, eventId: eventId);
                   });
+                },
+                onTipsTap: (){
+
+
+                  DonationSheet.show(context,eventId: crowdFund.id);
                 },
                 likeCount: crowdLike.toString(),commentCount: crowdComment,),
               SizedBox(height: 20.h,),

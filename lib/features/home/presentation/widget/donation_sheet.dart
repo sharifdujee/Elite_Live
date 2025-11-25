@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -9,11 +12,13 @@ import 'package:flutter/services.dart';
 
 
 class DonationSheet extends StatefulWidget {
-  const DonationSheet({super.key});
+  const DonationSheet({super.key, required this.eventId});
 
-  static void show(BuildContext context) {
+  final String eventId;
+
+  static void show(BuildContext context, {required String eventId}) {
     Get.bottomSheet(
-      const DonationSheet(),
+      DonationSheet(eventId: eventId),
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
@@ -28,6 +33,8 @@ class _DonationSheetState extends State<DonationSheet> {
   final HomeController controller = Get.find<HomeController>();
   final TextEditingController customAmountController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
+  final ScheduleController scheduleController = Get.find();
+
 
   @override
   void dispose() {
@@ -301,7 +308,10 @@ class _DonationSheetState extends State<DonationSheet> {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: _processDonation,
+                  onPressed: (){
+                    log('test button is pressed');
+                    scheduleController.createDonation(widget.eventId!);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
