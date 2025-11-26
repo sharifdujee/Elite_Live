@@ -14,20 +14,6 @@ import 'package:uuid/uuid.dart';
 import '../data/create_live_response_data_model.dart';
 
 
-import 'dart:developer';
-import 'package:elites_live/core/global_widget/custom_text_view.dart';
-import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
-import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
-import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
-import 'package:elites_live/core/utils/constants/app_colors.dart';
-import 'package:elites_live/core/utils/constants/app_urls.dart';
-import 'package:elites_live/routes/app_routing.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
-
-import '../data/create_live_response_data_model.dart';
 
 class LiveScreenController extends GetxController {
   var isCameraOn = true.obs;

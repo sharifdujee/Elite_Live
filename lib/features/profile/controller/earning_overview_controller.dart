@@ -4,11 +4,12 @@ import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
 import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:elites_live/features/profile/data/connected_account_balance_data_model.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EarningsController extends GetxController {
   // 0 = Ads Revenue, 1 = Funding
-  var selectedTab = 0.obs;
+
 
   // Example summary data (these can be fetched later)
   final double totalEarnings = 16.18;
@@ -19,6 +20,7 @@ class EarningsController extends GetxController {
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
   var isLoading = false.obs;
   RxList<ConnectedAccountBalanceResult> balanceHistory = <ConnectedAccountBalanceResult>[].obs;
+  final TextEditingController amountController = TextEditingController();
 
   @override
   void onInit() {
@@ -86,32 +88,68 @@ class EarningsController extends GetxController {
   }
 
 
-  // Ads Revenue data list
-  final List<Map<String, dynamic>> adsRevenueList = [
-    {
-      "image": "assets/images/live1.png",
-      "title": "Art In Motion - Hold",
-      "subtitle": "Tell me what excites..",
-      "amount": "\$1.00",
-    },
-    {
-      "image": "assets/images/live2.png",
-      "title": "Day 3",
-      "subtitle": "Tell me what excites..",
-      "amount": "\$0.00",
-    },
-    {
-      "image": "assets/images/live3.png",
-      "title": "Joe Barone",
-      "subtitle": "Tell me what excites..",
-      "amount": "\$5.00",
-    },
-  ];
 
-  // Funding data list
+  Future<void> instantPayout() async {
+    if (isLoading.value) return; // prevent double call
 
+    final withdrawable = balanceHistory.first.withdrawable;
 
-  void changeTab(int index) {
-    selectedTab.value = index;
+    String amountText = amountController.text.trim();
+    if (amountText.isEmpty) {
+      Get.snackbar("Enter Amount", "Please enter an amount to withdraw.");
+      return;
+    }
+
+    double? amount = double.tryParse(amountText);
+    if (amount == null || amount <= 0) {
+      Get.snackbar("Invalid Amount", "Please enter a valid amount.");
+      return;
+    }
+
+    if (amount > withdrawable) {
+      Get.snackbar("Insufficient Balance",
+          "You cannot withdraw more than available withdrawable balance.");
+      return;
+    }
+
+    isLoading.value = true;
+
+    try {
+      final token = helper.getString("userToken");
+
+      var response = await networkCaller.postRequest(
+        AppUrls.instantPayout,
+        body: {"amount": amount},
+        token: token,
+      );
+
+      if (response.isSuccess) {
+        Get.back(); // close sheet
+        amountController.clear();
+
+        Get.snackbar(
+          "Success",
+          "Withdrawal request submitted successfully.",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+
+        getConnectedAccountBalance();
+      } else {
+        Get.snackbar(
+          "Error",
+          response.errorMessage ?? "Failed to process payout.",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar("Exception", e.toString(),
+          backgroundColor: Colors.red, colorText: Colors.white);
+    } finally {
+      isLoading.value = false;
+    }
   }
+
+
 }

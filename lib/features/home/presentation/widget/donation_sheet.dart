@@ -1,14 +1,15 @@
 import 'dart:developer';
 
-import 'package:elites_live/core/global_widget/custom_loading.dart';
+
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../controller/home_controller.dart';
 import 'package:flutter/services.dart';
+import 'package:elites_live/core/global_widget/custom_loading.dart';
+import '../../controller/home_controller.dart';
 
 
 class DonationSheet extends StatefulWidget {
@@ -34,7 +35,6 @@ class _DonationSheetState extends State<DonationSheet> {
   final TextEditingController customAmountController = TextEditingController();
   final FocusNode amountFocusNode = FocusNode();
   final ScheduleController scheduleController = Get.find();
-
 
   @override
   void dispose() {
@@ -132,6 +132,11 @@ class _DonationSheetState extends State<DonationSheet> {
       return;
     }
 
+    // ✅ FIX: Set the amount in scheduleController BEFORE calling createDonation
+    scheduleController.amountController.text = amount.toString();
+
+    log('Donation amount set: ${scheduleController.amountController.text}');
+
     // Close the bottom sheet
     Get.back();
 
@@ -144,7 +149,9 @@ class _DonationSheetState extends State<DonationSheet> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomLoading(color: AppColors.primaryColor,),
+                CustomLoading(
+                  color: AppColors.primaryColor,
+                ),
                 const SizedBox(height: 16),
                 const Text('Processing payment...'),
               ],
@@ -156,7 +163,7 @@ class _DonationSheetState extends State<DonationSheet> {
     );
 
     // Process the donation
-    controller.processDonation(amount);
+    scheduleController.createDonation(widget.eventId);
   }
 
   @override
@@ -205,7 +212,8 @@ class _DonationSheetState extends State<DonationSheet> {
 
               // Description
               CustomTextView(
-                text: "Choose a donation amount or send a virtual gift to cheer for your favorite streamer!",
+                text:
+                "Choose a donation amount or send a virtual gift to cheer for your favorite streamer!",
                 fontWeight: FontWeight.w400,
                 fontSize: 12.sp,
                 color: AppColors.textBody,
@@ -247,7 +255,8 @@ class _DonationSheetState extends State<DonationSheet> {
                       decimal: true,
                     ),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d+\.?\d{0,2}')),
                     ],
                     onChanged: (value) {
                       if (value.isNotEmpty) {
@@ -308,10 +317,7 @@ class _DonationSheetState extends State<DonationSheet> {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: (){
-                    log('test button is pressed');
-                    scheduleController.createDonation(widget.eventId!);
-                  },
+                  onPressed: _processDonation, // ✅ Use the validation method
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,

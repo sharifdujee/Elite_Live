@@ -1,5 +1,8 @@
 
 
+import 'package:elites_live/features/event/presentation/screen/others_user_details_screen.dart';
+import 'package:elites_live/features/event/presentation/screen/others_user_schedule_event_screen.dart';
+import 'package:elites_live/features/home/presentation/screen/payment_web_view_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import '../../features/on_boarding/screen/slider_screen.dart';
@@ -77,6 +80,9 @@ class AppRoute {
   static const String premiumScreen = "/premium";
   static const String subscription = "/subscription";
   static const String myLive = "/myLive";
+  static const paymentWebView = '/payment-webview';
+  static const othersUser = '/otherUser';
+  static const othersSchedule = '/otherSchedule';
 
 
 
@@ -221,6 +227,9 @@ class AppRoute {
     GetPage(name: premiumScreen, page: ()=>UpgradePremiumScreen(), transition: Transition.rightToLeft),
     GetPage(name: subscription, page: ()=>SubscriptionScreen(), transition: Transition.rightToLeft),
     GetPage(name: myLive, page: ()=>MyLiveScreen(), transition: Transition.rightToLeft),
+    GetPage(name: paymentWebView, page: ()=>PaymentWebViewScreen(), transition: Transition.rightToLeft),
+    GetPage(name: othersUser, page: ()=>OthersUserDetailsScreen(), transition: Transition.rightToLeft),
+    GetPage(name: othersSchedule, page: ()=>OthersUserScheduleEventScreen(), transition: Transition.rightToLeft),
 
 
     GetPage(

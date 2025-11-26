@@ -8,6 +8,7 @@ import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:elites_live/core/utils/constants/image_path.dart';
 import 'package:elites_live/features/group/data/discoverGroup_data_model.dart';
 import 'package:elites_live/features/group/data/joined_group_data_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class GroupController extends GetxController{
@@ -15,6 +16,7 @@ class GroupController extends GetxController{
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
   RxList<DiscoverGroupResult> discoverGroupList = <DiscoverGroupResult>[].obs;
   RxList<JoinedGroupResultResult> joinedGroupList = <JoinedGroupResultResult>[].obs;
+  final TextEditingController searchTermController = TextEditingController();
 
 
   var isLoading = false.obs;
@@ -89,6 +91,47 @@ class GroupController extends GetxController{
       isLoading.value = false;
     }
   }
+
+  /// search group
+  Future<void> searchGroup(String search) async {
+    isLoading.value = true;
+
+    String? token = helper.getString("userToken");
+    log("token during search group is $token");
+
+    try {
+      var response = await networkCaller.getRequest(AppUrls.searchGroup(search), token: token);
+
+      if (response.isSuccess) {
+        log("the api response is ${response.responseData}");
+
+        final data = response.responseData;
+
+        // Handle if API returns list directly
+        if (data is List) {
+          discoverGroupList.assignAll(
+            data.map((x) => DiscoverGroupResult.fromJson(x)).toList(),
+          );
+        }
+
+        // Handle if wrapped inside a map (fallback)
+        else if (data is Map<String, dynamic> && data.containsKey("result")) {
+          discoverGroupList.assignAll(
+            (data["result"] as List)
+                .map((x) => DiscoverGroupResult.fromJson(x))
+                .toList(),
+          );
+        } else {
+          log("Unexpected search API format: ${data.runtimeType}");
+        }
+      }
+    } catch (e) {
+      log("Exception in searchGroup: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   
   /// join group 
   Future<void> joinGroup(String groupId) async {

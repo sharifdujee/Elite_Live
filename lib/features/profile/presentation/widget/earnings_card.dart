@@ -134,7 +134,7 @@ class EarningsSummaryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(28.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
+              color: Colors.black.withValues(alpha: 0.25),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -170,22 +170,17 @@ class EarningsSummaryCard extends StatelessWidget {
                 width: double.infinity,
                 height: 56.h,
                 child: ElevatedButton(
-                  onPressed: withdrawable > 0
-                      ? () => Get.snackbar(
-                    "Withdraw",
-                    "Withdraw request for \$${withdrawable.toStringAsFixed(2)} sent!",
-                    backgroundColor: Colors.white,
-                    colorText: const Color(0xFF9C27B0),
-                  )
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    disabledBackgroundColor: Colors.white70,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.r),
-                    ),
-                    elevation: 0,
-                  ),
+                  onPressed: () {
+                    Get.bottomSheet(
+                      _withdrawAmountSheet(controller),
+                      isScrollControlled: true,
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                      ),
+                    );
+                  },
+
                   child: Text(
                     "Withdraw  \$${withdrawable.toStringAsFixed(2)}",
                     style: GoogleFonts.inter(
@@ -194,8 +189,10 @@ class EarningsSummaryCard extends StatelessWidget {
                       color: const Color(0xFF9C27B0),
                     ),
                   ),
+                )
+
                 ),
-              ),
+
             ],
           ),
         ),
@@ -249,4 +246,60 @@ class EarningsSummaryCard extends StatelessWidget {
       ],
     );
   }
+
+  Widget _withdrawAmountSheet(EarningsController controller) {
+    final withdrawable = controller.balanceHistory.first.withdrawable;
+
+    return Container(
+      margin: EdgeInsets.only(
+        bottom: MediaQuery.of(Get.context!).viewInsets.bottom,
+        left: 20,
+        right: 20,
+        top: 20,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Withdraw Funds",
+            style: GoogleFonts.inter(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 20),
+
+          TextField(
+            controller: controller.amountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Enter amount",
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.attach_money),
+              hintText: "Max: ${withdrawable.toStringAsFixed(2)}",
+            ),
+          ),
+
+          SizedBox(height: 20),
+
+          Obx(() => ElevatedButton(
+            onPressed: controller.isLoading.value
+                ? null
+                : () => controller.instantPayout(),
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(double.infinity, 50),
+            ),
+            child: controller.isLoading.value
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(
+              "Withdraw Now",
+              style: TextStyle(fontSize: 16),
+            ),
+          )),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
 }

@@ -67,7 +67,7 @@ class AllLiveScreen extends StatelessWidget {
                           SizedBox(width: 8.w),
 
                           /// follow and dot indicator section
-                          FollowSection(index: index),
+                          FollowSection(index: index,),
                         ],
                       ),
 

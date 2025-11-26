@@ -143,8 +143,15 @@ class DiscoverGroup extends StatelessWidget {
                 children: [
                   /// Search Bar
                   CustomTextField(
+                    onChanged: (value) {
+                      controller.searchTermController.text = value;
+                    },
+                    onSubmitted: (value) {
+                      controller.searchGroup(value.trim());
+                    },
                     hintText: "Search by Group",
                   ),
+
                   SizedBox(height: 16.h),
 
                   /// Group List

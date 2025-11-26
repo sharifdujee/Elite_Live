@@ -10,16 +10,23 @@ class LiveIndicatorSection extends StatelessWidget {
     super.key,
     required this.influencerProfile,
      this.isLive = false,
+    this.onTap
   });
   final String influencerProfile;
   final bool isLive;
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CircleAvatar(
-          radius: 30.r,
-          backgroundImage: NetworkImage(influencerProfile),
+        GestureDetector(
+          onTap: (){
+            onTap!();
+          },
+          child: CircleAvatar(
+            radius: 30.r,
+            backgroundImage: NetworkImage(influencerProfile),
+          ),
         ),
         Positioned(
           bottom: -6.h, // Align to the bottom

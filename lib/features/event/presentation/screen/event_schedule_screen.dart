@@ -3,6 +3,8 @@ import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/event/controller/event_controller.dart';
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
+import 'package:elites_live/features/event/presentation/widget/event_follow_section.dart';
+import 'package:elites_live/routes/app_routing.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +12,6 @@ import 'package:get/get.dart';
 import '../../../../core/global_widget/custom_comment_sheet.dart';
 import '../../../../core/global_widget/date_time_helper.dart';
 import '../../../home/presentation/widget/designation_section.dart';
-import '../../../home/presentation/widget/follow_section.dart';
 import '../../../home/presentation/widget/live_indicator_section.dart';
 import '../../../home/presentation/widget/nameBadgeSection.dart';
 
@@ -37,7 +38,9 @@ class EventScheduleScreen extends StatelessWidget {
       }
 
       if (eventController.eventList.isEmpty) {
-        return Center(child: Text('No events found'));
+        return Center(child: Text('No events found',style: TextStyle(
+            color: AppColors.textHeader
+        ),));
       }
 
       return RefreshIndicator(
@@ -80,7 +83,7 @@ class EventScheduleScreen extends StatelessWidget {
 
             // Extract event data
             final about = event.text;
-            final eventType = event.eventType;
+            final eventType = event.title;
             final joiningFee = event.payAmount.toString();
 
             // Format date and time
@@ -95,6 +98,10 @@ class EventScheduleScreen extends StatelessWidget {
             // Counts
             final likeCount = event.count.eventLike;
             final commentCount = event.count.eventComment;
+            final isOwner = event.isOwner;
+            final hostLink = event.stream?.hostLink;
+            final audienceLink = event.stream?.audienceLink;
+
 
             // Live status (you may need to adjust this based on your logic)
 
@@ -107,6 +114,10 @@ class EventScheduleScreen extends StatelessWidget {
                   children: [
                     /// Live indicator
                     LiveIndicatorSection(
+                      onTap: (){
+                        Get.toNamed(AppRoute.othersUser, arguments: {"userId":event.userId});
+
+                      },
                       influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B',
 
                     ),
@@ -134,7 +145,7 @@ class EventScheduleScreen extends StatelessWidget {
                     SizedBox(width: 8.w),
 
                     /// Follow and dot indicator section
-                    FollowSection(index: index),
+                    EventFollowSection(index: index)
                   ],
                 ),
                 SizedBox(height: 16.h),
@@ -149,8 +160,11 @@ class EventScheduleScreen extends StatelessWidget {
                 /// Cloud Details Section
                 EventDetailsSection(
                   eventDetails: about,
-                  eventType: eventType,
+                  eventTitle: eventType,
                   joiningFee: joiningFee,
+                  isOwner: isOwner,
+                  hostLink: hostLink,
+                  audienceLink: audienceLink,
                 ),
 
                 SizedBox(height: 10.h),
@@ -161,7 +175,7 @@ class EventScheduleScreen extends StatelessWidget {
 
                     scheduleController.createLike(eventId);
                   },
-                  isTip: false,
+                  eventType: eventType,
                   isLiked: likeStatus,
                   likeCount: likeCount.toString(),
                   commentCount: commentCount,
@@ -169,7 +183,7 @@ class EventScheduleScreen extends StatelessWidget {
                     showModalBottomSheet(context: context, builder: (BuildContext context){
                       return CommentSheet(scheduleController: scheduleController, eventId: eventId);
                     });
-                  },
+                  }, isOwner: isOwner,
                 ),
 
 

@@ -38,7 +38,7 @@ class HomeController extends GetxController {
   ];
 
   List<bool> isLive = [true, false, true, true, true];
-  List<bool> isFollow = [true, false, true, true, true, false, true];
+  List<bool> isFollow = [true, false, true, true, true];
 
   var commentImage = Rx<File?>(null);
   var isEmojiVisible = false.obs;

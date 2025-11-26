@@ -1,7 +1,6 @@
 
 import 'package:elites_live/core/global_widget/custom_text_field.dart';
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
-import 'package:elites_live/features/group/controller/group_controller.dart';
 import 'package:elites_live/features/group/controller/my_group_controller.dart';
 import 'package:elites_live/routes/app_routing.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +71,12 @@ class GroupScreen extends StatelessWidget {
                     children: [
                       /// Search Bar
                       CustomTextField(
+                        onChanged: (value) {
+                          controller.searchTermController.text = value;
+                        },
+                        onSubmitted: (value) {
+                          controller.searchGroup(value.trim());
+                        },
                         hintText: "Search by Group",
                       ),
                       SizedBox(height: 16.h),

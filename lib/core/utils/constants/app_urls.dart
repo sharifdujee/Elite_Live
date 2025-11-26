@@ -14,6 +14,11 @@ class AppUrls {
   /// profile set up
   static const String setUpProfile = "$_baseUrl/auth/profile";
   static const String user = '$_baseUrl/auth/profile';
+
+  /// others user flow
+   static String getOtherUserInfo(String userId) => "$_baseUrl/users/$userId";
+   static String getOthersUserScheduleEvent(String userId) => "$_baseUrl/event/user-schedule/event/$userId";
+   static String getOthersUserFundingEvent(String userId) => "$_baseUrl/event/user-funding/event/$userId";
   /// setting flow
   static const String getMyEvent = "$_baseUrl/event/my-schedule/event";
   static const String getMyCrowdFund = "$_baseUrl/event/my-funding/event";
@@ -48,6 +53,7 @@ class AppUrls {
   /// Group flow
   static const String createGroup = "$_baseUrl/group/create";
   static const String discoverGroup = "$_baseUrl/group/discover-groups";
+  static String searchGroup(String search) => "$_baseUrl/group/discover-groups?search=$search";
   static String joinGroup(String groupId) => "$_baseUrl/group/join-group/$groupId";
   static const String joinedGroup = "$_baseUrl/group/joined-groups";
   static String groupInfo(String groupId) => "$_baseUrl/group/$groupId";
@@ -76,6 +82,7 @@ class AppUrls {
   static const String createPayoutAccount = "$_baseUrl/donation/connected/account";
   static String giveDonation(String eventId)=> "$_baseUrl/donation/$eventId";
   static String getConnectedAccountBalance = "$_baseUrl/donation/stripe/balance";
+  static const String instantPayout = "$_baseUrl/donation/instant/payout";
 
 
 

@@ -20,6 +20,7 @@ class FundingScheduleTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MyCrowdFundController>();
+    Future.microtask(()=>controller.getMyCrowdFunding());
 
     return Obx(() {
       log("UI REBUILD → isLoading: ${controller.isLoading.value} | events: ${controller.events.length}");
@@ -120,7 +121,7 @@ class EventCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.1),
+              color: AppColors.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6.r),
             ),
             child: Text(event.eventType, style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.w600)),

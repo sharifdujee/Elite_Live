@@ -1,7 +1,10 @@
 
 
+import 'dart:developer';
+
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:elites_live/features/event/presentation/widget/cloud_funding_details.dart';
+import 'package:elites_live/features/event/presentation/widget/crowd_fund_follow_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,7 +13,7 @@ import '../../../../core/global_widget/date_time_helper.dart';
 import '../../../home/controller/home_controller.dart';
 import '../../../home/presentation/widget/designation_section.dart';
 import '../../../home/presentation/widget/donation_sheet.dart';
-import '../../../home/presentation/widget/follow_section.dart';
+
 import '../../../home/presentation/widget/live_indicator_section.dart';
 import '../../../home/presentation/widget/nameBadgeSection.dart';
 import '../widget/user_interaction_section.dart';
@@ -29,11 +32,13 @@ class CloudFundingScreen extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         itemCount: scheduleController.crowdFundList.length,
         separatorBuilder: (context,index){
+
           return Divider();
         },
         shrinkWrap: true,
         itemBuilder: (context,index){
           final crowdFund = scheduleController.crowdFundList[index];
+          log("the eventype is ${crowdFund.eventType}");
 
           final firstName = crowdFund.user.firstName;
           final lastName = crowdFund.user.lastName;
@@ -46,8 +51,11 @@ class CloudFundingScreen extends StatelessWidget {
           final crowdLike = crowdFund.count.eventLike;
           final crowdComment = crowdFund.count.eventComment;
           final about = crowdFund.text;
+          final title = crowdFund.title;
+          final eventYpe = crowdFund.eventType;
           final eventId = crowdFund.id;
           final likeStatus = crowdFund.isLiked;
+          final isOwner = crowdFund.isOwner;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -77,7 +85,7 @@ class CloudFundingScreen extends StatelessWidget {
                   SizedBox(width: 8.w),
 
                   /// follow and dot indicator section
-                  FollowSection(index: index),
+                  CrowdFundFollowSection(event: crowdFund,)
                 ],
               ),
               SizedBox(height: 16.h,),
@@ -85,13 +93,14 @@ class CloudFundingScreen extends StatelessWidget {
               SizedBox(height: 10.h,),
 
               /// Event Details Section
-              CloudFundingDetails(eventDescription: about,),
+              CloudFundingDetails(eventDescription: about,title: title, event: crowdFund,),
 
               SizedBox(height: 10.h,),
               /// like comment and share Section
               UserInteractionSection(
+                isOwner: isOwner,
                 isLiked: likeStatus,
-                isTip: true,
+               eventType: eventYpe,
                 onLikeTap: (){
                 scheduleController.createLike(eventId);
                 },

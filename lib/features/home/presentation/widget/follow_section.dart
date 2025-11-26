@@ -12,7 +12,8 @@ import '../../../../core/global_widget/custom_text_view.dart';
 class FollowSection extends StatelessWidget {
   final int index;
 
-  FollowSection({super.key, required this.index});
+
+  FollowSection({super.key, required this.index, });
 
   final HomeController controller = Get.find();
   final EventController eventController = Get.find();
@@ -21,14 +22,15 @@ class FollowSection extends StatelessWidget {
   Widget build(BuildContext context) {
 
 
-    final event = eventController.eventList[index];
-    final bool isFollowing = event.user.isFollow;
-    final userId = event.userId;
+
+    final followCount = controller.isFollow[index];
+
+
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (!isFollowing)
+        /*if (!isFollowing)
           GestureDetector(
             onTap: () {
               eventController.followUnFlow(userId);
@@ -51,7 +53,7 @@ class FollowSection extends StatelessWidget {
                 color: const Color(0xFF374151),
               ),
             ),
-          ),
+          ),*/
         SizedBox(width: 4.w),
 
         /// 3-dot popup
@@ -71,7 +73,7 @@ class FollowSection extends StatelessWidget {
           itemBuilder: (context) {
             List<PopupMenuEntry<int>> items = [];
 
-            if (isFollowing) {
+           /* if (isFollowing) {
               items.add(
                 PopupMenuItem(
                   value: 0,
@@ -89,7 +91,7 @@ class FollowSection extends StatelessWidget {
                 ),
               );
             }
-
+*/
             items.addAll([
               PopupMenuItem(
                 value: 1,

@@ -87,4 +87,7 @@ class MyScheduleEventController extends GetxController {
       log("Loading complete. Final list length: ${myEventScheduleList.length}");
     }
   }
+
+  /// get others user information
+
 }

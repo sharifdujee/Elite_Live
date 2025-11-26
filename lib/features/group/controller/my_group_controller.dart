@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../../core/helper/shared_prefarenses_helper.dart';
@@ -11,6 +12,7 @@ import '../data/joined_group_data_model.dart';
 class MyGroupController extends GetxController {
   final NetworkCaller networkCaller = NetworkCaller();
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
+  final TextEditingController searchTermController = TextEditingController();
 
   RxList<JoinedGroupResultResult> joinedGroupList =
       <JoinedGroupResultResult>[].obs;
@@ -62,6 +64,45 @@ class MyGroupController extends GetxController {
     } catch (e, stackTrace) {
       log("the exception is ${e.toString()}");
       log("Stack trace: $stackTrace");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> searchGroup(String search) async {
+    isLoading.value = true;
+
+    String? token = helper.getString("userToken");
+    log("token during search group is $token");
+
+    try {
+      var response = await networkCaller.getRequest(AppUrls.searchGroup(search), token: token);
+
+      if (response.isSuccess) {
+        log("the api response is ${response.responseData}");
+
+        final data = response.responseData;
+
+        // Handle if API returns list directly
+        if (data is List) {
+          joinedGroupList.assignAll(
+            data.map((x) => JoinedGroupResultResult.fromJson(x)).toList(),
+          );
+        }
+
+        // Handle if wrapped inside a map (fallback)
+        else if (data is Map<String, dynamic> && data.containsKey("result")) {
+          joinedGroupList.assignAll(
+            (data["result"] as List)
+                .map((x) => JoinedGroupResultResult.fromJson(x))
+                .toList(),
+          );
+        } else {
+          log("Unexpected search API format: ${data.runtimeType}");
+        }
+      }
+    } catch (e) {
+      log("Exception in searchGroup: $e");
     } finally {
       isLoading.value = false;
     }
