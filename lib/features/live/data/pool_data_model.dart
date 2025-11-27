@@ -22,8 +22,8 @@ class PoolDataModel {
   });
 
   factory PoolDataModel.fromJson(Map<String, dynamic> json) => PoolDataModel(
-    success: json["success"],
-    message: json["message"],
+    success: json["success"]??true,
+    message: json["message"]??'',
     result: List<PoolResult>.from(
         json["result"].map((x) => PoolResult.fromJson(x))
     ), // ✅ Parse as list

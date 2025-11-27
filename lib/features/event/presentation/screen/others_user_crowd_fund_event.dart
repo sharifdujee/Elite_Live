@@ -93,8 +93,8 @@ class OthersUserCrowdScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CustomTextView(
-                          text: 'Date: ${formatDate(event.scheduleDate!)}',
+                       /* CustomTextView(
+                          text: 'Date: ${formatDate(event.scheduleDate??Dar)}',
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.black87,
@@ -104,7 +104,7 @@ class OthersUserCrowdScreen extends StatelessWidget {
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primaryColor,
-                        ),
+                        ),*/
                       ],
                     ),
                   ),

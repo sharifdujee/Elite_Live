@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:developer';
 
+
+
+import '../../../../routes/app_routing.dart';
+
 class PaymentWebViewScreen extends StatefulWidget {
   const PaymentWebViewScreen({super.key});
 
@@ -15,6 +19,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   bool isLoading = true;
   String? url;
   String? title;
+  bool hasNavigated = false; // Prevent multiple navigations
 
   @override
   void initState() {
@@ -50,40 +55,55 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             setState(() {
               isLoading = true;
             });
+
+            // ✅ Check for success/cancel URLs when page starts loading
+            if (!hasNavigated) {
+              if (url.contains('/donation/success')) {
+                hasNavigated = true;
+                log('Payment successful - navigating to main view');
+
+                // Navigate to main view
+                Get.offAllNamed(AppRoute.mainView);
+
+                // Show success message
+                Get.snackbar(
+                  'Success',
+                  'Your payment was successfully done!',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.green,
+                  colorText: Colors.white,
+                  duration: const Duration(seconds: 3),
+                );
+              } else if (url.contains('/donation/cancel')) {
+                hasNavigated = true;
+                log('Payment cancelled - navigating to main view');
+
+                // Navigate to main view
+                Get.offAllNamed(AppRoute.mainView);
+
+                // Show cancellation message
+                Get.snackbar(
+                  'Cancelled',
+                  'Payment was cancelled',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.orange,
+                  colorText: Colors.white,
+                  duration: const Duration(seconds: 3),
+                );
+              }
+            }
           },
           onPageFinished: (String url) {
             log('Page finished loading: $url');
             setState(() {
               isLoading = false;
             });
-
-            // Check if payment is successful or cancelled
-            if (url.contains('/donation/success')) {
-              log('Payment successful');
-              Get.back();
-              Get.snackbar(
-                'Success',
-                'Payment completed successfully!',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.green,
-                colorText: Colors.white,
-                duration: const Duration(seconds: 3),
-              );
-            } else if (url.contains('/donation/cancel')) {
-              log('Payment cancelled');
-              Get.back();
-              Get.snackbar(
-                'Cancelled',
-                'Payment was cancelled',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.orange,
-                colorText: Colors.white,
-                duration: const Duration(seconds: 3),
-              );
-            }
           },
           onWebResourceError: (WebResourceError error) {
             log('WebView error: ${error.description}');
+            setState(() {
+              isLoading = false;
+            });
             Get.snackbar(
               'Error',
               'Failed to load payment page',

@@ -93,6 +93,7 @@ class LiveEvent {
   StreamData? stream;
   bool isLiked;
   bool isOwner;
+  bool isPayment; // <-- NEW FIELD
 
   LiveEvent({
     required this.id,
@@ -111,6 +112,7 @@ class LiveEvent {
     required this.stream,
     required this.isLiked,
     required this.isOwner,
+    required this.isPayment, // <-- NEW
   });
 
   factory LiveEvent.fromJson(Map<String, dynamic> json) => LiveEvent(
@@ -136,11 +138,11 @@ class LiveEvent {
         ? []
         : List<EventLike>.from(
         json["EventLike"].map((x) => EventLike.fromJson(x))),
-    stream: json["stream"] == null
-        ? null
-        : StreamData.fromJson(json["stream"]),
+    stream:
+    json["stream"] == null ? null : StreamData.fromJson(json["stream"]),
     isLiked: json["isLiked"] ?? false,
     isOwner: json["isOwner"] ?? false,
+    isPayment: json["isPayment"] ?? false, // <-- PARSE NEW FIELD
   );
 
   Map<String, dynamic> toJson() => {
@@ -160,8 +162,10 @@ class LiveEvent {
     "stream": stream?.toJson(),
     "isLiked": isLiked,
     "isOwner": isOwner,
+    "isPayment": isPayment, // <-- ADD TO JSON
   };
 }
+
 
 /// ===============================
 /// STREAM DATA

@@ -20,10 +20,10 @@ class CreatePollController extends GetxController {
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
   RxList<PoolResult> poolList = <PoolResult>[].obs;
 
-  // IMPORTANT: Use Map instead of List for vote results
+
   RxMap<String, PoolVoteResult> poolVoteMap = <String, PoolVoteResult>{}.obs;
 
-  // Map to store checked states: pollIndex -> [list of bool for each option]
+
   final RxMap<int, RxList<bool>> checkedOptionsMap = <int, RxList<bool>>{}.obs;
 
   @override
@@ -38,7 +38,7 @@ class CreatePollController extends GetxController {
     }
   }
 
-  // Get checked value for a specific poll's option
+
   bool getCheckedValue(int pollIndex, int optionIndex) {
     if (checkedOptionsMap.containsKey(pollIndex)) {
       final list = checkedOptionsMap[pollIndex]!;
@@ -49,7 +49,6 @@ class CreatePollController extends GetxController {
     return false;
   }
 
-  // Set checked value for a specific poll's option
   void setCheckedValue(int pollIndex, int optionIndex, bool value) {
     if (checkedOptionsMap.containsKey(pollIndex)) {
       final list = checkedOptionsMap[pollIndex]!;
@@ -59,12 +58,12 @@ class CreatePollController extends GetxController {
     }
   }
 
-  // Clear all checked states (call this when closing dialog or after actions)
+
   void clearCheckedStates() {
     checkedOptionsMap.clear();
   }
 
-  // Get selected options for a specific poll (returns list of selected option texts)
+
   List<String> getSelectedOptions(int pollIndex, List<String> pollOptions) {
     if (!checkedOptionsMap.containsKey(pollIndex)) {
       return [];
@@ -204,18 +203,29 @@ class CreatePollController extends GetxController {
   }
 
   /// update pool
-  Future<void> updatePool(String poolId, String streamId) async {
+  /// Update pool with question and options
+  Future<void> updatePool(String poolId, String streamId, String question, List<String> options) async {
+    if (question.trim().isEmpty) {
+      Get.snackbar("Error", "Question cannot be empty");
+      return;
+    }
+
+    if (options.isEmpty) {
+      Get.snackbar("Error", "Add at least one option");
+      return;
+    }
+
     isLoading.value = true;
     String? token = helper.getString("userToken");
-    log("token during update pool: $token");
+    log("Token during update pool: $token");
 
     try {
       final Map<String, dynamic> body = {
-        "question": questionController.text.trim(),
-        "options": options.toList(),
+        "question": question.trim(),
+        "options": options, // Include options in update
       };
 
-      log("Sending Poll Body: $body");
+      log("Updating Poll Body: $body");
 
       var response = await networkCaller.patchRequest(
         AppUrls.updatePool(poolId),
@@ -225,6 +235,12 @@ class CreatePollController extends GetxController {
 
       if (response.statusCode == 200 && response.isSuccess) {
         log("Poll updated: ${response.responseData}");
+
+        // Clear the form
+        questionController.clear();
+        this.options.clear();
+
+        // Refresh poll list
         await getPool(streamId);
 
         Get.back();
@@ -232,14 +248,28 @@ class CreatePollController extends GetxController {
           "Success",
           "Poll updated successfully",
           snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
         );
       } else {
-        log("Poll updated Failed: ${response.responseData}");
-        Get.snackbar("Error", "Failed to update poll");
+        log("Poll update failed: ${response.responseData}");
+        Get.snackbar(
+          "Error",
+          response.responseData?['message'] ?? "Failed to update poll",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
-      log("Exception in update: ${e.toString()}");
-      Get.snackbar("Error", "Something went wrong");
+      log("Exception in updatePool: ${e.toString()}");
+      Get.snackbar(
+        "Error",
+        "Something went wrong",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -265,14 +295,83 @@ class CreatePollController extends GetxController {
     }
   }
 
-  /// get pool vote result - FIXED VERSION
-  Future<void> getPoolVoteResult(String pollId) async {
+  /// Vote on a pool with selected options
+  /// Vote on a pool with selected option
+  Future<void> votePool(String poolId, String streamId, List<String> selectedOptions) async {
+    if (selectedOptions.isEmpty) {
+      Get.snackbar("Error", "Please select at least one option");
+      return;
+    }
+
+    isLoading.value = true;
     String? token = helper.getString("userToken");
-    log("🔍 Fetching vote results for pollId: $pollId");
+    log("Token during vote pool: $token");
+    log("Voting on poll: $poolId with option: ${selectedOptions.first}");
 
     try {
+      // Send single option as string (API expects "option" not "options")
+      final Map<String, dynamic> body = {
+        "option": selectedOptions.first, // ✅ Send first selected option as string
+      };
+
+      log("Vote Body: $body");
+
+      var response = await networkCaller.postRequest(
+        AppUrls.votePool(poolId),
+        body: body,
+        token: token,
+      );
+
+      if (response.isSuccess && response.statusCode == 200) {
+        log("Vote successful: ${response.responseData}");
+
+        // Clear selected options after successful vote
+        clearCheckedStates();
+
+        // Refresh poll data and results
+        await getPool(streamId);
+        ///await getPoolVoteResult(streamId);
+
+        Get.snackbar(
+          "Success",
+          "Vote submitted successfully",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      } else {
+        log("Vote failed: ${response.responseData}");
+        Get.snackbar(
+          "Error",
+          response.responseData?['message'] ?? "Failed to submit vote",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      log("Exception in votePool: ${e.toString()}");
+      Get.snackbar(
+        "Error",
+        "Something went wrong while voting",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// get pool vote result - FIXED VERSION
+  Future<void> getPoolVoteResultByStream(String streamId) async {
+    String? token = helper.getString("userToken");
+    log("🔍 Fetching vote results for streamId: $streamId");
+
+    try {
+      // Use streamId instead of pollId in the endpoint
       var response = await networkCaller.getRequest(
-        AppUrls.poolResult(pollId),
+        AppUrls.poolResult(streamId), // ✅ Pass streamId, not pollId
         token: token,
       );
 
@@ -281,50 +380,57 @@ class CreatePollController extends GetxController {
 
       if (response.isSuccess && response.responseData != null) {
         try {
-          PoolVoteDataModel poolVoteData;
+          // The response can be a single poll result or array of results
+          List<dynamic> resultsArray = [];
 
           if (response.responseData is String) {
-            // Parse JSON string
             final decoded = json.decode(response.responseData);
-            poolVoteData = PoolVoteDataModel.fromJson(
-                Map<String, dynamic>.from(decoded));
-          } else if (response.responseData is Map) {
-            // Already a Map
-            final responseMap =
-            Map<String, dynamic>.from(response.responseData);
-
-            // Check structure: does it have 'result' key or is it the result itself?
-            if (responseMap.containsKey('result') &&
-                responseMap.containsKey('success')) {
-              // Full response: {success: true, message: "...", result: {...}}
-              poolVoteData = PoolVoteDataModel.fromJson(responseMap);
+            if (decoded is Map && decoded.containsKey('result')) {
+              final result = decoded['result'];
+              resultsArray = result is List ? result : [result];
+            } else if (decoded is List) {
+              resultsArray = decoded;
             } else {
-              // Direct result: {id: "...", question: "...", options: [...]}
-              poolVoteData = PoolVoteDataModel(
-                success: true,
-                message: "Poll result retrieved",
-                result: PoolVoteResult.fromJson(responseMap),
-              );
+              resultsArray = [decoded];
             }
-          } else {
-            log("⚠️ Unexpected response type: ${response.responseData.runtimeType}");
-            return;
+          } else if (response.responseData is Map) {
+            final responseMap = Map<String, dynamic>.from(response.responseData);
+
+            if (responseMap.containsKey('result')) {
+              final result = responseMap['result'];
+              resultsArray = result is List ? result : [result];
+            } else {
+              resultsArray = [responseMap];
+            }
+          } else if (response.responseData is List) {
+            resultsArray = response.responseData;
           }
 
-          // CRITICAL: Store in map using poll ID
-          poolVoteMap[pollId] = poolVoteData.result;
+          log("📊 Processing ${resultsArray.length} poll result(s)");
 
-          log("✅ Stored vote results for poll: $pollId");
-          log("   Question: ${poolVoteData.result.question}");
-          log("   Total options: ${poolVoteData.result.options.length}");
+          // Process each poll result
+          for (var resultData in resultsArray) {
+            final resultMap = Map<String, dynamic>.from(resultData);
+            final pollResult = PoolVoteResult.fromJson(resultMap);
+
+            // Store using poll ID as key
+            poolVoteMap[pollResult.id] = pollResult;
+
+            log("✅ Stored vote results for poll: ${pollResult.id}");
+            log("   Question: ${pollResult.question}");
+            log("   Total options: ${pollResult.options.length}");
+          }
 
           // Trigger UI update
           poolVoteMap.refresh();
+          log("✅ Completed fetching poll results for stream: $streamId");
 
         } catch (parseError, parseStack) {
           log("❌ Parse Error: $parseError");
           log("Parse Stack: $parseStack");
         }
+      } else {
+        log("⚠️ API call failed or returned no data");
       }
     } catch (e, stackTrace) {
       log("❌ Network Error: $e");

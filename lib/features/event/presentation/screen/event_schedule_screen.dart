@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import '../../../../core/global_widget/custom_comment_sheet.dart';
 import '../../../../core/global_widget/date_time_helper.dart';
 import '../../../home/presentation/widget/designation_section.dart';
+import '../../../home/presentation/widget/donation_sheet.dart';
 import '../../../home/presentation/widget/live_indicator_section.dart';
 import '../../../home/presentation/widget/nameBadgeSection.dart';
 
@@ -93,6 +94,7 @@ class EventScheduleScreen extends StatelessWidget {
             final eventDate = scheduleDateTime['date']!;
             final eventTime = scheduleDateTime['time']!;
             final likeStatus = event.isLiked;
+            final paymentStatus = event.isPayment;
 
             // Calculate time ago
             final timeAgo = DateTimeHelper.getTimeAgo(event.createdAt!.toIso8601String());
@@ -161,16 +163,27 @@ class EventScheduleScreen extends StatelessWidget {
 
                 /// Cloud Details Section
                 EventDetailsSection(
-                  onTap: (){
-                   controller.createAndNavigateToLive(isPaid: false, isHost: isOwner);
-                  },
                   eventDetails: about,
                   eventTitle: eventType,
                   joiningFee: joiningFee,
                   isOwner: isOwner,
                   hostLink: hostLink,
                   audienceLink: audienceLink,
+                  isPayment: paymentStatus,
+
+                  onTap: () {
+                    if (isOwner) return; // Owners never pay or join
+
+                    if (!paymentStatus) {
+                      DonationSheet.show(context,eventId: eventId);
+
+                    } else {
+                      // ALREADY PAID → JOIN LIVE
+                      Get.toNamed(AppRoute.myLive);
+                    }
+                  },
                 ),
+
 
                 SizedBox(height: 10.h),
 

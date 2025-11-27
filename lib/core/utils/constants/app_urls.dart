@@ -92,7 +92,7 @@ class AppUrls {
   static const String  createLive = "$_baseUrl/live/create/streaming";
   static  String endLive(String streamId) => "$_baseUrl//live/close/streaming/$streamId";
   static String createPool(String streamId) => "$_baseUrl/polls/$streamId";
-  static String getSinglePool(String streamId) => "$_baseUrl/polls";
+  static String getSinglePool(String streamId) => "$_baseUrl/polls/$streamId";
   static String updatePool(String poolId) => "$_baseUrl/polls/$poolId";
   static String deletePool(String poolId) => "$_baseUrl/polls/$poolId";
   static String votePool(String poolId) => "$_baseUrl/polls/submit/vote/$poolId";

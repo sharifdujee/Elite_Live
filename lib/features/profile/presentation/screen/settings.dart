@@ -273,14 +273,14 @@ class SettingsPage extends StatelessWidget {
                       SizedBox(height: 12.h,),
                       Container(height: 1.5.h, width: 310, color: Color(0xFFF8F8FB),),
                       SizedBox(height: 12.h),
-                      settingTile(
+                     /* settingTile(
                         'assets/icons/edit_profile2.png',
                         'Moderator',
                         showArrow: true,
                         color: Color(0xFF2D2D2D), // icon color
                         textColor: Color(0xFF2D2D2D), // text color
                         onTap: (){Get.toNamed(AppRoute.moderator);},
-                      ),
+                      ),*/
 
                       settingTile(
                         'assets/icons/earnings.png',
@@ -318,7 +318,7 @@ class SettingsPage extends StatelessWidget {
                         onTap: (){Get.toNamed(AppRoute.changePass);},
                       ),
 
-                      settingTile(
+                     /* settingTile(
                         'assets/icons/bank.png',
                         'Bank Information',
                         showArrow: true,
@@ -326,7 +326,7 @@ class SettingsPage extends StatelessWidget {
                         textColor: Color(0xFF191919), // text color
                          onTap: (){Get.toNamed(AppRoute.bank);},
                       ),
-
+*/
                       settingTile(
                         'assets/icons/subscription.png',
                         'Delete Account',

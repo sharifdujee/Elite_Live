@@ -1,107 +1,3 @@
-/*
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../core/utils/constants/app_colors.dart';
-import '../../controller/earning_overview_controller.dart';
-
-import 'package:get/get.dart';
-
-class EarningsSummaryCard extends StatelessWidget {
-  final EarningsController controller = Get.find<EarningsController>();
-
-  EarningsSummaryCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      if (controller.balanceHistory.isEmpty) {
-        return const Center(child: Text("No balance data available."));
-      }
-
-      final balance = controller.balanceHistory.first;
-
-
-
-
-
-      return Card(
-        margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.r),
-        ),
-        color: AppColors.primaryColor,
-        elevation: 5,
-        child: Padding(
-          padding: EdgeInsets.all(20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Earnings Summary",
-                style: GoogleFonts.poppins(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textHeader,
-                ),
-              ),
-              SizedBox(height: 10.h),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildInfoColumn("Available", available.toDouble()),
-                  _buildInfoColumn("Withdrawable", withdrawable),
-                  _buildInfoColumn("Pending", pending),
-                ],
-              ),
-
-              SizedBox(height: 20.h),
-              Divider(color: AppColors.dividerColor, thickness: 1),
-
-              SizedBox(height: 10.h),
-
-            ],
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget _buildInfoColumn(String label, double value) {
-    return Column(
-      children: [
-        Text(
-          value.toStringAsFixed(2),
-          style: GoogleFonts.poppins(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textHeader,
-          ),
-        ),
-        SizedBox(height: 6.h),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 14.sp,
-            color: AppColors.textBody,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-
-*/
-
-
-// earnings_summary_card.dart  →  Updated UI Only (100% same data & logic)
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -117,14 +13,33 @@ class EarningsSummaryCard extends StatelessWidget {
     final controller = Get.find<EarningsController>();
 
     return Obx(() {
-      // Using your existing observables — NO CHANGES in logic
-      final withdrawable = controller.balanceHistory.first.withdrawable;
-      final available = controller.balanceHistory.first.available ;
-      final pending = controller.balanceHistory.first.pendingBalance ;
-      final totalTransaction = controller.balanceHistory.first.totalTransactions;
-      final completeTransaction = controller.balanceHistory.first.completedTransactions;
-      final pendingTransaction = controller.balanceHistory.first.pendingTransactions;
+      /// ✔ FIX 1 — Prevent crash if list is empty
+      if (controller.balanceHistory.isEmpty) {
+        return Container(
+          margin: EdgeInsets.fromLTRB(10.w, 20.h, 10.w, 10.h),
+          padding: EdgeInsets.all(30),
+          decoration: BoxDecoration(
+            gradient: AppColors.primaryGradient,
+            borderRadius: BorderRadius.circular(28.r),
+          ),
+          child: const Center(
+            child: Text(
+              "No earnings data available",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        );
+      }
 
+      // Extract safely after the check
+      final data = controller.balanceHistory.first;
+
+      final withdrawable = data.withdrawable;
+      final available = data.available;
+      final pending = data.pendingBalance;
+      final totalTransaction = data.totalTransactions;
+      final completeTransaction = data.completedTransactions;
+      final pendingTransaction = data.pendingTransactions;
 
       return Container(
         margin: EdgeInsets.fromLTRB(10.w, 20.h, 10.w, 10.h),
@@ -144,7 +59,7 @@ class EarningsSummaryCard extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 32.h, horizontal: 24.w),
           child: Column(
             children: [
-              // Top Stats: Transactions • Completed • In Progress
+              // Top Stats
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -156,7 +71,7 @@ class EarningsSummaryCard extends StatelessWidget {
 
               SizedBox(height: 40.h),
 
-              // Balance Details
+              // Balance Summary
               _balanceRow("Available Balance", available.toDouble()),
               SizedBox(height: 20.h),
               _balanceRow("Pending Balance", pending),
@@ -180,7 +95,6 @@ class EarningsSummaryCard extends StatelessWidget {
                       ),
                     );
                   },
-
                   child: Text(
                     "Withdraw  \$${withdrawable.toStringAsFixed(2)}",
                     style: GoogleFonts.inter(
@@ -189,10 +103,8 @@ class EarningsSummaryCard extends StatelessWidget {
                       color: const Color(0xFF9C27B0),
                     ),
                   ),
-                )
-
                 ),
-
+              ),
             ],
           ),
         ),
@@ -248,6 +160,14 @@ class EarningsSummaryCard extends StatelessWidget {
   }
 
   Widget _withdrawAmountSheet(EarningsController controller) {
+    /// ✔ FIX 2 — Prevent bottom sheet crash
+    if (controller.balanceHistory.isEmpty) {
+      return Container(
+        padding: EdgeInsets.all(20),
+        child: const Text("No withdrawable balance available"),
+      );
+    }
+
     final withdrawable = controller.balanceHistory.first.withdrawable;
 
     return Container(
@@ -291,15 +211,11 @@ class EarningsSummaryCard extends StatelessWidget {
             ),
             child: controller.isLoading.value
                 ? const CircularProgressIndicator(color: Colors.white)
-                : Text(
-              "Withdraw Now",
-              style: TextStyle(fontSize: 16),
-            ),
+                : Text("Withdraw Now", style: TextStyle(fontSize: 16)),
           )),
           SizedBox(height: 20),
         ],
       ),
     );
   }
-
 }

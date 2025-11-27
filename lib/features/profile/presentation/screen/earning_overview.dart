@@ -73,13 +73,19 @@ class EarningsPage extends StatelessWidget {
 
                       // FUNDING ONLY
                       Obx(() {
-                        final fundingItems =
-                        controller.balanceHistory.first.transactionHistory
+                        if (controller.balanceHistory.isEmpty) {
+                          return const Center(
+                            child: Text("No earning data available"),
+                          );
+                        }
+
+                        final fundingItems = controller.balanceHistory.first.transactionHistory
                             .map((tx) => {
                           "image": "assets/images/live1.png",
                           "title": tx.event.title,
                           "subtitle": tx.event.text,
                           "amount": "\$${tx.amount}",
+                          'paymentFor': tx.paymentFor
                         })
                             .toList();
 
@@ -87,7 +93,8 @@ class EarningsPage extends StatelessWidget {
                           title: "Crowdfunding",
                           items: fundingItems,
                         );
-                      }),
+                      })
+
                     ],
                   ),
                 ),

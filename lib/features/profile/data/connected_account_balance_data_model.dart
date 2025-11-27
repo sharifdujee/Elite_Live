@@ -78,6 +78,7 @@ class TransactionHistory {
   String status;
   int amount;
   String method;
+  String paymentFor; // <-- NEW FIELD
   Event event;
 
   TransactionHistory({
@@ -85,25 +86,30 @@ class TransactionHistory {
     required this.status,
     required this.amount,
     required this.method,
+    required this.paymentFor, // <-- NEW FIELD
     required this.event,
   });
 
-  factory TransactionHistory.fromJson(Map<String, dynamic> json) => TransactionHistory(
-    id: json["id"],
-    status: json["status"],
-    amount: json["amount"],
-    method: json["method"],
-    event: Event.fromJson(json["event"]),
-  );
+  factory TransactionHistory.fromJson(Map<String, dynamic> json) =>
+      TransactionHistory(
+        id: json["id"],
+        status: json["status"],
+        amount: json["amount"],
+        method: json["method"],
+        paymentFor: json["paymentFor"] ?? "", // <-- PARSE IT
+        event: Event.fromJson(json["event"]),
+      );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "status": status,
     "amount": amount,
     "method": method,
+    "paymentFor": paymentFor, // <-- ADD IT BACK
     "event": event.toJson(),
   };
 }
+
 
 class Event {
   String id;
