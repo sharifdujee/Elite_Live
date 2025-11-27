@@ -16,6 +16,7 @@ import '../../../home/presentation/widget/live_indicator_section.dart';
 import '../../../home/presentation/widget/nameBadgeSection.dart';
 
 
+import '../../../live/controller/live_screen_controller.dart';
 import '../widget/date_time_section.dart';
 import '../widget/event_details_section.dart';
 import '../widget/user_interaction_section.dart';
@@ -26,6 +27,7 @@ class EventScheduleScreen extends StatelessWidget {
 
   final EventController eventController = Get.find();
   final ScheduleController scheduleController = Get.find();
+  final LiveScreenController controller = Get.find();
 
   final RxString replyingToId = ''.obs;
   final RxString replyingToName = ''.obs;
@@ -159,6 +161,9 @@ class EventScheduleScreen extends StatelessWidget {
 
                 /// Cloud Details Section
                 EventDetailsSection(
+                  onTap: (){
+                   controller.createAndNavigateToLive(isPaid: false, isHost: isOwner);
+                  },
                   eventDetails: about,
                   eventTitle: eventType,
                   joiningFee: joiningFee,

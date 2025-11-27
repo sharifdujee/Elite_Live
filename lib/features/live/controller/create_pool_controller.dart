@@ -9,6 +9,8 @@ import 'package:elites_live/features/live/data/pool_vote_data_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+
+
 class CreatePollController extends GetxController {
   final questionController = TextEditingController();
   final newOptionController = TextEditingController();
@@ -21,9 +23,63 @@ class CreatePollController extends GetxController {
   // IMPORTANT: Use Map instead of List for vote results
   RxMap<String, PoolVoteResult> poolVoteMap = <String, PoolVoteResult>{}.obs;
 
+  // Map to store checked states: pollIndex -> [list of bool for each option]
+  final RxMap<int, RxList<bool>> checkedOptionsMap = <int, RxList<bool>>{}.obs;
+
   @override
   void onInit() {
     super.onInit();
+  }
+
+  // Initialize checked options for a specific poll
+  void initializeCheckedOptions(int pollIndex, int optionsCount) {
+    if (!checkedOptionsMap.containsKey(pollIndex)) {
+      checkedOptionsMap[pollIndex] = List<bool>.generate(optionsCount, (_) => false).obs;
+    }
+  }
+
+  // Get checked value for a specific poll's option
+  bool getCheckedValue(int pollIndex, int optionIndex) {
+    if (checkedOptionsMap.containsKey(pollIndex)) {
+      final list = checkedOptionsMap[pollIndex]!;
+      if (optionIndex < list.length) {
+        return list[optionIndex];
+      }
+    }
+    return false;
+  }
+
+  // Set checked value for a specific poll's option
+  void setCheckedValue(int pollIndex, int optionIndex, bool value) {
+    if (checkedOptionsMap.containsKey(pollIndex)) {
+      final list = checkedOptionsMap[pollIndex]!;
+      if (optionIndex < list.length) {
+        list[optionIndex] = value;
+      }
+    }
+  }
+
+  // Clear all checked states (call this when closing dialog or after actions)
+  void clearCheckedStates() {
+    checkedOptionsMap.clear();
+  }
+
+  // Get selected options for a specific poll (returns list of selected option texts)
+  List<String> getSelectedOptions(int pollIndex, List<String> pollOptions) {
+    if (!checkedOptionsMap.containsKey(pollIndex)) {
+      return [];
+    }
+
+    final checkedList = checkedOptionsMap[pollIndex]!;
+    final selectedOptions = <String>[];
+
+    for (int i = 0; i < checkedList.length && i < pollOptions.length; i++) {
+      if (checkedList[i]) {
+        selectedOptions.add(pollOptions[i]);
+      }
+    }
+
+    return selectedOptions;
   }
 
   void addOption(String option) {
@@ -292,6 +348,7 @@ class CreatePollController extends GetxController {
     questionController.clear();
     newOptionController.clear();
     options.clear();
+    clearCheckedStates();
     super.onClose();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:elites_live/core/services/push_notification_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:get/get.dart';
@@ -20,9 +21,10 @@ await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
 );
   await AuthService().init();
-  // Get.put(NotificationService());
+  await PushNotificationService.initialize();
+
   AppBinding().dependencies();
-  ///await initializeStripe();
+  await initializeStripe();
   Get.put(WebSocketClientService(), permanent: true);
 
 

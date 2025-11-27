@@ -513,6 +513,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
   }
 
   // Show Menu Options Bottom Sheet
+  // Show Menu Options Bottom Sheet
   void _showMenuOptions(BuildContext context, bool isHost) {
     final Map<String, dynamic>? data = Get.arguments;
 
@@ -590,44 +591,47 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   ),
                 ),
 
-              // ====== OTHER MENU OPTIONS ======
-              _buildMenuOption(
-                icon: Icons.screen_share,
-                title: "Screen Share",
-                subtitle: controller.isScreenSharing.value
-                    ? "Stop sharing screen"
-                    : "Share your screen",
-                color: Colors.blue,
-                onTap: () {
-                  Get.back();
-                  controller.toggleScreenShare();
-                },
-              ),
+              // ====== HOST-ONLY OPTIONS ======
+              if (isHost) ...[
+                _buildMenuOption(
+                  icon: Icons.screen_share,
+                  title: "Screen Share",
+                  subtitle: controller.isScreenSharing.value
+                      ? "Stop sharing screen"
+                      : "Share your screen",
+                  color: Colors.blue,
+                  onTap: () {
+                    Get.back();
+                    controller.toggleScreenShare();
+                  },
+                ),
 
-              _buildMenuOption(
-                icon: Icons.fiber_manual_record,
-                title: "Recording",
-                subtitle: controller.isRecording.value
-                    ? "Stop recording session"
-                    : "Record live session",
-                color: Colors.red,
-                onTap: () {
-                  Get.back();
-                  controller.toggleRecording();
-                },
-              ),
+                _buildMenuOption(
+                  icon: Icons.fiber_manual_record,
+                  title: "Recording",
+                  subtitle: controller.isRecording.value
+                      ? "Stop recording session"
+                      : "Record live session",
+                  color: Colors.red,
+                  onTap: () {
+                    Get.back();
+                    controller.toggleRecording();
+                  },
+                ),
 
-              _buildMenuOption(
-                icon: Icons.person_add,
-                title: "Add Contributor",
-                subtitle: "Invite someone to join",
-                color: Colors.green,
-                onTap: () {
-                  Get.back();
-                  _openAddContributorDialog();
-                },
-              ),
+                _buildMenuOption(
+                  icon: Icons.person_add,
+                  title: "Add Contributor",
+                  subtitle: "Invite someone to join",
+                  color: Colors.green,
+                  onTap: () {
+                    Get.back();
+                    _openAddContributorDialog();
+                  },
+                ),
+              ],
 
+              // ====== CREATE POLL (Available for everyone) ======
               _buildMenuOption(
                 icon: Icons.poll,
                 title: "Create Poll",
@@ -640,6 +644,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 },
               ),
 
+              // ====== END LIVE (Only for Host) ======
               if (isHost)
                 _buildMenuOption(
                   icon: Icons.call_end,

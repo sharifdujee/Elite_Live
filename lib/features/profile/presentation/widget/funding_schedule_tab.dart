@@ -1,3 +1,4 @@
+import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/features/profile/controller/my_crowd_funding_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'dart:developer';
 import '../../../../core/global_widget/custom_loading.dart';
-
+import 'package:intl/intl.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 
 
@@ -20,7 +21,7 @@ class FundingScheduleTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MyCrowdFundController>();
-    Future.microtask(()=>controller.getMyCrowdFunding());
+
 
     return Obx(() {
       log("UI REBUILD → isLoading: ${controller.isLoading.value} | events: ${controller.events.length}");
@@ -32,24 +33,24 @@ class FundingScheduleTab extends StatelessWidget {
         );
       }
 
-      if (controller.events.isEmpty) {
+      if (controller.myCrowd.isEmpty) {
         log("UI: No events → showing empty state");
         return _buildEmptyState();
       }
 
-      log("UI: Rendering ${controller.events.length} event(s)");
+      log("UI: Rendering ${controller.myCrowd.length} event(s)");
 
       return ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        itemCount: controller.events.length,
+        itemCount: controller.myCrowd.length,
         separatorBuilder: (_, __) => SizedBox(height: 16.h),
         itemBuilder: (context, index) {
-          final event = controller.events[index];
-          log("Building card for: ${event.text}");
+          final event = controller.myCrowd[index];
+          log("Building card for: ${event.events.first.title}");
 
-          return EventCard(event: event); // Extracted for clarity
+          return EventCard(event: event.events.first); // Extracted for clarity
         },
       );
     });
@@ -110,9 +111,10 @@ class EventCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${event.user.firstName} ${event.user.lastName}",
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14.sp)),
-                  Text(event.user.profession, style: TextStyle(fontSize: 12.sp, color: Colors.grey[600])),
+
+                  CustomTextView(text: "${event.user.firstName} ${event.user.lastName}",
+                      fontWeight: FontWeight.w600, fontSize: 14.sp),
+                  CustomTextView(text: event.user.profession, fontSize: 12.sp, color: AppColors.textBody),
                 ],
               ),
             ],
@@ -121,13 +123,13 @@ class EventCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
-              color: AppColors.primaryColor.withValues(alpha: 0.1),
+              ///color: AppColors.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6.r),
             ),
-            child: Text(event.eventType, style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.w600)),
+            child: CustomTextView(text: event.title, color: AppColors.textHeader, fontWeight: FontWeight.w600),
           ),
           SizedBox(height: 12.h),
-          Text(event.text),
+          CustomTextView(text: event.text, fontSize: 12.sp,fontWeight: FontWeight.w400,color: AppColors.textBody,),
           SizedBox(height: 16.h),
           Row(
             children: [
@@ -152,4 +154,14 @@ class EventCard extends StatelessWidget {
       ],
     );
   }
+  String formatDate(DateTime date) {
+    return DateFormat('dd-MM-yyyy').format(date);
+  }
+
+  String formatTime(DateTime date) {
+    return DateFormat('hh:mm a').format(date);
+  }
 }
+
+
+

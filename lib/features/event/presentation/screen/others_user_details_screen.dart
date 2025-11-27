@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'others_user_crowd_fund_event.dart';
+import 'others_user_schedule_event_screen.dart';
 
 
 class OthersUserDetailsScreen extends StatelessWidget {
@@ -86,11 +87,11 @@ class OthersUserDetailsScreen extends StatelessWidget {
                             backgroundColor: Colors.grey[300],
                             child: user.profileImage == null
                                 ? Text(
-                              user.firstName,
-                              style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                              user.firstName[0],
+                              style:  TextStyle(
+                                  fontSize: 32.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textHeader),
                             )
                                 : null,
                           ),
@@ -220,7 +221,7 @@ class OthersUserDetailsScreen extends StatelessWidget {
                     // Grid Tab - Photos/Videos
                     _buildGridView(),
                     // Calendar Tab
-                    OthersUserCrowdScreen(userId: user.id,),
+                    OthersUserScheduleEventScreen(userId: user.id,),
                     // Profile Tab
                     OthersUserCrowdScreen(userId: user.id)
                   ],

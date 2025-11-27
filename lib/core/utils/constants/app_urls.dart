@@ -98,5 +98,8 @@ class AppUrls {
   static String votePool(String poolId) => "$_baseUrl/polls/submit/vote/$poolId";
   static  String poolResult(String streamId) => "$_baseUrl/polls/result/$streamId";
 
+  /// notification flow
+   static const String getAllNotification = "$_baseUrl/notification";
+   static String updateNotificationStatus(String notificationId)  => "$_baseUrl/notification/$notificationId";
 
 }

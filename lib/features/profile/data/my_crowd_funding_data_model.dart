@@ -74,6 +74,7 @@ class Event {
   String id;
   String userId;
   String eventType;
+  String title;
   String text;
   dynamic scheduleDate;
   int payAmount;
@@ -88,6 +89,7 @@ class Event {
     required this.id,
     required this.userId,
     required this.eventType,
+    required this.title,
     required this.text,
     required this.scheduleDate,
     required this.payAmount,
@@ -103,6 +105,7 @@ class Event {
     id: json["id"] ?? '',
     userId: json["userId"] ?? '',
     eventType: json["eventType"] ?? '',
+    title: json['title'],
     text: json["text"] ?? '',
     scheduleDate: json["scheduleDate"],
     payAmount: json["payAmount"] ?? 0,
@@ -124,6 +127,7 @@ class Event {
     "id": id,
     "userId": userId,
     "eventType": eventType,
+    'title': title,
     "text": text,
     "scheduleDate": scheduleDate,
     "payAmount": payAmount,

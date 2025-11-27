@@ -1,13 +1,10 @@
 import 'dart:developer';
 import 'package:get/get.dart';
-
+import 'dart:convert';
 import '../../../core/helper/shared_prefarenses_helper.dart';
 import '../../../core/services/network_caller/repository/network_caller.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../data/my_crowd_funding_data_model.dart';
-
-
-
 
 class MyCrowdFundController extends GetxController {
   var isLoading = false.obs;
@@ -15,60 +12,54 @@ class MyCrowdFundController extends GetxController {
   // THIS IS THE KEY: We store only the List<Event> directly!
   // No more wrapping in MyCrowdResult → eliminates all confusion
   var events = <Event>[].obs;
+  RxList<MyCrowdResult> myCrowd = <MyCrowdResult>[].obs;
+  final NetworkCaller networkCaller = NetworkCaller();
+  final SharedPreferencesHelper helper = SharedPreferencesHelper();
 
   @override
   void onInit() {
     super.onInit();
     log("Controller initialized → calling API");
-    getMyCrowdFunding();
+    getMyCrowdEvent();
+
   }
 
-  Future<void> getMyCrowdFunding() async {
-    log("getMyCrowdFunding() STARTED");
-
-    isLoading.value = true;
-    events.clear(); // Start fresh
-
-    String? token = SharedPreferencesHelper().getString("userToken");
-
+  Future<void> getMyCrowdEvent() async {
+    String? token = helper.getString('userToken');
+    log("the token during get single user $token");
     try {
-      final response = await NetworkCaller().getRequest(
+      var response = await networkCaller.getRequest(
         AppUrls.getMyCrowdFund,
         token: token,
       );
+      log("Response isSuccess: ${response.isSuccess}");
+      log("Response data type: ${response.responseData.runtimeType}");
+      if (response.isSuccess && response.responseData != null) {
+        log("Raw API response: ${response.responseData}");
+        Map<String, dynamic> resultData;
 
-      log("API CALL SUCCESS: ${response.isSuccess}");
-
-      if (!response.isSuccess || response.responseData == null) {
-        log("API FAILED or null data");
-        return;
+        if (response.responseData is String) {
+          log("Response is String, decoding...");
+          resultData = json.decode(response.responseData);
+        } else if (response.responseData is Map) {
+          log("Response is already a Map");
+          resultData = Map<String, dynamic>.from(response.responseData);
+        } else {
+          log("Unexpected response type: ${response.responseData.runtimeType}");
+          throw Exception("Unexpected response type");
+        }
+        log("Result data: $resultData");
+        final userResult = MyCrowdResult.fromJson(resultData);
+        myCrowd.value = [userResult];
+      } else {
+        log("Response not successful or data is null");
       }
-
-      // FULL RAW RESPONSE LOG
-      log("RAW JSON RESPONSE:");
-      log("${response.responseData}");
-
-      final model = MyCrowdFundingDataModel.fromJson(
-          response.responseData as Map<String, dynamic>);
-
-      log("Parsed success: ${model.success}");
-      log("Message: ${model.message}");
-      log("Total events in result: ${model.result.events.length}");
-
-      // DIRECTLY assign events — this triggers Obx perfectly
-      events.assignAll(model.result.events);
-
-      log("events list updated → length: ${events.length}");
-      if (events.isNotEmpty) {
-        log("First event text: ${events.first.text}");
-        log("First event user: ${events.first.user.firstName} ${events.first.user.lastName}");
-      }
-    } catch (e, s) {
-      log("EXCEPTION in getMyCrowdFunding", error: e, stackTrace: s);
-      events.clear();
+    } catch (e, stackTrace) {
+      log("Exception: ${e.toString()}");
+      log("Stack trace: $stackTrace");
     } finally {
       isLoading.value = false;
-      log("getMyCrowdFunding() FINISHED | isLoading = false | events.length = ${events.length}");
+      log("Loading completed, isLoading: ${isLoading.value}");
     }
   }
 }

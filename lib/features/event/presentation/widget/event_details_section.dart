@@ -15,6 +15,7 @@ class EventDetailsSection extends StatelessWidget {
     required this.isOwner,
     this.hostLink,
     this.audienceLink,
+    this.onTap,
   });
 
   final String eventDetails;
@@ -23,6 +24,7 @@ class EventDetailsSection extends StatelessWidget {
   final bool isOwner;
   final String? hostLink;
   final String? audienceLink;
+  final VoidCallback? onTap;
 
   // Helper method to copy link to clipboard
   void _copyToClipboard(String link, BuildContext context) {
@@ -75,10 +77,10 @@ class EventDetailsSection extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: AppColors.primaryColor.withOpacity(0.1),
+                color: AppColors.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(
-                  color: AppColors.primaryColor.withOpacity(0.3),
+                  color: AppColors.primaryColor.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -101,12 +103,17 @@ class EventDetailsSection extends StatelessWidget {
                           color: AppColors.liveText,
                         ),
                         SizedBox(height: 4.h),
-                        CustomTextView(
-                          text: displayLink,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.linkColor,
-                          maxLines: 1,
+                        GestureDetector(
+                          onTap: (){
+                            onTap!();
+                          },
+                          child: CustomTextView(
+                            text: displayLink,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.linkColor,
+                            maxLines: 1,
+                          ),
                         ),
                       ],
                     ),

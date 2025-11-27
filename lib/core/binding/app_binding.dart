@@ -8,6 +8,7 @@ import 'package:elites_live/features/group/controller/my_group_controller.dart';
 import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:elites_live/features/home/controller/live_controller.dart';
 import 'package:elites_live/features/home/controller/video_player_controller.dart';
+import 'package:elites_live/features/live/controller/live_screen_controller.dart';
 import 'package:elites_live/features/profile/controller/earning_overview_controller.dart';
 import 'package:elites_live/features/profile/controller/edit_profile_controller.dart';
 import 'package:elites_live/features/profile/controller/following_follwer_controller.dart';
@@ -64,6 +65,7 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>MyCrowdFundController(), fenix: true);
     Get.lazyPut(()=>FollowingFollwerController(), fenix: true);
     Get.lazyPut(()=>EarningsController(), fenix: true);
+    Get.lazyPut(()=>LiveScreenController(), fenix: true);
 
   }
 }

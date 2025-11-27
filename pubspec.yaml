@@ -59,6 +59,7 @@ dependencies:
   webview_flutter: any
   webview_flutter_android: any
   webview_flutter_wkwebview: any
+  flutter_local_notifications: ^19.5.0
 
 
 

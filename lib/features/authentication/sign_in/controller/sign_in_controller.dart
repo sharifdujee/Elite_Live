@@ -27,7 +27,7 @@ class SignInController extends GetxController {
   }
 
   Future<void> signIn() async {
-    String? token = "";
+    String? token = preferencesHelper.getString("fcm_token") ?? "";
     Map<String, dynamic> registration = {
       "email": emailController.text,
       "password": passwordController.text,

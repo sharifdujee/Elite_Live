@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -50,20 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDOtK_q_hpQIcqhmQB3KNtY31FyKz3PFuY',
-    appId: '1:245104862316:android:dfd7918760ea187d716449',
-    messagingSenderId: '245104862316',
-    projectId: 'elitelive-da4fb',
-    storageBucket: 'elitelive-da4fb.firebasestorage.app',
+    apiKey: 'AIzaSyAijNl4y_5YVJMCFLvs8xANJl_UoIqTg00',
+    appId: '1:628281445808:android:0621532a9852d3251c9a75',
+    messagingSenderId: '628281445808',
+    projectId: 'elitelive-81772',
+    storageBucket: 'elitelive-81772.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAYaoQPXGvWKQBJ-axf9izgXjXFvJigSTI',
-    appId: '1:245104862316:ios:864266f2fbed4963716449',
-    messagingSenderId: '245104862316',
-    projectId: 'elitelive-da4fb',
-    storageBucket: 'elitelive-da4fb.firebasestorage.app',
-    iosBundleId: 'com.example.eliteLives',
+    apiKey: 'AIzaSyBW79PG54mvvA6SxuSDz-fzXbn26xoBHWw',
+    appId: '1:628281445808:ios:7a7ad0cbdb35f82c1c9a75',
+    messagingSenderId: '628281445808',
+    projectId: 'elitelive-81772',
+    storageBucket: 'elitelive-81772.firebasestorage.app',
+    androidClientId: '628281445808-6rcarfi8tvkngpfsh4eboioe2qm81mra.apps.googleusercontent.com',
+    iosClientId: '628281445808-9sopig57tblhtf10f1hfiar6cvngnlfi.apps.googleusercontent.com',
+    iosBundleId: 'com.elitelive.mobile.app',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAhxXKECi9lx4JHLJqDru5wp7MAjF5wWaI',
+    appId: '1:628281445808:web:39a758792ca911401c9a75',
+    messagingSenderId: '628281445808',
+    projectId: 'elitelive-81772',
+    authDomain: 'elitelive-81772.firebaseapp.com',
+    storageBucket: 'elitelive-81772.firebasestorage.app',
+    measurementId: 'G-8LBP6J0P5H',
   );
 
 }

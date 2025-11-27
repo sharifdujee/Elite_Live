@@ -1,26 +1,43 @@
 {
   "project_info": {
-    "project_number": "245104862316",
-    "project_id": "elitelive-da4fb",
-    "storage_bucket": "elitelive-da4fb.firebasestorage.app"
+    "project_number": "628281445808",
+    "project_id": "elitelive-81772",
+    "storage_bucket": "elitelive-81772.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:245104862316:android:dfd7918760ea187d716449",
+        "mobilesdk_app_id": "1:628281445808:android:0621532a9852d3251c9a75",
         "android_client_info": {
-          "package_name": "com.example.elite_lives"
+          "package_name": "com.elitelive.mobile.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "628281445808-4vlup8mb441dvecere30uv7ikbkq8h1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDOtK_q_hpQIcqhmQB3KNtY31FyKz3PFuY"
+          "current_key": "AIzaSyAijNl4y_5YVJMCFLvs8xANJl_UoIqTg00"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628281445808-4vlup8mb441dvecere30uv7ikbkq8h1e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "628281445808-9sopig57tblhtf10f1hfiar6cvngnlfi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.elitelive.mobile.app"
+              }
+            }
+          ]
         }
       }
     }
