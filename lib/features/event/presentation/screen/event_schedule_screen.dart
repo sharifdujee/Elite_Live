@@ -113,7 +113,7 @@ class EventScheduleScreen extends StatelessWidget {
             final cohostLink = event.stream?.coHostLink;
             final streamId = event.streamId;
             final hostId = event.userId;
-            final roomId = event.stream;
+
 
 
             return Column(

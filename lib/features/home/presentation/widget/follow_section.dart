@@ -15,25 +15,28 @@ class FollowSection extends StatelessWidget {
 
   FollowSection({super.key, required this.index, });
 
-  final HomeController controller = Get.find();
-  final EventController eventController = Get.find();
+
+  final EventController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
 
 
 
-    final followCount = controller.isFollow[index];
+
+    final eventInfo = controller.eventList[index];
+    final isFollowing = eventInfo.user.isFollow;
+    final userId = eventInfo.userId;
 
 
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        /*if (!isFollowing)
+        if (!isFollowing)
           GestureDetector(
             onTap: () {
-              eventController.followUnFlow(userId);
+              controller.followUnFlow(userId);
               log("start following");
               // Update state logic here, e.g.:
               // controller.isFollow[index] = true;
@@ -53,7 +56,7 @@ class FollowSection extends StatelessWidget {
                 color: const Color(0xFF374151),
               ),
             ),
-          ),*/
+          ),
         SizedBox(width: 4.w),
 
         /// 3-dot popup
@@ -73,7 +76,7 @@ class FollowSection extends StatelessWidget {
           itemBuilder: (context) {
             List<PopupMenuEntry<int>> items = [];
 
-           /* if (isFollowing) {
+            if (isFollowing) {
               items.add(
                 PopupMenuItem(
                   value: 0,
@@ -83,7 +86,7 @@ class FollowSection extends StatelessWidget {
                       SizedBox(width: 10.w),
                       GestureDetector(
                         onTap: (){
-                          eventController.followUnFlow(userId);
+                          controller.followUnFlow(userId);
                         },
                           child: CustomTextView(  text:   "Unfollow", fontWeight: FontWeight.w500, fontSize: 14.sp, color: AppColors.redColor)),
                     ],
@@ -91,7 +94,7 @@ class FollowSection extends StatelessWidget {
                 ),
               );
             }
-*/
+
             items.addAll([
               PopupMenuItem(
                 value: 1,

@@ -49,7 +49,7 @@ class AppBinding extends Bindings {
     Get.lazyPut(() => CustomDateTimeController(), fenix: true);
     Get.lazyPut(() => MainViewController(), fenix: true);
     Get.lazyPut(()=>HomeController(), fenix: true);
-    Get.lazyPut(()=>VideoController(), fenix: true);
+    ////Get.lazyPut(()=>VideoController(), fenix: true);
     Get.lazyPut(()=>LiveController(), fenix: true);
     Get.lazyPut(()=>GroupController(), fenix: true);
     Get.lazyPut(()=>EventController(), fenix: true);

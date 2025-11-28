@@ -15,9 +15,19 @@ class DesignationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Safe strings
-    final String des = (designation ?? "N/A").trim();
-    final String time = (timeAgo ?? "${DateTime.now().day}").trim();
+
+    final String des = (designation == null ||
+        designation!.trim().isEmpty ||
+        designation!.trim().toLowerCase() == "null")
+        ? "Test Profession"
+        : designation!.trim();
+
+    // Clean timeAgo input
+    final String time = (timeAgo == null ||
+        timeAgo!.trim().isEmpty ||
+        timeAgo!.trim().toLowerCase() == "null")
+        ? ""
+        : timeAgo!.trim();
 
     final bool hasDesignation = des.isNotEmpty;
     final bool hasTimeAgo = time.isNotEmpty;
@@ -28,17 +38,15 @@ class DesignationSection extends StatelessWidget {
         if (hasDesignation)
           Expanded(
             child: CustomTextView(
-            text:   des,
+              text: des,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-
-                fontSize: 10.sp,
-                color: AppColors.textHeader,
-
+              fontSize: 10.sp,
+              color: AppColors.textHeader,
             ),
           ),
 
-        /// SPACING between items
+        /// spacing
         if (hasDesignation && hasTimeAgo)
           SizedBox(width: 8.w),
 
@@ -46,17 +54,16 @@ class DesignationSection extends StatelessWidget {
         if (hasTimeAgo)
           Expanded(
             child: CustomTextView(
-             text:  time,
+              text: time,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.right,
-
-                fontSize: 10.sp,
-                color: AppColors.textHeader,
-
+              fontSize: 10.sp,
+              color: AppColors.textHeader,
             ),
           ),
       ],
     );
   }
 }
+

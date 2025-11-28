@@ -1,12 +1,10 @@
+import 'package:elites_live/features/profile/presentation/widget/my_recorded_live_tab.dart';
 import 'package:elites_live/features/profile/presentation/widget/schedule_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../controller/profile_controller.dart';
 import '../../controller/profile_tab_controller.dart';
-import 'build_grid_tab.dart';
 import 'funding_schedule_tab.dart';
 
 
@@ -17,7 +15,7 @@ class ProfileTabsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ProfileTabsController controller = Get.find();
-    final ProfileController profileController = Get.find();
+
 
     return Column(
       children: [
@@ -59,7 +57,7 @@ class ProfileTabsWidget extends StatelessWidget {
             index: controller.selectedIndex.value,
             sizing: StackFit.loose,
             children: [
-              BuildGridTab(imageList: profileController.imageList),
+              MyRecordedLiveSession(),
               EventScheduleTab(),
               FundingScheduleTab(),
             ],
@@ -105,5 +103,8 @@ class ProfileTabsWidget extends StatelessWidget {
     );
   }
 }
+
+
+
 
 

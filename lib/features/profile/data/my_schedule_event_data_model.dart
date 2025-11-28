@@ -75,6 +75,7 @@ class Event {
   String text;
   DateTime scheduleDate;
   double payAmount;
+  String recordedLink;
   DateTime createdAt;
   DateTime updatedAt;
   User user;
@@ -89,6 +90,7 @@ class Event {
     required this.text,
     required this.scheduleDate,
     required this.payAmount,
+    required this.recordedLink,
     required this.createdAt,
     required this.updatedAt,
     required this.user,
@@ -106,6 +108,7 @@ class Event {
         ? DateTime.parse(json["scheduleDate"])
         : DateTime.now(),
     payAmount: (json["payAmount"] ?? 0).toDouble(),
+    recordedLink: (json["recordedLink"] ?? "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
     createdAt: json["createdAt"] != null
         ? DateTime.parse(json["createdAt"])
         : DateTime.now(),
@@ -137,6 +140,7 @@ class Event {
     "text": text,
     "scheduleDate": scheduleDate.toIso8601String(),
     "payAmount": payAmount,
+    "recordedLink":recordedLink,
     "createdAt": createdAt.toIso8601String(),
     "updatedAt": updatedAt.toIso8601String(),
     "user": user.toJson(),

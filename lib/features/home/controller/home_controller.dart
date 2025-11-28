@@ -37,7 +37,7 @@ class HomeController extends GetxController {
     "https://www.newdirectionsforwomen.org/wp-content/uploads/2021/02/Woman-smiling-sunlight.jpg"
   ];
 
-  List<bool> isLive = [true, false, true, true, true];
+  List<bool> isLive = [true, false, true, true];
   List<bool> isFollow = [true, false, true, true, true];
 
   var commentImage = Rx<File?>(null);

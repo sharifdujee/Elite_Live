@@ -259,10 +259,10 @@ class ProfilePage extends StatelessWidget {
 
                               Obx(() {
                                 final follower =
-                                    controller.userinfo.value!.followersCount.toString();
+                                    controller.userinfo.value?.followersCount.toString();
 
                                 return CustomTextView(
-                                  text: follower,
+                                  text: follower!,
 
                                   fontWeight: FontWeight.w600,
                                   fontSize: 18.sp,
@@ -332,7 +332,7 @@ class ProfilePage extends StatelessWidget {
                               Obx(() {
                                 // Force rebuild by accessing the list
                                 final count =
-                                controller.userinfo.value!.count.event;
+                                controller.userinfo.value?.count.event;
 
 
                                 return CustomTextView(

@@ -85,6 +85,7 @@ class LiveEvent {
   String text;
   DateTime? scheduleDate;
   double payAmount;
+  String recordedLink;
   DateTime? createdAt;
   DateTime? updatedAt;
   User user;
@@ -93,7 +94,8 @@ class LiveEvent {
   StreamData? stream;
   bool isLiked;
   bool isOwner;
-  bool isPayment; // <-- NEW FIELD
+  bool isPayment;
+
 
   LiveEvent({
     required this.id,
@@ -104,6 +106,7 @@ class LiveEvent {
     required this.text,
     required this.scheduleDate,
     required this.payAmount,
+    required this.recordedLink,
     required this.createdAt,
     required this.updatedAt,
     required this.user,
@@ -126,6 +129,12 @@ class LiveEvent {
         ? null
         : DateTime.parse(json["scheduleDate"]),
     payAmount: (json["payAmount"] ?? 0).toDouble(),
+
+    // ✅ FIXED: Handle null and use working fallback
+    recordedLink: json['recordedLink'] != null && json['recordedLink'].toString().isNotEmpty
+        ? json['recordedLink']
+        : 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+
     createdAt: json["createdAt"] == null
         ? null
         : DateTime.parse(json["createdAt"]),
@@ -142,7 +151,7 @@ class LiveEvent {
     json["stream"] == null ? null : StreamData.fromJson(json["stream"]),
     isLiked: json["isLiked"] ?? false,
     isOwner: json["isOwner"] ?? false,
-    isPayment: json["isPayment"] ?? false, // <-- PARSE NEW FIELD
+    isPayment: json["isPayment"] ?? false,
   );
 
   Map<String, dynamic> toJson() => {
@@ -154,6 +163,7 @@ class LiveEvent {
     "text": text,
     "scheduleDate": scheduleDate?.toIso8601String(),
     "payAmount": payAmount,
+    'recordedLink' : recordedLink,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "user": user.toJson(),

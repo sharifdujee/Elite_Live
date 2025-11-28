@@ -9,46 +9,59 @@ class LiveIndicatorSection extends StatelessWidget {
   const LiveIndicatorSection({
     super.key,
     required this.influencerProfile,
-     this.isLive = false,
-    this.onTap
+    this.isLive = false,
+    this.onTap,
   });
-  final String influencerProfile;
+
+  final String? influencerProfile; // allow nullable
   final bool isLive;
   final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
+    // Fallback image if null, empty or "null"
+    final String fallbackImage =
+        "https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png";
+
+    String imageUrl = (influencerProfile == null ||
+        influencerProfile!.isEmpty ||
+        influencerProfile!.toLowerCase() == "null")
+        ? fallbackImage
+        : influencerProfile!;
+
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         GestureDetector(
-          onTap: (){
-            onTap!();
-          },
+          onTap: onTap,
           child: CircleAvatar(
             radius: 30.r,
-            backgroundImage: NetworkImage(influencerProfile),
+            backgroundImage: NetworkImage(imageUrl),
           ),
         ),
-        Positioned(
-          bottom: -6.h, // Align to the bottom
-          left: 50.w - 40.r, // Center horizontally relative to CircleAvatar radius
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 8.h,
-              vertical: 4.h,
+
+        /// LIVE BADGE
+        if (isLive)
+          Positioned(
+            bottom: -6.h,
+            left: 15.w,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 8.h,
+                vertical: 4.h,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.liveColor,
+                borderRadius: BorderRadius.circular(4.r),
+              ),
+              child: CustomTextView(
+                text: 'Live',
+                color: AppColors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 14.sp,
+              ),
             ),
-            decoration: BoxDecoration(
-              color: AppColors.liveColor,
-              borderRadius: BorderRadius.circular(4.r),
-            ),
-            child: isLive?
-            CustomTextView(
-              text:   'Live',
-              color: AppColors.white,
-              fontWeight: FontWeight.w500,
-              fontSize: 14.sp,
-            ):SizedBox.shrink(),
           ),
-        ),
       ],
     );
   }
