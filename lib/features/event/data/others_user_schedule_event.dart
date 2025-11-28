@@ -73,6 +73,7 @@ class Event {
   String text;
   DateTime scheduleDate;
   int payAmount;
+  String recordedLink;
   DateTime createdAt;
   DateTime updatedAt;
   User user;
@@ -81,6 +82,8 @@ class Event {
   Stream stream;
   bool isLiked;
   bool isOwner;
+  bool isPayment;
+
 
   Event({
     required this.id,
@@ -91,6 +94,7 @@ class Event {
     required this.text,
     required this.scheduleDate,
     required this.payAmount,
+    required this.recordedLink,
     required this.createdAt,
     required this.updatedAt,
     required this.user,
@@ -99,6 +103,7 @@ class Event {
     required this.stream,
     required this.isLiked,
     required this.isOwner,
+    required this.isPayment,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) => Event(
@@ -110,6 +115,7 @@ class Event {
     text: json["text"],
     scheduleDate: DateTime.parse(json["scheduleDate"]),
     payAmount: json["payAmount"],
+    recordedLink: json["recordedLink"] ?? "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
     createdAt: DateTime.parse(json["createdAt"]),
     updatedAt: DateTime.parse(json["updatedAt"]),
     user: User.fromJson(json["user"]),
@@ -118,6 +124,7 @@ class Event {
     stream: Stream.fromJson(json["stream"]),
     isLiked: json["isLiked"],
     isOwner: json["isOwner"],
+    isPayment: json["isPayment"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -129,6 +136,7 @@ class Event {
     "text": text,
     "scheduleDate": scheduleDate.toIso8601String(),
     "payAmount": payAmount,
+    'recordedLink': recordedLink,
     "createdAt": createdAt.toIso8601String(),
     "updatedAt": updatedAt.toIso8601String(),
     "user": user.toJson(),
@@ -137,6 +145,7 @@ class Event {
     "stream": stream.toJson(),
     "isLiked": isLiked,
     "isOwner": isOwner,
+    "isPayment": isPayment,
   };
 }
 

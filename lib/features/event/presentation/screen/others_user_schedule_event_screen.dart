@@ -5,10 +5,12 @@ import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
+import 'package:flutter/services.dart';
+
+import '../../../../routes/app_routing.dart';
+import '../../../home/presentation/widget/donation_sheet.dart';
 
 class OthersUserScheduleEventScreen extends StatelessWidget {
   OthersUserScheduleEventScreen({super.key, this.userId});
@@ -24,11 +26,16 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
     return DateFormat('hh:mm a').format(date);
   }
 
-  Future<void> launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      throw Exception('Could not launch $url');
-    }
+  void _copyToClipboard(String link) {
+    Clipboard.setData(ClipboardData(text: link));
+    Get.snackbar(
+      'Copied',
+      'Link copied to clipboard',
+      snackPosition: SnackPosition.BOTTOM,
+      duration: Duration(seconds: 2),
+      backgroundColor: AppColors.primaryColor,
+      colorText: Colors.white,
+    );
   }
 
   @override
@@ -57,9 +64,20 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
           itemCount: result.events.length,
           itemBuilder: (context, index) {
             final event = result.events[index];
-            final streamLink = event.isOwner
-                ? event.stream.hostLink
-                : event.stream.audienceLink;
+            final isOwner = event.isOwner;
+            final isPayment = event.isPayment;
+            final hostLink = event.stream.hostLink;
+            final audienceLink = event.stream.audienceLink;
+            final coHostLink = event.stream.coHostLink;
+            final streamId = event.streamId;
+            final hostId = event.userId;
+            final firstName = event.user.firstName;
+            final lastName = event.user.lastName;
+            final userName = "$firstName $lastName";
+
+            // Determine which link to display
+            final displayLink = isOwner ? hostLink : audienceLink;
+            final linkLabel = isOwner ? "Host Link" : "Audience Link";
 
             return Container(
               margin: EdgeInsets.only(bottom: 16.h),
@@ -136,8 +154,8 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 16.h),
 
-                        // Pay Amount
-                        if (event.payAmount > 0)
+                        // Pay Amount Display (if applicable)
+                        if (event.payAmount > 0 && !isOwner)
                           Padding(
                             padding: EdgeInsets.only(bottom: 12.h),
                             child: Container(
@@ -153,7 +171,7 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
                                 ),
                               ),
                               child: CustomTextView(
-                                text: 'Pay \$${event.payAmount}',
+                                text: 'Joining Fee: \$${event.payAmount}',
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14.sp,
                                 color: Colors.green.shade700,
@@ -161,44 +179,61 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
                             ),
                           ),
 
-                        // Live Event Link Button
-                        InkWell(
-                          onTap: () => launchURL(streamLink),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 8.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade50,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      CustomTextView(
-                                        text: 'Go to Live Event:',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12.sp,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      CustomTextView(
-                                        text: streamLink,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 11.sp,
-                                        color: Colors.blue.shade700,
-                                        maxLines: 1,
-                                      ),
-                                    ],
-                                  ),
+                        // Link Section (if available)
+                        if (displayLink.isNotEmpty)
+                          GestureDetector(
+                            onTap: () => _copyToClipboard(displayLink),
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 16.h),
+                              padding: EdgeInsets.all(12.w),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade50,
+                                borderRadius: BorderRadius.circular(8.r),
+                                border: Border.all(
+                                  color: Colors.blue.shade200,
                                 ),
-                              ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextView(
+                                    text: "$linkLabel:",
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13.sp,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  CustomTextView(
+                                    text: displayLink,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 11.sp,
+                                    color: Colors.blue.shade700,
+                                    maxLines: 2,
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  CustomTextView(
+                                    text: 'Tap to copy',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10.sp,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
+
+                        // Action Button
+                        _buildActionButton(
+                          context: context,
+                          event: event,
+                          userName: userName,
+                          isOwner: isOwner,
+                          isPayment: isPayment,
+                          hostLink: hostLink,
+                          audienceLink: audienceLink,
+                          coHostLink: coHostLink,
+                          streamId: streamId,
+                          hostId: hostId,
                         ),
                       ],
                     ),
@@ -264,6 +299,104 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildActionButton({
+    required BuildContext context,
+    required dynamic event,
+    required bool isOwner,
+    required bool isPayment,
+    required String hostLink,
+    required String? audienceLink,
+    required String? coHostLink,
+    required String streamId,
+    required String hostId,
+    required String userName,
+  }) {
+    final hasLive = hostLink.isNotEmpty;
+
+    // OWNER: Start Live
+    if (isOwner) {
+      if (!hasLive) {
+        return CustomElevatedButton(
+          text: "Start Live",
+          ontap: () {
+            Get.snackbar(
+              'Info',
+              'Start Live functionality - requires LiveScreenController',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.primaryColor,
+              colorText: Colors.white,
+            );
+          },
+        );
+      }
+
+      return CustomElevatedButton(
+        text: "Join as Host",
+        ontap: () {
+          Get.toNamed(
+            AppRoute.myLive,
+            arguments: {
+              'roomId': streamId,
+              'userName': userName,
+              'isHost': true,
+              'hostLink': hostLink,
+              'audienceLink': audienceLink,
+              'hostId': hostId,
+              'coHostLink': coHostLink,
+            },
+          );
+        },
+      );
+    }
+
+    // AUDIENCE: Pay First
+    if (!isPayment) {
+      return CustomElevatedButton(
+        text: "Pay \$${event.payAmount}",
+        ontap: () {
+          DonationSheet.show(context, eventId: event.id);
+        },
+        textColor: Colors.white,
+      );
+    }
+
+    // AUDIENCE: Join After Payment
+    if (audienceLink != null && audienceLink.isNotEmpty) {
+      return CustomElevatedButton(
+        text: "Join Now",
+
+        ontap: () {
+          if (audienceLink != null && audienceLink.isNotEmpty) {
+            Get.toNamed(AppRoute.myLive, arguments: {
+              'roomId': streamId,
+              'userName': userName,
+              'isHost': isOwner,
+              'hostLink': hostLink,
+              'audienceLink': audienceLink,
+              'hostId': hostId,
+
+            });
+          }
+        },
+      );
+    }
+
+    // Live not started
+    return CustomElevatedButton(
+      text: "Waiting for Live",
+      ontap: () {
+        Get.snackbar(
+          'Not Available',
+          'The live event hasn\'t started yet.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+      },
+    );
+  }
+
+
   String _formatCount(int count) {
     if (count >= 1000000) {
       return '${(count / 1000000).toStringAsFixed(1)}M';
@@ -273,4 +406,8 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
     return count.toString();
   }
 }
+
+// TODO: Add these classes if they don't exist in your project
+
+
 

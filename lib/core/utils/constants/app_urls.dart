@@ -2,7 +2,8 @@ class AppUrls {
 
   /// vps
   ////static const String _baseUrl = 'http://206.162.244.144:5020/api/v1';
-  static const String _baseUrl = 'http://10.0.20.169:5020/api/v1';
+  ////static const String _baseUrl = 'http://10.0.20.169:5020/api/v1';
+  static const String _baseUrl = 'https://api.morgan.smtsigma.com/api/v1';
 
 
   //create

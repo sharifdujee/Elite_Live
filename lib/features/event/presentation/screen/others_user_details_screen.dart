@@ -4,6 +4,7 @@ import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/event/controller/event_controller.dart';
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
+import 'package:elites_live/features/event/presentation/screen/recorde_live_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -219,7 +220,7 @@ class OthersUserDetailsScreen extends StatelessWidget {
                 child: TabBarView(
                   children: [
                     // Grid Tab - Photos/Videos
-                    _buildGridView(),
+                    RecordedLiveSession(userId: userId),
                     // Calendar Tab
                     OthersUserScheduleEventScreen(userId: user.id,),
                     // Profile Tab
@@ -282,68 +283,7 @@ class OthersUserDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileTab(dynamic user) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (user.bio != null) ...[
-            const Text(
-              'Bio',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              user.bio,
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            const SizedBox(height: 16),
-          ],
-          _buildInfoRow(Icons.email, 'Email', user.email),
-          _buildInfoRow(Icons.location_on, 'Address',
-              user.address ?? 'Not specified'),
-          _buildInfoRow(
-              Icons.person, 'Gender', user.gender ?? 'Not specified'),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        children: [
-          Icon(icon, color: const Color(0xFF7C3AED), size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
+
 }

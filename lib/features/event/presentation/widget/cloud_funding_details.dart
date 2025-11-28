@@ -28,11 +28,11 @@ class CloudFundingDetails extends StatelessWidget {
         SizedBox(height: 10.h),
         CustomTextView(text: eventDescription, color: AppColors.textBody,),
         SizedBox(height: 10.h),
-        if (stream != null)
+       /* if (stream != null)
           CustomTextView(
            text: event.isOwner ? "Host Link: ${stream.hostLink}" : "Audience Link: ${stream.audienceLink}",
           color: Colors.blue,
-          ),
+          ),*/
       ],
     );
   }

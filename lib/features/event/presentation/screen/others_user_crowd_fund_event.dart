@@ -1,3 +1,6 @@
+
+
+import 'package:elites_live/features/home/presentation/widget/donation_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -55,9 +58,7 @@ class OthersUserCrowdScreen extends StatelessWidget {
           itemCount: result.events.length,
           itemBuilder: (context, index) {
             final event = result.events[index];
-            final streamLink = event.isOwner
-                ? event.stream.hostLink
-                : event.stream.audienceLink;
+
 
             return Container(
               margin: EdgeInsets.only(bottom: 16.h),
@@ -136,68 +137,36 @@ class OthersUserCrowdScreen extends StatelessWidget {
 
                         // Pay Amount
                         if (event.payAmount > 0)
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 12.h),
+                          GestureDetector(
+                            onTap: (){
+                              DonationSheet.show(context, eventId: event.id);
+                            },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 12.w,
-                                vertical: 6.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.green.shade50,
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(
-                                  color: Colors.green.shade200,
+                              margin: EdgeInsets.only(bottom: 12.h),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12.w,
+                                  vertical: 6.h,
                                 ),
-                              ),
-                              child: CustomTextView(
-                                text: 'Pay \$${event.payAmount}',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14.sp,
-                                color: Colors.green.shade700,
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade50,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  border: Border.all(
+                                    color: Colors.green.shade200,
+                                  ),
+                                ),
+                                child: CustomTextView(
+                                  text: 'Pay \$${event.payAmount}',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14.sp,
+                                  color: Colors.green.shade700,
+                                ),
                               ),
                             ),
                           ),
 
                         // Live Event Link Button
-                        InkWell(
-                          onTap: () => launchURL(streamLink),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 8.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade50,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      CustomTextView(
-                                        text: 'Go to Live Event:',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12.sp,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      CustomTextView(
-                                        text: streamLink,
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 11.sp,
-                                        color: Colors.blue.shade700,
-                                        maxLines: 1,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                   ),

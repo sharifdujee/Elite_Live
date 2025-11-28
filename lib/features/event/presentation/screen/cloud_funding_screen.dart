@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../core/global_widget/custom_comment_sheet.dart';
 import '../../../../core/global_widget/date_time_helper.dart';
+import '../../../../routes/app_routing.dart';
 import '../../../home/controller/home_controller.dart';
 import '../../../home/presentation/widget/designation_section.dart';
 import '../../../home/presentation/widget/donation_sheet.dart';
@@ -63,7 +64,11 @@ class CloudFundingScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// live indicator
-                  LiveIndicatorSection(influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B',),
+                  LiveIndicatorSection(
+                    onTap: (){
+                      Get.toNamed(AppRoute.othersUser, arguments: {"userId":crowdFund.userId});
+                    },
+                    influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B',),
 
                   SizedBox(width: 12.w),
 

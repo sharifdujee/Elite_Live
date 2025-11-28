@@ -1,9 +1,11 @@
+import 'dart:developer';
 
 import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/event/controller/event_controller.dart';
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:elites_live/features/event/presentation/widget/event_follow_section.dart';
+import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:elites_live/routes/app_routing.dart';
 
 import 'package:flutter/material.dart';
@@ -29,6 +31,7 @@ class EventScheduleScreen extends StatelessWidget {
   final EventController eventController = Get.find();
   final ScheduleController scheduleController = Get.find();
   final LiveScreenController controller = Get.find();
+  final ProfileController profileController = Get.find();
 
   final RxString replyingToId = ''.obs;
   final RxString replyingToName = ''.obs;
@@ -51,7 +54,7 @@ class EventScheduleScreen extends StatelessWidget {
         child: ListView.separated(
           controller: eventController.scrollController,
           physics: BouncingScrollPhysics(),
-          itemCount: eventController.eventList.length + 1, // +1 for loading indicator
+          itemCount: eventController.eventList.length + 1,
           separatorBuilder: (context, index) {
             if (index >= eventController.eventList.length) {
               return SizedBox.shrink();
@@ -60,7 +63,7 @@ class EventScheduleScreen extends StatelessWidget {
           },
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            // Show loading indicator at the bottom
+
             if (index >= eventController.eventList.length) {
               return Obx(() {
                 if (eventController.isPaginationLoading.value) {
@@ -73,7 +76,6 @@ class EventScheduleScreen extends StatelessWidget {
               });
             }
 
-            // FIXED: Access event directly from the list
             final event = eventController.eventList[index];
 
             // Extract user data
@@ -83,6 +85,9 @@ class EventScheduleScreen extends StatelessWidget {
             final userImage = event.user.profileImage;
             final profession = event.user.profession;
             final eventId = event.id;
+            final currentUserFirstName = profileController.userinfo.value!.firstName;
+            final currentUserLastName = profileController.userinfo.value!.lastName;
+            final currentUserName = "$currentUserFirstName $currentUserLastName";
 
             // Extract event data
             final about = event.text;
@@ -105,9 +110,10 @@ class EventScheduleScreen extends StatelessWidget {
             final isOwner = event.isOwner;
             final hostLink = event.stream?.hostLink;
             final audienceLink = event.stream?.audienceLink;
-
-
-            // Live status (you may need to adjust this based on your logic)
+            final cohostLink = event.stream?.coHostLink;
+            final streamId = event.streamId;
+            final hostId = event.userId;
+            final roomId = event.stream;
 
 
             return Column(
@@ -116,31 +122,24 @@ class EventScheduleScreen extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// Live indicator
                     LiveIndicatorSection(
                       onTap: (){
                         Get.toNamed(AppRoute.othersUser, arguments: {"userId":event.userId});
-
                       },
                       influencerProfile: userImage??'https://cdn2.psychologytoday.com/assets/styles/manual_crop_1_91_1_1528x800/public/field_blog_entry_images/2018-09/shutterstock_648907024.jpg?itok=7lrLYx-B',
-
                     ),
 
                     SizedBox(width: 12.w),
 
-                    /// Expanded wrapper to prevent overflow
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          /// Name and badge
                           NameBadgeSection(userName: userName),
                           SizedBox(height: 4.h),
-
-                          /// Designation and time ago
                           DesignationSection(
                             designation: profession??'',
-                            timeAgo: timeAgo, // Pass time ago here
+                            timeAgo: timeAgo,
                           ),
                         ],
                       ),
@@ -148,20 +147,18 @@ class EventScheduleScreen extends StatelessWidget {
 
                     SizedBox(width: 8.w),
 
-                    /// Follow and dot indicator section
                     EventFollowSection(index: index)
                   ],
                 ),
                 SizedBox(height: 16.h),
 
-                /// Event date time section
                 DateTimeSection(
                   eventDate: eventDate,
                   eventTime: eventTime,
                 ),
                 SizedBox(height: 10.h),
 
-                /// Cloud Details Section
+                /// FIXED: Complete onTap logic for all cases
                 EventDetailsSection(
                   eventDetails: about,
                   eventTitle: eventType,
@@ -170,27 +167,65 @@ class EventScheduleScreen extends StatelessWidget {
                   hostLink: hostLink,
                   audienceLink: audienceLink,
                   isPayment: paymentStatus,
-
                   onTap: () {
-                    if (isOwner) return; // Owners never pay or join
-
+                    log("the steam id is $streamId");
+                    if (isOwner) {
+                      if (hostLink == null || hostLink.isEmpty) {
+                        // OWNER: Start Live (create new session)
+                        controller.createAndNavigateToLive(
+                            isPaid: false,
+                            isHost: isOwner
+                        );
+                      } else {
+                        // OWNER: Join as Host (existing session)
+                        Get.toNamed(AppRoute.myLive, arguments: {
+                          'roomId': streamId,
+                          'userName': currentUserName,
+                          'isHost': isOwner,
+                          'hostLink': hostLink,
+                          'audienceLink': audienceLink,
+                          'hostId': hostId,
+                          'coHostLink': cohostLink,
+                        });
+                      }
+                      return;
+                    }
                     if (!paymentStatus) {
-                      DonationSheet.show(context,eventId: eventId);
+                      // TODO: Replace with your actual payment route
+                      DonationSheet.show(context,eventId: event.id);
 
+
+                      return;
+                    }
+
+                    // CASE B: User has paid → Join as audience
+                    if (audienceLink != null && audienceLink.isNotEmpty) {
+                      Get.toNamed(AppRoute.myLive, arguments: {
+                        'roomId': streamId,
+                        'userName': currentUserName,
+                        'isHost': isOwner,
+                        'hostLink': hostLink,
+                        'audienceLink': audienceLink,
+                        'hostId': hostId,
+                        'coHostLink': cohostLink,
+                      });
                     } else {
-                      // ALREADY PAID → JOIN LIVE
-                      Get.toNamed(AppRoute.myLive);
+                      // Show error: Live hasn't started yet
+                      Get.snackbar(
+                        'Not Available',
+                        'The live event hasn\'t started yet. Please wait for the host to begin.',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.orange,
+                        colorText: Colors.white,
+                      );
                     }
                   },
                 ),
 
-
                 SizedBox(height: 10.h),
 
-                /// Like comment and share Section
                 UserInteractionSection(
                   onLikeTap: (){
-
                     scheduleController.createLike(eventId);
                   },
                   eventType: eventType,
@@ -198,13 +233,18 @@ class EventScheduleScreen extends StatelessWidget {
                   likeCount: likeCount.toString(),
                   commentCount: commentCount,
                   onCommentTap: (){
-                    showModalBottomSheet(context: context, builder: (BuildContext context){
-                      return CommentSheet(scheduleController: scheduleController, eventId: eventId);
-                    });
-                  }, isOwner: isOwner,
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context){
+                          return CommentSheet(
+                              scheduleController: scheduleController,
+                              eventId: eventId
+                          );
+                        }
+                    );
+                  },
+                  isOwner: isOwner,
                 ),
-
-
               ],
             );
           },
@@ -213,12 +253,3 @@ class EventScheduleScreen extends StatelessWidget {
     });
   }
 }
-
-
-
-
-
-
-
-
-
