@@ -21,13 +21,25 @@ class PoolDataModel {
     required this.result,
   });
 
-  factory PoolDataModel.fromJson(Map<String, dynamic> json) => PoolDataModel(
-    success: json["success"]??true,
-    message: json["message"]??'',
-    result: List<PoolResult>.from(
-        json["result"].map((x) => PoolResult.fromJson(x))
-    ), // ✅ Parse as list
-  );
+  factory PoolDataModel.fromJson(Map<String, dynamic> json) {
+    final rawResult = json["result"];
+
+    List<PoolResult> parsedResult = [];
+
+    if (rawResult is List) {
+      parsedResult = rawResult
+          .map((x) => PoolResult.fromJson(Map<String, dynamic>.from(x)))
+          .toList();
+    } else if (rawResult is Map) {
+      parsedResult = [PoolResult.fromJson(Map<String, dynamic>.from(rawResult))];
+    }
+
+    return PoolDataModel(
+      success: json["success"] ?? true,
+      message: json["message"] ?? '',
+      result: parsedResult,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "success": success,
@@ -35,15 +47,15 @@ class PoolDataModel {
     "result": List<dynamic>.from(result.map((x) => x.toJson())),
   };
 }
-
 class PoolResult {
   String id;
   String userId;
   String? streamId;
   String question;
   List<String> options;
-  String? createdAt; // ✅ Add these fields from API
-  String? updatedAt; // ✅ Add these fields from API
+  bool isOwner; // ✅ ADD THIS FIELD
+  String? createdAt;
+  String? updatedAt;
 
   PoolResult({
     required this.id,
@@ -51,6 +63,7 @@ class PoolResult {
     this.streamId,
     required this.question,
     required this.options,
+    required this.isOwner, // ✅ ADD THIS
     this.createdAt,
     this.updatedAt,
   });
@@ -61,6 +74,7 @@ class PoolResult {
     streamId: json["streamId"],
     question: json["question"] ?? "",
     options: List<String>.from(json["options"] ?? []),
+    isOwner: json["isOwner"] ?? false, // ✅ ADD THIS
     createdAt: json["createdAt"],
     updatedAt: json["updatedAt"],
   );
@@ -71,6 +85,7 @@ class PoolResult {
     "streamId": streamId,
     "question": question,
     "options": List<dynamic>.from(options.map((x) => x)),
+    "isOwner": isOwner, // ✅ ADD THIS
     "createdAt": createdAt,
     "updatedAt": updatedAt,
   };

@@ -161,7 +161,6 @@ class ScheduleController extends GetxController {
       isLoading.value = false;
     }
   }
-
   Future<void> createCrowdFunding({String eventType = "Funding"}) async {
     isLoading.value = true;
 
@@ -199,21 +198,70 @@ class ScheduleController extends GetxController {
       log("Response success: ${response.isSuccess}");
 
       if (response.statusCode == 201 && response.isSuccess) {
-        Get.snackbar("Success", "The event was successfully Created");
+        // ✅ Close loading dialog
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+
+        // ✅ Clear form
+        crowdFundTitleController.clear();
+        descriptionController.clear();
+
+        // ✅ Show success message
+        Get.snackbar(
+          "Success",
+          "The event was successfully created",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+
+        // ✅ Refresh data
         await getAllCrowdFunding(currentPage.value, limit.value);
+
+        // ✅ Navigate back
+        Get.back();
+
       } else {
         log("Event creation failed: ${response.responseData}");
+
+        // ✅ Close loading dialog
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+
+        // ✅ Show error
+        Get.snackbar(
+          "Error",
+          "Failed to create event",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       }
     } catch (e, s) {
       log("Exception during event creation: ${e.toString()}");
       log("Stack trace: $s");
-    } finally {
+
+      // ✅ Close loading dialog
       if (Get.isDialogOpen ?? false) {
         Get.back();
       }
+
+      // ✅ Show error
+      Get.snackbar(
+        "Error",
+        "Something went wrong",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
       isLoading.value = false;
     }
   }
+
+
 
   Future<void> createLike(String eventId) async {
     isLoading.value = true;

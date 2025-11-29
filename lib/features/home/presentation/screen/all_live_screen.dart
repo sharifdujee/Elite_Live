@@ -73,7 +73,7 @@ class AllLiveScreen extends StatelessWidget {
                   final recordeEvent = controller.eventList[index];
                   ///need update Here is Live
 
-                  final isLive = recordeEvent.user.isFollow;
+                  final isLive = recordeEvent.stream!.isLive;
 
 
                   final firstName = recordeEvent.user.firstName;

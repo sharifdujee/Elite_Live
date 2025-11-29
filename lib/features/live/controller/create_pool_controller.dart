@@ -26,12 +26,8 @@ class CreatePollController extends GetxController {
 
   final RxMap<int, RxList<bool>> checkedOptionsMap = <int, RxList<bool>>{}.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
-  // Initialize checked options for a specific poll
+
   void initializeCheckedOptions(int pollIndex, int optionsCount) {
     if (!checkedOptionsMap.containsKey(pollIndex)) {
       checkedOptionsMap[pollIndex] = List<bool>.generate(optionsCount, (_) => false).obs;
@@ -147,53 +143,58 @@ class CreatePollController extends GetxController {
       );
 
       log("Response Status: ${response.statusCode}");
-      log("Response Data Type: ${response.responseData.runtimeType}");
-      log("Raw Response: ${response.responseData}");
+      log("Response Data: ${response.responseData}");
 
       if (response.isSuccess && response.responseData != null) {
-        PoolDataModel poolData;
+        List<PoolResult> polls = [];
 
-        if (response.responseData is String) {
-          log("Parsing from String");
-          poolData = poolDataModelFromJson(response.responseData);
-        } else if (response.responseData is Map) {
-          log("Parsing from Map");
-          poolData = PoolDataModel.fromJson(
-              Map<String, dynamic>.from(response.responseData));
+        // Check if response.responseData is the wrapper or direct result
+        if (response.responseData is Map) {
+          final data = Map<String, dynamic>.from(response.responseData);
+
+          // Check if it has the wrapper structure (success, message, result)
+          if (data.containsKey('success') && data.containsKey('result')) {
+            log("✅ Response has wrapper structure");
+            final result = data['result'];
+
+            if (result is List) {
+              polls = result
+                  .map((item) => PoolResult.fromJson(Map<String, dynamic>.from(item)))
+                  .toList();
+            } else if (result is Map) {
+              polls = [PoolResult.fromJson(Map<String, dynamic>.from(result))];
+            }
+          } else {
+            // Direct result object (no wrapper)
+            log("✅ Response is direct result object");
+            polls = [PoolResult.fromJson(data)];
+          }
         } else if (response.responseData is List) {
-          log("Response is a List - wrapping in PoolDataModel");
-          poolData = PoolDataModel(
-            success: true,
-            message: "Polls retrieved",
-            result: (response.responseData as List)
-                .map((item) =>
-                PoolResult.fromJson(Map<String, dynamic>.from(item)))
-                .toList(),
-          );
-        } else {
-          log("Unexpected response type: ${response.responseData.runtimeType}");
-          Get.snackbar("Error",
-              "Invalid response format: ${response.responseData.runtimeType}");
-          return;
+          log("✅ Response is a List");
+          polls = (response.responseData as List)
+              .map((item) => PoolResult.fromJson(Map<String, dynamic>.from(item)))
+              .toList();
         }
 
-        if (poolData.success && poolData.result.isNotEmpty) {
-          poolList.value = poolData.result;
-          log("Successfully loaded ${poolList.length} polls");
+        log("✅ Parsed ${polls.length} polls");
+
+        if (polls.isNotEmpty) {
+          poolList.value = polls;
+          log("✅ Successfully loaded ${poolList.length} polls");
 
           for (var poll in poolList) {
-            log("  - Poll: ${poll.question}");
+            log("  📊 Poll: ${poll.question} (${poll.options.length} options)");
           }
         } else {
-          log("⚠️ No polls found or success=false");
+          log("⚠️ No polls found");
           poolList.clear();
         }
       } else {
-        log("API call failed with status: ${response.statusCode}");
+        log("❌ API call failed with status: ${response.statusCode}");
         Get.snackbar("Error", "Failed to load polls");
       }
     } catch (e, stackTrace) {
-      log("Exception in getPool: $e");
+      log("❌ Exception in getPool: $e");
       log("Stack trace: $stackTrace");
       Get.snackbar("Error", "Error loading polls: ${e.toString()}");
     } finally {
@@ -325,12 +326,12 @@ class CreatePollController extends GetxController {
       if (response.isSuccess && response.statusCode == 200) {
         log("Vote successful: ${response.responseData}");
 
-        // Clear selected options after successful vote
+
         clearCheckedStates();
 
-        // Refresh poll data and results
+
         await getPool(streamId);
-        ///await getPoolVoteResult(streamId);
+        await getPoolVoteResultByStream(streamId);
 
         Get.snackbar(
           "Success",

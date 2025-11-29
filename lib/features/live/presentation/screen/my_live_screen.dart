@@ -228,6 +228,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
         children: [
           // ✅ FIXED: Use zegoRoomId instead of roomId
           ZegoUIKitPrebuiltLiveStreaming(
+
             appID: 1071350787,
             appSign: "657d70a56532ec960b9fc671ff05d44b498910b5668a1b3f1f1241bede47af71",
             userName: userName,
@@ -619,7 +620,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 onTap: () {
                   log("the button is pressed");
                   Get.back();
-                  CreatePollDialog.show(context, roomId!);
+                  CreatePollDialog.show(context, streamId: liveId!);
                 },
               ),
               if (isHost)
