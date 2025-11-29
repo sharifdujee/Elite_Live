@@ -9,14 +9,6 @@ import '../../../../core/services/socket_service.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import 'package:get/get.dart';
 
-import 'dart:developer';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/material.dart';
-import '../../../../core/global_widget/custom_text_field.dart';
-import '../../../../core/global_widget/custom_text_view.dart';
-import '../../../../core/services/socket_service.dart';
-import '../../../../core/utils/constants/app_colors.dart';
-import 'package:get/get.dart';
 
 class AddContributorDialog {
   static void show(
@@ -153,10 +145,10 @@ class AddContributorDialog {
                       itemCount: followingList.length,
                       itemBuilder: (context, index) {
                         final following = followingList[index];
-                        final firstName = following.user.firstName ?? "";
-                        final lastName = following.user.lastName ?? "";
+                        final firstName = following.user.firstName;
+                        final lastName = following.user.lastName;
                         final name = "$firstName $lastName";
-                        final receiverId = following.user.id ?? "";
+                        final receiverId = following.user.id;
 
                         return Container(
                           padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -177,11 +169,13 @@ class AddContributorDialog {
                                         : null,
                                   ),
                                   SizedBox(width: 8.w),
-                                  CustomTextView(
-                                    text: name,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.sp,
-                                    color: AppColors.textHeader,
+                                  Expanded(
+                                    child: CustomTextView(
+                                      text: name,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16.sp,
+                                      color: AppColors.textHeader,
+                                    ),
                                   ),
                                 ],
                               ),

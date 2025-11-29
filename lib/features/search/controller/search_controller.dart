@@ -1,11 +1,169 @@
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
+import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:get/get.dart';
 
+
+import '../data/others_user_list_data_model.dart';
 import '../data/user_tab_data_model.dart';
 import '../data/video _tab_model.dart';
 
 class SearchScreenController extends GetxController {
   var searchText = ''.obs;
   var selectedTab = 0.obs; // 0 = All, 1 = Live, 2 = Video, 3 = User
+  RxList<OthersUserListResult> othersList = <OthersUserListResult>[].obs;
+  var isLoading = false.obs;
+  final NetworkCaller networkCaller = NetworkCaller();
+  final SharedPreferencesHelper helper = SharedPreferencesHelper();
+  final TextEditingController searchController = TextEditingController();
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    getOtherUserList();
+    super.onInit();
+  }
+
+  /// get others user
+
+  Future<void> getOtherUserList() async {
+    isLoading.value = true;
+
+    String? token = helper.getString('userToken');
+    log("the token during fetch othersList: $token");
+
+    try {
+      var response = await networkCaller.getRequest(AppUrls.getOtherUser, token: token);
+
+      if (response.isSuccess) {
+        log("the api response is ${response.responseData}");
+
+        // Fix: Check if responseData is already the full JSON or just the result array
+        if (response.responseData is Map<String, dynamic>) {
+          // If it's a Map, parse normally
+          final others = OthersUserList.fromJson(response.responseData);
+          othersList.assignAll(others.result);
+        } else if (response.responseData is List) {
+          // If it's a List, create the wrapper manually
+          final resultList = List<OthersUserListResult>.from(
+              response.responseData.map((x) => OthersUserListResult.fromJson(x))
+          );
+          othersList.assignAll(resultList);
+        }
+
+        log("Successfully loaded ${othersList.length} users");
+      } else {
+
+        log("API request failed: ${response.statusCode}");
+      }
+    } catch (e) {
+
+      log("the exception is ${e.toString()}");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  /// search user 
+  Future<void> searchOtherUser(String search) async {
+    isLoading.value = true;
+
+    String? token = helper.getString('userToken');
+    log("the token during fetch othersList: $token");
+
+    try {
+      var response = await networkCaller.getRequest(AppUrls.searchOtherUser(search), token: token);
+
+      if (response.isSuccess) {
+        log("the api response is ${response.responseData}");
+
+        // Fix: Check if responseData is already the full JSON or just the result array
+        if (response.responseData is Map<String, dynamic>) {
+          // If it's a Map, parse normally
+          final others = OthersUserList.fromJson(response.responseData);
+          othersList.assignAll(others.result);
+        } else if (response.responseData is List) {
+          // If it's a List, create the wrapper manually
+          final resultList = List<OthersUserListResult>.from(
+              response.responseData.map((x) => OthersUserListResult.fromJson(x))
+          );
+          othersList.assignAll(resultList);
+        }
+
+        log("Successfully loaded ${othersList.length} users");
+      } else {
+
+        log("API request failed: ${response.statusCode}");
+      }
+    } catch (e) {
+
+      log("the exception is ${e.toString()}");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// follow unfollow user
+  Future<void> followUnFlow(String userId) async {
+    isLoading.value = true;
+
+    // SHOW LOADER
+    /*Get.dialog(
+      CustomLoading(color: AppColors.primaryColor),
+      barrierDismissible: false,
+    );
+*/
+    String? token = helper.getString("userToken");
+    log("token during follow user is $token");
+
+    try {
+      var response = await networkCaller.postRequest(
+        AppUrls.followUser(userId),
+        body: {},
+        token: token,
+      );
+
+      // ALWAYS CLOSE LOADING
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      if (response.isSuccess) {
+        log("the api response is ${response.responseData}");
+
+        // SUCCESS SNACK
+
+
+        // REFRESH LIST
+        await getOtherUserList();
+      } else {
+        // ERROR SNACK
+        Get.snackbar(
+          "Failed",
+          response.errorMessage ?? "Something went wrong",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      log("Exception: ${e.toString()}");
+
+      // ENSURE LOADING CLOSED ON ERROR
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      Get.snackbar(
+        "Error",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 
 
   // Tab control

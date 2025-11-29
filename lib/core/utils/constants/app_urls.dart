@@ -99,6 +99,10 @@ class AppUrls {
   static String votePool(String poolId) => "$_baseUrl/polls/submit/vote/$poolId";
   static  String poolResult(String streamId) => "$_baseUrl/polls/result/$streamId";
 
+  /// search flow
+  static const String getOtherUser = "$_baseUrl/auth/user-list";
+  static String searchOtherUser(String search) => "$_baseUrl/auth/user-list?search=$search";
+
   /// notification flow
    static const String getAllNotification = "$_baseUrl/notification";
    static String updateNotificationStatus(String notificationId)  => "$_baseUrl/notification/$notificationId";

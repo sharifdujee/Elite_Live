@@ -229,6 +229,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
           // ✅ FIXED: Use zegoRoomId instead of roomId
           ZegoUIKitPrebuiltLiveStreaming(
 
+
             appID: 1071350787,
             appSign: "657d70a56532ec960b9fc671ff05d44b498910b5668a1b3f1f1241bede47af71",
             userName: userName,
@@ -237,6 +238,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
             config: (isHost
                 ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
                 : ZegoUIKitPrebuiltLiveStreamingConfig.audience())
+
               ..layout = ZegoLayout.gallery(
                   showScreenSharingFullscreenModeToggleButtonRules:
                   ZegoShowFullscreenModeToggleButtonRules.alwaysShow,

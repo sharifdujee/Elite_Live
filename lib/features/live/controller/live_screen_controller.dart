@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
@@ -12,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 import '../data/create_live_response_data_model.dart';
+import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
 
 
@@ -23,10 +25,19 @@ class LiveScreenController extends GetxController {
   var showMenu = false.obs;
   var viewerCount = 0.obs;
   var isLoading = false.obs;
+  late ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
+
 
   final NetworkCaller networkCaller = NetworkCaller();
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
   final Uuid uuid = Uuid();
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    prebuiltController = ZegoUIKitPrebuiltLiveStreamingController();
+    super.onInit();
+  }
 
   /// Generate unique links for live streaming
   String generateHostLink() {
@@ -50,7 +61,9 @@ class LiveScreenController extends GetxController {
 
     // Show loading spinner
     Get.dialog(
-      const Center(child: CircularProgressIndicator()),
+       Center(child: CustomLoading(
+        color:AppColors.primaryColor ,
+      )),
       barrierDismissible: false,
     );
 
@@ -292,21 +305,50 @@ class LiveScreenController extends GetxController {
     isMicOn.value = !isMicOn.value;
   }
 
-  void toggleScreenShare() {
-    isScreenSharing.value = !isScreenSharing.value;
-    showMenu.value = false;
+  void toggleScreenShare() async {
+    if (isScreenSharing.value) {
+      // === STOP SCREEN SHARING ===
+      await ZegoUIKit.instance.stopSharingScreen();
+      isScreenSharing.value = false;
 
-    Get.snackbar(
-      isScreenSharing.value ? 'Screen Sharing Started' : 'Screen Sharing Stopped',
-      isScreenSharing.value
-          ? 'Your screen is now being shared'
-          : 'Screen sharing has been stopped',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
+      Get.snackbar(
+        'Screen Sharing Stopped',
+        'Your screen is no longer being shared',
+        backgroundColor: Colors.black87,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+    } else {
+      // === START SCREEN SHARING ===
+      try {
+        await ZegoUIKit.instance.startSharingScreen();
+
+        // If no exception, assume success
+        isScreenSharing.value = true;
+
+        Get.snackbar(
+          'Screen Sharing Started',
+          'Your screen is now being shared with viewers',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+      } catch (e) {
+        log("Screen sharing failed: $e");
+
+        Get.snackbar(
+          'Error',
+          'Failed to start screen sharing. Please try again.',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    }
+
+    showMenu.value = false;
   }
+
+
 
   void toggleRecording() {
     isRecording.value = !isRecording.value;

@@ -49,7 +49,7 @@ class LiveStreamController extends GetxController {
         return;
       }
 
-      final socketUrl = "ws://10.0.20.169:5020";
+      final socketUrl = "wss://api.morgan.smtsigma.com";
 
       // Connect and wait for connection or timeout
       await webSocketService.connect(socketUrl, authToken);
