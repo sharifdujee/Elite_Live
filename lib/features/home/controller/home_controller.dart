@@ -4,7 +4,7 @@ import 'package:elites_live/core/utils/constants/image_path.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../core/services/payment_service.dart';
+
 import '../data/comment_data_model.dart';
 
 class HomeController extends GetxController {
@@ -51,21 +51,7 @@ class HomeController extends GetxController {
   void onSearchChanged(String value) => searchText.value = value;
 
   /// FIXED: Now actually calls Stripe payment service
-  Future<void> processDonation(double amount) async {
-    selectedDonationAmount.value = amount;
 
-    // Get the current post ID (you need to pass this from your UI)
-    // For now, using a dummy postId - replace with actual post ID
-    String postId = getCurrentPostId();
-
-    try {
-      // Call Stripe payment service
-      await StripeService.instance.paymentStart(postId, amount);
-    } catch (e) {
-      // Error is already handled in StripeService
-      log('Error processing donation: $e');
-    }
-  }
 
   /// Get the current post/stream ID
   /// Replace this with your actual logic to get the post ID
