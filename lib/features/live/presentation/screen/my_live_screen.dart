@@ -1,3 +1,4 @@
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/socket_service.dart';
 import 'package:elites_live/features/live/presentation/widget/contributor_dialog.dart';
@@ -113,39 +114,23 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     log("🔍 Co-Host Link: $coHostLink");
 
     if (!webSocketService.isConnected.value) {
-      Get.snackbar(
-        "Connecting",
-        "Please wait while we establish connection...",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-      );
+      CustomSnackBar.warning(title: "Connecting", message: "Please wait while we establish connection...");
+
 
       _initializeWebSocket().then((_) {
         if (webSocketService.isConnected.value) {
           _showContributorDialog();
         } else {
-          Get.snackbar(
-            "Connection Failed",
-            "Unable to connect to server. Please try again.",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
+          CustomSnackBar.error(title: "Connection Failed", message: "Unable to connect to server. Please try again.");
+
         }
       });
       return;
     }
 
     if (roomId == null || roomId!.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Stream ID not available",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Stream ID not available");
+
       return;
     }
 
@@ -688,14 +673,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
               InkWell(
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: displayValue));
-                  Get.snackbar(
-                    "Copied",
-                    "$title copied to clipboard",
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white,
-                    duration: Duration(seconds: 2),
-                  );
+                  CustomSnackBar.success(title: "Copied", message: "$title copied to clipboard");
+
                 },
                 child: Icon(Icons.copy, color: Colors.blue, size: 20.sp),
               ),

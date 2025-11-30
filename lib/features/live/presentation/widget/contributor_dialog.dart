@@ -251,26 +251,17 @@ class AddContributorDialog {
 
     // Double-check connection status
     if (!webSocketService.isConnected.value) {
-      Get.snackbar(
-        "Connection Error",
-        "WebSocket is not connected. Please try again.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Connection Error", message: "WebSocket is not connected. Please try again.");
+
       log("❌ Cannot add contributor: WebSocket not connected");
       return;
     }
 
     // Validate required fields
     if (receiverId.isEmpty || streamId.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Missing required information",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Missing required information");
+
+
       log("❌ Missing receiverId or streamId");
       return;
     }

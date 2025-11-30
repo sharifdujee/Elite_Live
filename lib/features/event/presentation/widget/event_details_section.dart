@@ -1,8 +1,9 @@
 import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+
 
 import '../../../../core/global_widget/custom_text_view.dart';
 import '../../../../core/utils/constants/app_colors.dart';
@@ -29,22 +30,11 @@ class EventDetailsSection extends StatelessWidget {
   final String? audienceLink;
   final VoidCallback? onTap;
 
-  void _copyToClipboard(String link) {
-    Clipboard.setData(ClipboardData(text: link));
-    Get.snackbar(
-      'Copied',
-      'Link copied to clipboard',
-      snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: 2),
-      backgroundColor: AppColors.primaryColor,
-      colorText: Colors.white,
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    final String? displayLink = isOwner ? hostLink : audienceLink;
-    final String linkLabel = isOwner ? "Host Link" : "Audience Link";
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

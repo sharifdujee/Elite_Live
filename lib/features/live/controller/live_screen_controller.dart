@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
@@ -71,12 +72,8 @@ class LiveScreenController extends GetxController {
 
     if (token == null || token.isEmpty) {
       if (Get.isDialogOpen ?? false) Get.back();
-      Get.snackbar(
-        'Authentication Error',
-        'Please login again',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Authentication Error", message: "Please login again");
+
       isLoading.value = false;
       return null;
     }
@@ -131,12 +128,8 @@ class LiveScreenController extends GetxController {
       return liveData;
     } catch (e) {
       if (Get.isDialogOpen ?? false) Get.back();
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: e.toString());
+
       return null;
     } finally {
       isLoading.value = false;
@@ -189,13 +182,8 @@ class LiveScreenController extends GetxController {
         log("✅ Navigation successful");
       } catch (e) {
         log("❌ Navigation error: $e");
-        Get.snackbar(
-          'Error',
-          'Failed to navigate to live screen',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        CustomSnackBar.error(title: "Error", message: "Failed to navigate to live screen");
+
       }
     } else {
       log("❌ liveData is null, navigation cancelled");
@@ -228,14 +216,9 @@ class LiveScreenController extends GetxController {
       log("⚠️ No separator found, using entire link as liveId: $liveId");
     }
 
-    if (liveId == null || liveId.isEmpty) {
-      Get.snackbar(
-        'Invalid Link',
-        'The audience link is invalid. Please check and try again.',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+    if (liveId.isEmpty) {
+      CustomSnackBar.error(title: "Invalid Link", message: "The audience link is invalid. Please check and try again.");
+
       return;
     }
 
@@ -267,13 +250,8 @@ class LiveScreenController extends GetxController {
       log("✅ Successfully joined live stream");
     } catch (e) {
       log("❌ Navigation error: $e");
-      Get.snackbar(
-        'Error',
-        'Failed to join live stream. Please try again.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Failed to join live stream. Please try again.");
+
     }
   }
 
@@ -310,14 +288,9 @@ class LiveScreenController extends GetxController {
       // === STOP SCREEN SHARING ===
       await ZegoUIKit.instance.stopSharingScreen();
       isScreenSharing.value = false;
+      CustomSnackBar.success(title: "Screen Sharing Stopped", message: "Your screen is no longer being shared");
 
-      Get.snackbar(
-        'Screen Sharing Stopped',
-        'Your screen is no longer being shared',
-        backgroundColor: Colors.black87,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
+
     } else {
       // === START SCREEN SHARING ===
       try {
@@ -325,23 +298,14 @@ class LiveScreenController extends GetxController {
 
         // If no exception, assume success
         isScreenSharing.value = true;
+        CustomSnackBar.success(title: "Screen Sharing Started", message: "Your screen is now being shared with viewers");
 
-        Get.snackbar(
-          'Screen Sharing Started',
-          'Your screen is now being shared with viewers',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 3),
-        );
+
       } catch (e) {
         log("Screen sharing failed: $e");
+        CustomSnackBar.error(title: "Error", message: "Failed to start screen sharing. Please try again.");
 
-        Get.snackbar(
-          'Error',
-          'Failed to start screen sharing. Please try again.',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+
       }
     }
 
@@ -376,38 +340,18 @@ class LiveScreenController extends GetxController {
 
   void addContributor() {
     showMenu.value = false;
-    Get.snackbar(
-      'Add Contributor',
-      'Opening contributor selection...',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
+    CustomSnackBar.success(title: "Add Contributor", message: "Opening contributor selection..");
+
   }
 
   void openComments() {
     showMenu.value = false;
-    Get.snackbar(
-      'Comments',
-      'Opening comments section...',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
+
   }
 
   void openPolls() {
     showMenu.value = false;
-    Get.snackbar(
-      'Polls',
-      'Opening polls...',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
+
   }
 
   void endCall(BuildContext context, String streamId) {
@@ -452,13 +396,8 @@ class LiveScreenController extends GetxController {
 
                       isLoading.value = false;
                       Get.back(); // navigate back from live screen
-                      Get.snackbar(
-                        "Session Ended",
-                        "Live session ended successfully",
-                        backgroundColor: Colors.green,
-                        colorText: Colors.white,
-                        duration: const Duration(seconds: 2),
-                      );
+                      CustomSnackBar.success(title: "Session Ended", message: "Live session ended successfully");
+
                     },
                     text: "End",
                   ),
@@ -512,13 +451,8 @@ class LiveScreenController extends GetxController {
 
                       isLoading.value = false;
                       Get.back(); // leave live screen
-                      Get.snackbar(
-                        "Left Session",
-                        "You have left the live session",
-                        backgroundColor: Colors.orange,
-                        colorText: Colors.white,
-                        duration: const Duration(seconds: 2),
-                      );
+                      CustomSnackBar.warning(title: "Left Session", message: "You have left the live session");
+
                     },
                     text: "Leave",
                   ),

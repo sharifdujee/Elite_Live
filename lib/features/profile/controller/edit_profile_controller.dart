@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/profile/controller/profile_controller.dart';
@@ -75,13 +76,8 @@ class EditProfileController extends GetxController {
         // Validate file extension
         String extension = image.path.split('.').last.toLowerCase();
         if (!['jpg', 'jpeg', 'png', 'webp'].contains(extension)) {
-          Get.snackbar(
-            "Error",
-            "Unsupported image format. Please use JPG, PNG, or WEBP",
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            snackPosition: SnackPosition.TOP,
-          );
+          CustomSnackBar.warning(title: "Warning", message: "Unsupported image format. Please use JPG, PNG, or WEBP");
+
           return;
         }
 
@@ -94,13 +90,8 @@ class EditProfileController extends GetxController {
       }
     } catch (e) {
       log("Error picking image from camera: $e");
-      Get.snackbar(
-        "Error",
-        "Failed to capture image from camera",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      CustomSnackBar.error(title: "Error", message: "Failed to capture image from camera");
+
     }
   }
 
@@ -118,13 +109,8 @@ class EditProfileController extends GetxController {
         // Validate file extension
         String extension = image.path.split('.').last.toLowerCase();
         if (!['jpg', 'jpeg', 'png', 'webp'].contains(extension)) {
-          Get.snackbar(
-            "Error",
-            "Unsupported image format. Please use JPG, PNG, or WEBP",
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            snackPosition: SnackPosition.TOP,
-          );
+          CustomSnackBar.warning(title: "Warning", message: "Unsupported image format. Please use JPG, PNG, or WEBP");
+
           return;
         }
 
@@ -137,13 +123,7 @@ class EditProfileController extends GetxController {
       }
     } catch (e) {
       log("Error picking image from gallery: $e");
-      Get.snackbar(
-        "Error",
-        "Failed to select image from gallery",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      CustomSnackBar.error(title: "Error", message: "Failed to capture image from Gallery");
     }
   }
 
@@ -160,19 +140,15 @@ class EditProfileController extends GetxController {
   }
 
   void updateProfile() {
-    Get.snackbar('Success', 'Profile Updated');
+    CustomSnackBar.success(title: "Success", message: "Profile Updated");
+
   }
 
   /// update profile
   Future<void> editProfile() async {
     if (addressController.text.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Address is required",
-        backgroundColor: AppColors.redColor,
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      CustomSnackBar.warning(title: "Warning", message: "Address is required");
+
       return;
     }
     try {
@@ -181,13 +157,8 @@ class EditProfileController extends GetxController {
       log("the user token is $userToken");
 
       if (userToken == null || userToken.isEmpty) {
-        Get.snackbar(
-          "Error",
-          "User token not found. Please login again.",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+        CustomSnackBar.error(title: "Error", message:  "User token not found. Please login again.");
+
         isLoading.value = false;
         return;
       }
@@ -244,14 +215,9 @@ class EditProfileController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         var responseData = jsonDecode(response.body);
+        CustomSnackBar.success(title: "Succcess", message: responseData['message'] ?? "Profile setup completed successfully",);
 
-        Get.snackbar(
-          "Success",
-          responseData['message'] ?? "Profile setup completed successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+
 
         showSuccessDialogue();
       } else {
@@ -263,14 +229,8 @@ class EditProfileController extends GetxController {
         } catch (e) {
           log("Error parsing error response: $e");
         }
+         CustomSnackBar.error(title: "Error", message: errorMessage);
 
-        Get.snackbar(
-          "Error",
-          errorMessage,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
       }
     } catch (e) {
       log("The exception is ${e.toString()}");
@@ -328,13 +288,8 @@ class EditProfileController extends GetxController {
   /// update profile picture
   Future<void> updateProfilePicture() async {
     if (selectedImage.value == null) {
-      Get.snackbar(
-        "Error",
-        "Please select an image first",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      CustomSnackBar.warning(title: "Warning", message: "Please select an image first");
+
       return;
     }
 
@@ -344,13 +299,8 @@ class EditProfileController extends GetxController {
       log("The user token is $userToken");
 
       if (userToken == null || userToken.isEmpty) {
-        Get.snackbar(
-          "Error",
-          "User token not found. Please login again.",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+        CustomSnackBar.error(title: "Error", message: "User token not found. Please login again.");
+
         isLoading.value = false;
         return;
       }
@@ -419,13 +369,9 @@ class EditProfileController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         var responseData = jsonDecode(response.body);
 
-        Get.snackbar(
-          "Success",
-          responseData['message'] ?? "Profile picture updated successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+        CustomSnackBar.success(title: "Success", message: responseData['message'] ?? "Profile picture updated successfully");
+
+
 
         // Refresh profile to show updated image
         await controller.getMyProfile();
@@ -442,23 +388,12 @@ class EditProfileController extends GetxController {
           log("Error parsing error response: $e");
         }
 
-        Get.snackbar(
-          "Error",
-          errorMessage,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+
+        CustomSnackBar.error(title: "Error", message: errorMessage);
       }
     } catch (e) {
       log("Error in updateProfilePicture: $e");
-      Get.snackbar(
-        "Error",
-        "Something went wrong: ${e.toString()}",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      CustomSnackBar.error(title: "Error", message: e.toString());
     } finally {
       isLoading.value = false;
     }

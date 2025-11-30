@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/event/controller/event_controller.dart';
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
@@ -211,13 +212,9 @@ class EventScheduleScreen extends StatelessWidget {
                       });
                     } else {
                       // Show error: Live hasn't started yet
-                      Get.snackbar(
-                        'Not Available',
-                        'The live event hasn\'t started yet. Please wait for the host to begin.',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.orange,
-                        colorText: Colors.white,
-                      );
+                      CustomSnackBar.warning(title: "Not Available ", message: "The live event hasn\'t started yet. Please wait for the host to begin.");
+
+
                     }
                   },
                 ),

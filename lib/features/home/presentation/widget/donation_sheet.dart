@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/features/event/controller/schedule_controller.dart';
@@ -96,24 +97,13 @@ class _DonationSheetState extends State<DonationSheet> {
       final customAmount = double.tryParse(customAmountController.text.trim());
 
       if (customAmount == null) {
-        Get.snackbar(
-          'Invalid Amount',
-          'Please enter a valid number',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        CustomSnackBar.warning(title: "Invalid amount", message: "Please enter a valid number");
+
         return;
       }
 
       if (customAmount <= 0) {
-        Get.snackbar(
-          'Invalid Amount',
-          'Please enter an amount greater than \$0',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        CustomSnackBar.warning(title: "Invalid amount", message: "Please enter a valid number");
         return;
       }
 
@@ -122,13 +112,8 @@ class _DonationSheetState extends State<DonationSheet> {
 
     // Validate that an amount is selected
     if (amount <= 0) {
-      Get.snackbar(
-        'No Amount Selected',
-        'Please select or enter a donation amount',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.warning(title: "No Amount Selected'", message: "Please select or enter a donation amount");
+
       return;
     }
 
@@ -143,24 +128,72 @@ class _DonationSheetState extends State<DonationSheet> {
     // Show loading dialog
     Get.dialog(
       Center(
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomLoading(
-                  color: AppColors.primaryColor,
-                ),
-                const SizedBox(height: 16),
-                const Text('Processing payment...'),
-              ],
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: 260,
+              padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.12),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  // Loader
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CustomLoading(
+                     color: AppColors.primaryColor,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Title
+                  CustomTextView(
+                   text:  "Processing Payment",
+
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textHeader,
+
+                    textAlign: TextAlign.center,
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // Subtitle
+                  Text(
+                    "Please wait a moment...",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+
+                ],
+              ),
             ),
           ),
         ),
       ),
       barrierDismissible: false,
     );
+
 
     // Process the donation
     scheduleController.createDonation(widget.eventId);
@@ -310,7 +343,7 @@ class _DonationSheetState extends State<DonationSheet> {
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primaryColor.withOpacity(0.3),
+                      color: AppColors.primaryColor.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),

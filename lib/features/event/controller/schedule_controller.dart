@@ -1,3 +1,4 @@
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
 import 'package:elites_live/features/event/data/crowd_funding_data_model.dart';
@@ -208,13 +209,8 @@ class ScheduleController extends GetxController {
         descriptionController.clear();
 
         // ✅ Show success message
-        Get.snackbar(
-          "Success",
-          "The event was successfully created",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+        CustomSnackBar.success(title: "Success", message: "The event was successfully created");
+
 
         // ✅ Refresh data
         await getAllCrowdFunding(currentPage.value, limit.value);
@@ -231,13 +227,8 @@ class ScheduleController extends GetxController {
         }
 
         // ✅ Show error
-        Get.snackbar(
-          "Error",
-          "Failed to create event",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        CustomSnackBar.error(title: "Error", message: "Failed to create event");
+
       }
     } catch (e, s) {
       log("Exception during event creation: ${e.toString()}");
@@ -249,13 +240,8 @@ class ScheduleController extends GetxController {
       }
 
       // ✅ Show error
-      Get.snackbar(
-        "Error",
-        "Something went wrong",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Something went wrong");
+
     } finally {
       isLoading.value = false;
     }
@@ -354,7 +340,7 @@ class ScheduleController extends GetxController {
 
       if (response.isSuccess) {
         log("the api response is ${response.responseData}");
-        Get.snackbar("Success", "The Reply is created");
+
       }
     } catch (e) {
       log("the exception is ${e.toString()}");
@@ -389,7 +375,8 @@ class ScheduleController extends GetxController {
       }
     } catch (e) {
       log("Exception: ${e.toString()}");
-      Get.snackbar('Error', 'Failed to load events');
+      CustomSnackBar.error(title: "Error", message: "Failed to load events");
+
     } finally {
       isLoading.value = false;
     }
@@ -648,14 +635,7 @@ class ScheduleController extends GetxController {
                   2, '0')}-${selectedDateValue.year}";
               selectedDate.value = formattedDate;
 
-              Get.snackbar(
-                "Date Selected",
-                formattedDate,
-                backgroundColor: Colors.white,
-                colorText: Colors.black,
-                snackPosition: SnackPosition.BOTTOM,
-                duration: const Duration(seconds: 2),
-              );
+
             },
           );
         },
@@ -690,14 +670,8 @@ class ScheduleController extends GetxController {
 
       if (picked != null) {
         selectedTime.value = picked.format(context);
-        Get.snackbar(
-          "Time Selected",
-          selectedTime.value,
-          backgroundColor: Colors.white,
-          colorText: Colors.black,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
-        );
+
+
       }
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -101,8 +102,8 @@ class GroupPostScreen extends StatelessWidget {
             // Group Image
             CircleAvatar(
               radius: 50.r,
-              backgroundImage: (groupData.photo != null && groupData.photo!.isNotEmpty)
-                  ? NetworkImage(groupData.photo!)
+              backgroundImage: (groupData.photo.isNotEmpty)
+                  ? NetworkImage(groupData.photo)
                   : const AssetImage(ImagePath.dance),
             ),
 
@@ -578,8 +579,8 @@ class GroupPostScreen extends StatelessWidget {
                               radius: 60.r,
                               backgroundImage: groupPostController.selectedImage.value != null
                                   ? FileImage(groupPostController.selectedImage.value!)
-                                  : ((groupData.photo != null && groupData.photo!.isNotEmpty)
-                                  ? NetworkImage(groupData.photo!)
+                                  : ((groupData.photo.isNotEmpty)
+                                  ? NetworkImage(groupData.photo)
                                   : const AssetImage(ImagePath.dance)),
 
                             );
@@ -726,24 +727,13 @@ class GroupPostScreen extends StatelessWidget {
   Future<void> _handleConfirm(
       GroupPostController groupPostController, String groupId) async {
     if (groupPostController.groupNameController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter group name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.warning(title: "Error", message: "Please enter group name");
+
       return;
     }
 
     if (groupPostController.descriptionController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter description',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Please enter Description");
       return;
     }
 

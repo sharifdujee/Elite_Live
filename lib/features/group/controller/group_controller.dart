@@ -5,7 +5,6 @@ import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/core/utils/constants/app_urls.dart';
-import 'package:elites_live/core/utils/constants/image_path.dart';
 import 'package:elites_live/features/group/data/discoverGroup_data_model.dart';
 import 'package:elites_live/features/group/data/joined_group_data_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -194,7 +193,5 @@ class GroupController extends GetxController{
 
 
 
-  List<String> userPicture = [ImagePath.user, ImagePath.one, ImagePath.three];
-  List<String> userName = ["Jane Cooper", "Theresa Webb", "Annette Black"];
-  List<String> userDescription = ["Restaurant Owner", "Actress", "Student"];
+
 }

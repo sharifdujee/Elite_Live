@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
@@ -138,27 +139,18 @@ class SearchScreenController extends GetxController {
         await getOtherUserList();
       } else {
         // ERROR SNACK
-        Get.snackbar(
-          "Failed",
-          response.errorMessage ?? "Something went wrong",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        CustomSnackBar.error(title: "Failed", message: response.errorMessage);
+
+
       }
     } catch (e) {
       log("Exception: ${e.toString()}");
 
       // ENSURE LOADING CLOSED ON ERROR
       if (Get.isDialogOpen ?? false) Get.back();
+      CustomSnackBar.error(title: "Error", message: e.toString());
 
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+
     } finally {
       isLoading.value = false;
     }

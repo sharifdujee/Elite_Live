@@ -1,3 +1,4 @@
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -201,14 +202,8 @@ class CreateLiveScreen extends StatelessWidget {
                       String link = audienceLinkController.text.trim();
 
                       if (link.isEmpty) {
-                        Get.snackbar(
-                          "Error",
-                          "Please enter a valid audience link",
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                          duration: const Duration(seconds: 2),
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
+                        CustomSnackBar.error(title: "Error", message: "Please enter a valid audience link");
+
                         return;
                       }
 

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:convert';
 import 'dart:io';
 import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
@@ -192,14 +193,9 @@ class GroupPostController extends GetxController {
         if (Get.isDialogOpen ?? false) Get.back();
 
         log("Group updated: $responseData");
+        CustomSnackBar.success(title: "Success", message: " responseData['message'] ?? 'Group updated successfully',");
 
-        Get.snackbar(
-          'Success',
-          responseData['message'] ?? 'Group updated successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+
 
         // Clear controllers
         groupNameController.clear();
@@ -262,13 +258,7 @@ class GroupPostController extends GetxController {
       if (response.isSuccess) {
         log("Delete response: ${response.responseData}");
 
-        Get.snackbar(
-          'Success',
-          'Group deleted successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+
 
         // Refresh the joined groups list
         await controller.joinedGroup();
@@ -286,13 +276,8 @@ class GroupPostController extends GetxController {
 
       if (Get.isDialogOpen ?? false) Get.back();
 
-      Get.snackbar(
-        'Error',
-        'An error occurred while deleting the group',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+
+
     } finally {
       isLoading.value = false;
     }
@@ -323,14 +308,9 @@ class GroupPostController extends GetxController {
 
       if (response.isSuccess) {
         log("API response: ${response.responseData}");
+        CustomSnackBar.success(title: "Success", message: "Group post created successfully");
 
-        Get.snackbar(
-          'Success',
-          'Group post created successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+
 
 
         contentController.clear();
@@ -342,13 +322,8 @@ class GroupPostController extends GetxController {
         Get.back();
       } else {
         // Show error message
-        Get.snackbar(
-          'Error',
-          'Failed to create group post',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        CustomSnackBar.error(title: "Error", message: "An error occurred while creating the post");
+
       }
     } catch (e) {
       log("Exception during create group post: ${e.toString()}");
@@ -357,13 +332,8 @@ class GroupPostController extends GetxController {
       if (Get.isDialogOpen ?? false) Get.back();
 
       // Show error message
-      Get.snackbar(
-        'Error',
-        'An error occurred while creating the post',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "An error occurred while creating the post");
+
     } finally {
       isLoading.value = false;
     }
@@ -390,31 +360,14 @@ class GroupPostController extends GetxController {
         log("Delete post success: ${response.responseData}");
 
         // Show success message
-        Get.snackbar(
-          'Success',
-          'Post deleted successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          duration: Duration(seconds: 2),
-          margin: EdgeInsets.all(16.w),
-          borderRadius: 12.r,
-        );
+        CustomSnackBar.success(title: "Success", message: "Post deleted successfully");
+
 
         // Refresh group info to update the post list
         ///await getGroupInfo(groupId);
       } else {
         // Show error message
-        Get.snackbar(
-          'Error',
-          'Failed to delete post',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          duration: Duration(seconds: 2),
-          margin: EdgeInsets.all(16.w),
-          borderRadius: 12.r,
-        );
+        CustomSnackBar.error(title: "Error", message: "An error occurred while deleting the post");
       }
     } catch (e) {
       log("Exception during delete group post: ${e.toString()}");
@@ -423,16 +376,8 @@ class GroupPostController extends GetxController {
       if (Get.isDialogOpen ?? false) Get.back();
 
       // Show error message
-      Get.snackbar(
-        'Error',
-        'An error occurred while deleting the post',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-        margin: EdgeInsets.all(16.w),
-        borderRadius: 12.r,
-      );
+      CustomSnackBar.error(title: "Error", message: "An error occurred while deleting the post");
+
     } finally {
       isLoading.value = false;
     }
@@ -440,13 +385,7 @@ class GroupPostController extends GetxController {
   /// delete group post
   Future<void> createPostComment(String postId) async {
     if (commentController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please write a comment',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+
       return;
     }
 
@@ -461,13 +400,7 @@ class GroupPostController extends GetxController {
       );
 
       if (response.isSuccess) {
-        Get.snackbar(
-          'Success',
-          'Comment added successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+
 
         // Clear comment field
         commentController.clear();
@@ -477,13 +410,7 @@ class GroupPostController extends GetxController {
       }
     } catch (e) {
       log("Error creating comment: ${e.toString()}");
-      Get.snackbar(
-        'Error',
-        'Failed to add comment',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+
     } finally {
       isLoading.value = false;
     }
@@ -499,13 +426,7 @@ class GroupPostController extends GetxController {
       var response = await networkCaller.postRequest(AppUrls.likePost(postId), body: {}, token: token);
       if(response.isSuccess){
         log("the api response is ${response.responseData}");
-        Get.snackbar(
-          'Success',
-          'Comment created successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+
         Get.back();
         await getPostInformation(postId);
       }
@@ -516,13 +437,7 @@ class GroupPostController extends GetxController {
       if (Get.isDialogOpen ?? false) Get.back();
 
       // Show error message
-      Get.snackbar(
-        'Error',
-        'An error occurred while creating the post',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "An error occurred while creating the post");
     }
     
     finally{
@@ -577,13 +492,8 @@ class GroupPostController extends GetxController {
       if (Get.isDialogOpen ?? false) Get.back();
 
       // Show error message
-      Get.snackbar(
-        'Error',
-        'An error occurred while creating the post',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "An error occurred while creating the post");
+
 
     }
 
@@ -597,13 +507,7 @@ class GroupPostController extends GetxController {
   /// reply comment
   Future<void> createReply(String commentId, String postId) async {
     if (replyController.text.trim().isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please write a reply',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+
       return;
     }
 
@@ -621,13 +525,7 @@ class GroupPostController extends GetxController {
       if (response.isSuccess) {
         log("Reply created: ${response.responseData}");
 
-        Get.snackbar(
-          'Success',
-          'Reply added successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+
 
         // Clear reply field
         replyController.clear();
@@ -641,13 +539,7 @@ class GroupPostController extends GetxController {
     } catch (e) {
       log("Error creating reply: ${e.toString()}");
 
-      Get.snackbar(
-        'Error',
-        'Failed to add reply',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+
     } finally {
       isLoading.value = false;
     }
@@ -665,13 +557,9 @@ class GroupPostController extends GetxController {
       }
       Get.back(); // Close bottom sheet
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to capture image',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Failed to capture image");
+
+
     }
   }
 
@@ -687,13 +575,8 @@ class GroupPostController extends GetxController {
       }
       Get.back(); // Close bottom sheet
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to select image',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Failed to select image");
+
     }
   }
 
@@ -827,100 +710,5 @@ class GroupPostController extends GetxController {
     );
   }
 
-    /*
 
-  Future<void> editProfile() async {
-
-    try {
-      isLoading.value = true;
-
-      var request = http.MultipartRequest(
-        'PATCH',
-        Uri.parse(AppUrls.setUpProfile),
-      );
-      request.headers.addAll();
-
-      if (selectedProfession.value != null &&
-          selectedProfession.value!.isNotEmpty) {
-        request.fields['profession'] = selectedProfession.value!;
-      }
-
-      if (bioController.text.isNotEmpty) {
-        request.fields['bio'] = bioController.text.trim();
-      }
-
-      if (selectedGender.value != null) {
-        request.fields['gender'] = selectedGender.value!.capitalizeFirst!;
-      }
-
-      if (dateController.text.isNotEmpty) {
-        try {
-          DateTime parsedDate = DateTime.parse(dateController.text);
-          DateTime dobWithTime = DateTime(
-            parsedDate.year,
-            parsedDate.month,
-            parsedDate.day,
-            0,
-            0,
-            0,
-            0,
-          );
-          request.fields['dob'] = dobWithTime.toUtc().toIso8601String();
-        } catch (e) {
-          log("Error parsing date: $e");
-          request.fields['dob'] = dateController.text;
-        }
-      }
-
-      if (addressController.text.isNotEmpty) {
-        request.fields['address'] = addressController.text.trim();
-      }
-
-      log("Sending request to: ${AppUrls.setUpProfile}");
-      log("Request fields: ${request.fields}");
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      log("Response status: ${response.statusCode}");
-      log("Response body: ${response.body}");
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        var responseData = jsonDecode(response.body);
-
-        Get.snackbar(
-          "Success",
-          responseData['message'] ?? "Profile setup completed successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
-
-        showSuccessDialogue();
-      } else {
-        var errorMessage =
-            "Failed to setup profile. Status: ${response.statusCode}";
-        try {
-          var errorData = jsonDecode(response.body);
-          errorMessage = errorData['message'] ?? errorMessage;
-        } catch (e) {
-          log("Error parsing error response: $e");
-        }
-
-        Get.snackbar(
-          "Error",
-          errorMessage,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
-      }
-    } catch (e) {
-      log("The exception is ${e.toString()}");
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-     */
 }

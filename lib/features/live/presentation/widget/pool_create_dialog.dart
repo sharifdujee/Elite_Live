@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/global_widget/custom_text_field.dart';
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
@@ -159,12 +160,8 @@ class CreatePollDialog {
                                               );
 
                                           if (selectedOptions.isEmpty) {
-                                            Get.snackbar(
-                                              "Info",
-                                              "Please select at least one option to vote",
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                            );
+                                            CustomSnackBar.warning(title: "Info", message: "Please select at least one option to vote");
+
                                             return;
                                           }
 
@@ -698,11 +695,8 @@ class CreatePollDialog {
                         final newOption = editOptionController.text.trim();
                         if (newOption.isNotEmpty) {
                           if (editOptions.contains(newOption)) {
-                            Get.snackbar(
-                              "Info",
-                              "This option already exists",
-                              snackPosition: SnackPosition.BOTTOM,
-                            );
+                            CustomSnackBar.warning(title: "Warning", message: "This option already exists");
+
                           } else {
                             editOptions.add(newOption);
                             editOptionController.clear();
@@ -715,11 +709,8 @@ class CreatePollDialog {
                     final newOption = value.trim();
                     if (newOption.isNotEmpty) {
                       if (editOptions.contains(newOption)) {
-                        Get.snackbar(
-                          "Info",
-                          "This option already exists",
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
+                        CustomSnackBar.warning(title: "Warning", message: "This option already exists");
+
                       } else {
                         editOptions.add(newOption);
                         editOptionController.clear();
@@ -979,7 +970,7 @@ class PollResultsDialog {
                             borderRadius: BorderRadius.circular(14),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.04),
+                                color: Colors.black.withValues(alpha: 0.04),
                                 blurRadius: 6,
                                 offset: const Offset(0, 3),
                               ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
 import 'package:elites_live/core/utils/constants/app_urls.dart';
@@ -113,18 +114,16 @@ class CreatePollController extends GetxController {
         await getPool(streamId);
 
         Get.back();
-        Get.snackbar(
-          "Success",
-          "Poll created successfully",
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        CustomSnackBar.success(title: "Success", message: "Poll created successfully");
+
       } else {
         log("Poll Create Failed: ${response.responseData}");
-        Get.snackbar("Error", "Failed to create poll");
+        CustomSnackBar.error(title: "Error", message: "Failed to create Pool");
+
       }
     } catch (e) {
       log("Exception in createPool: ${e.toString()}");
-      Get.snackbar("Error", "Something went wrong");
+      CustomSnackBar.error(title: "Error", message: "Failed to create Pool");
     } finally {
       isLoading.value = false;
     }
@@ -191,12 +190,12 @@ class CreatePollController extends GetxController {
         }
       } else {
         log("❌ API call failed with status: ${response.statusCode}");
-        Get.snackbar("Error", "Failed to load polls");
+        CustomSnackBar.error(title: "Error", message: "Error loading polls:");
       }
     } catch (e, stackTrace) {
       log("❌ Exception in getPool: $e");
       log("Stack trace: $stackTrace");
-      Get.snackbar("Error", "Error loading polls: ${e.toString()}");
+      CustomSnackBar.error(title: "Error", message: "Error loading polls: ${e.toString()}");
     } finally {
       isLoading.value = false;
       log("🔹 getPool completed. poolList.length = ${poolList.length}");
@@ -207,12 +206,13 @@ class CreatePollController extends GetxController {
   /// Update pool with question and options
   Future<void> updatePool(String poolId, String streamId, String question, List<String> options) async {
     if (question.trim().isEmpty) {
-      Get.snackbar("Error", "Question cannot be empty");
+      CustomSnackBar.error(title: "Error", message: "Question cannot be empty");
       return;
     }
 
     if (options.isEmpty) {
-      Get.snackbar("Error", "Add at least one option");
+
+      CustomSnackBar.error(title: "Error", message: "Add at least one option");
       return;
     }
 
@@ -245,31 +245,25 @@ class CreatePollController extends GetxController {
         await getPool(streamId);
 
         Get.back();
-        Get.snackbar(
-          "Success",
-          "Poll updated successfully",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
+        CustomSnackBar.success(
+         title:  "Success",
+        message:   "Poll updated successfully",
+
         );
       } else {
         log("Poll update failed: ${response.responseData}");
-        Get.snackbar(
-          "Error",
-          response.responseData?['message'] ?? "Failed to update poll",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+        CustomSnackBar.error(
+         title:  "Error",
+        message:   response.responseData?['message'] ?? "Failed to update poll",
+
         );
       }
     } catch (e) {
       log("Exception in updatePool: ${e.toString()}");
-      Get.snackbar(
-        "Error",
-        "Something went wrong",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+      CustomSnackBar.error(
+       title:  "Error",
+       message:  "Something went wrong",
+
       );
     } finally {
       isLoading.value = false;
@@ -287,7 +281,7 @@ class CreatePollController extends GetxController {
       if (response.isSuccess) {
         log("the api response is ${response.responseData}");
         await getPool(streamId);
-        Get.snackbar("Success", "Poll deleted successfully");
+        CustomSnackBar.success(title: "Success", message: "Poll deleted successfully");
       }
     } catch (e) {
       log("the exception is ${e.toString()}");
@@ -300,7 +294,7 @@ class CreatePollController extends GetxController {
   /// Vote on a pool with selected option
   Future<void> votePool(String poolId, String streamId, List<String> selectedOptions) async {
     if (selectedOptions.isEmpty) {
-      Get.snackbar("Error", "Please select at least one option");
+      CustomSnackBar.error(title: "Error", message: "Please select at least one option");
       return;
     }
 
@@ -332,33 +326,17 @@ class CreatePollController extends GetxController {
 
         await getPool(streamId);
         await getPoolVoteResultByStream(streamId);
+        CustomSnackBar.success(title: "Success", message: "Vote submitted successfully");
 
-        Get.snackbar(
-          "Success",
-          "Vote submitted successfully",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+
       } else {
         log("Vote failed: ${response.responseData}");
-        Get.snackbar(
-          "Error",
-          response.responseData?['message'] ?? "Failed to submit vote",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        CustomSnackBar.error(title: "Error", message: "Failed to create Pool");
+
       }
     } catch (e) {
       log("Exception in votePool: ${e.toString()}");
-      Get.snackbar(
-        "Error",
-        "Something went wrong while voting",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Failed to create Pool ${e.toString()}");
     } finally {
       isLoading.value = false;
     }

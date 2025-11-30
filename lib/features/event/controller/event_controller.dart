@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/core/utils/constants/app_urls.dart';
@@ -90,27 +91,17 @@ class EventController extends GetxController {
         await getAllEvent(currentPage.value, limit.value);
       } else {
         // ERROR SNACK
-        Get.snackbar(
-          "Failed",
-          response.errorMessage ?? "Something went wrong",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+
+        CustomSnackBar.error(title: "Failed", message: response.errorMessage);
       }
     } catch (e) {
       log("Exception: ${e.toString()}");
 
       // ENSURE LOADING CLOSED ON ERROR
       if (Get.isDialogOpen ?? false) Get.back();
+      CustomSnackBar.error(title: "Error", message: e.toString());
 
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+
     } finally {
       isLoading.value = false;
     }
@@ -145,7 +136,8 @@ class EventController extends GetxController {
       }
     } catch (e) {
       log("Exception: ${e.toString()}");
-      Get.snackbar('Error', 'Failed to load events');
+      CustomSnackBar.error(title: "Error", message: "Failed to Load Events");
+
     } finally {
       isLoading.value = false;
     }
@@ -205,11 +197,8 @@ class EventController extends GetxController {
 
   void processDonation(double amount) {
     selectedDonationAmount.value = amount;
-    Get.snackbar(
-      'Donation',
-      'Processing donation of \$${amount.toStringAsFixed(2)}',
-      snackPosition: SnackPosition.BOTTOM,
-    );
+    CustomSnackBar.success(title: "Donation", message: 'Processing donation of \$${amount.toStringAsFixed(2)}',);
+
   }
 
   Future<void> pickImage(ImageSource source) async {
