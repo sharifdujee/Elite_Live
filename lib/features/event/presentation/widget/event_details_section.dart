@@ -70,7 +70,7 @@ class EventDetailsSection extends StatelessWidget {
         /// ======================
         /// LINK SECTION (MOVED UP)
         /// ======================
-        if (displayLink != null && displayLink.isNotEmpty)
+       /* if (displayLink != null && displayLink.isNotEmpty)
           GestureDetector(
             onTap: () => _copyToClipboard(displayLink),
             child: Padding(
@@ -99,7 +99,7 @@ class EventDetailsSection extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+          ),*/
 
         SizedBox(height: 20.h),
 

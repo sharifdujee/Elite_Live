@@ -1,6 +1,7 @@
 
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/features/home/presentation/widget/share_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -41,7 +42,7 @@ class UserInteractionSection extends StatelessWidget {
               onTap: onLikeTap,
               child: Icon(
                 Icons.favorite,
-                color: isLiked ? AppColors.primaryColor : Colors.grey.withOpacity(0.3),
+                color: isLiked ? AppColors.primaryColor : Colors.grey.withValues(alpha: 0.3),
               ),
             ),
             SizedBox(width: 4.w),
@@ -64,7 +65,9 @@ class UserInteractionSection extends StatelessWidget {
         /// SHARE
         Row(
           children: [
-            Icon(Icons.share),
+            GestureDetector(
+                onTap: () => ShareSheet().show(context),
+                child: Icon(Icons.share)),
             SizedBox(width: 4.w),
             CustomTextView(text: "Share"),
           ],

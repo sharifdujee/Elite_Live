@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
 import 'package:elites_live/features/profile/controller/following_follwer_controller.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
@@ -169,13 +170,11 @@ class AddContributorDialog {
                                         : null,
                                   ),
                                   SizedBox(width: 8.w),
-                                  Expanded(
-                                    child: CustomTextView(
-                                      text: name,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.sp,
-                                      color: AppColors.textHeader,
-                                    ),
+                                  CustomTextView(
+                                    text: name,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.sp,
+                                    color: AppColors.textHeader,
                                   ),
                                 ],
                               ),
@@ -289,24 +288,13 @@ class AddContributorDialog {
       webSocketService.sendMessage(message);
 
       // Show success feedback
-      Get.snackbar(
-        "Contributor Added",
-        "$userName has been invited to the live stream",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-      );
+      CustomSnackBar.success(title: "Contributor Added", message: "$userName has been invited to the live stream",);
+
 
       log("✅ Contributor added: $userName (ID: $receiverId)");
     } catch (e) {
-      Get.snackbar(
-        "Error",
-        "Failed to add contributor: $e",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      CustomSnackBar.error(title: "Error", message: "Failed to add contributor: $e");
+
       log("❌ Error adding contributor: $e");
     }
   }

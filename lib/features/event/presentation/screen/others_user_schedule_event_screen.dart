@@ -7,10 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:elites_live/core/global_widget/custom_elevated_button.dart';
-import 'package:flutter/services.dart';
 
+
+import '../../../../core/global_widget/custom_comment_sheet.dart';
 import '../../../../routes/app_routing.dart';
 import '../../../home/presentation/widget/donation_sheet.dart';
+import '../widget/user_interaction_section.dart';
 
 class OthersUserScheduleEventScreen extends StatelessWidget {
   OthersUserScheduleEventScreen({super.key, this.userId});
@@ -26,17 +28,7 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
     return DateFormat('hh:mm a').format(date);
   }
 
-  void _copyToClipboard(String link) {
-    Clipboard.setData(ClipboardData(text: link));
-    Get.snackbar(
-      'Copied',
-      'Link copied to clipboard',
-      snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: 2),
-      backgroundColor: AppColors.primaryColor,
-      colorText: Colors.white,
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +68,7 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
             final userName = "$firstName $lastName";
 
             // Determine which link to display
-            final displayLink = isOwner ? hostLink : audienceLink;
-            final linkLabel = isOwner ? "Host Link" : "Audience Link";
+
 
             return Container(
               margin: EdgeInsets.only(bottom: 16.h),
@@ -179,48 +170,7 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
                             ),
                           ),
 
-                        // Link Section (if available)
-                        if (displayLink.isNotEmpty)
-                          GestureDetector(
-                            onTap: () => _copyToClipboard(displayLink),
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 16.h),
-                              padding: EdgeInsets.all(12.w),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.shade50,
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(
-                                  color: Colors.blue.shade200,
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CustomTextView(
-                                    text: "$linkLabel:",
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 13.sp,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  CustomTextView(
-                                    text: displayLink,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 11.sp,
-                                    color: Colors.blue.shade700,
-                                    maxLines: 2,
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  CustomTextView(
-                                    text: 'Tap to copy',
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 10.sp,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+
 
                         // Action Button
                         _buildActionButton(
@@ -240,54 +190,29 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
                   ),
 
                   // Footer with Stats
+
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(12.r),
-                        bottomRight: Radius.circular(12.r),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          event.isLiked ? Icons.favorite : Icons.favorite_border,
-                          color: Colors.red,
-                          size: 20.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        CustomTextView(
-                          text: _formatCount(event.count.eventLike),
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        SizedBox(width: 24.w),
-                        Icon(
-                          Icons.chat_bubble_outline,
-                          color: Colors.grey.shade600,
-                          size: 20.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        CustomTextView(
-                          text: _formatCount(event.count.eventComment),
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        const Spacer(),
-                        Icon(
-                          Icons.share_outlined,
-                          color: Colors.grey.shade600,
-                          size: 20.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        CustomTextView(
-                          text: 'Share',
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey.shade600,
-                        ),
-                      ],
+                    margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    child: UserInteractionSection(
+                      onLikeTap: (){
+                        controller.createLike(event.id);
+                      },
+                      eventType: event.eventType,
+                      isLiked: event.isLiked,
+                      likeCount: event.count.eventLike.toString(),
+                      commentCount: event.count.eventComment,
+                      onCommentTap: (){
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context){
+                              return CommentSheet(
+                                  scheduleController: controller,
+                                  eventId: event.id
+                              );
+                            }
+                        );
+                      },
+                      isOwner: isOwner,
                     ),
                   ),
                 ],
@@ -366,7 +291,7 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
         text: "Join Now",
 
         ontap: () {
-          if (audienceLink != null && audienceLink.isNotEmpty) {
+          if (audienceLink.isNotEmpty) {
             Get.toNamed(AppRoute.myLive, arguments: {
               'roomId': streamId,
               'userName': userName,
@@ -397,14 +322,7 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
   }
 
 
-  String _formatCount(int count) {
-    if (count >= 1000000) {
-      return '${(count / 1000000).toStringAsFixed(1)}M';
-    } else if (count >= 1000) {
-      return '${(count / 1000).toStringAsFixed(1)}K';
-    }
-    return count.toString();
-  }
+
 }
 
 // TODO: Add these classes if they don't exist in your project

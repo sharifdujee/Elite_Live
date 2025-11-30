@@ -9,7 +9,8 @@ import 'dart:developer';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 import '../../controller/live_screen_controller.dart';
-import '../../../../core/utils/constants/app_colors.dart';
+
+import '../widget/live_error_screen.dart';
 
 class MyLiveScreen extends StatefulWidget {
   const MyLiveScreen({super.key});
@@ -61,7 +62,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
         return;
       }
 
-      final socketUrl = "ws://10.0.20.169:5020";
+      final socketUrl = "wss://api.morgan.smtsigma.com";
       await webSocketService.connect(socketUrl, authToken);
 
       int attempts = 0;
@@ -173,7 +174,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
 
     if (data == null) {
       log("❌ No data received in MyLiveScreen");
-      return _buildErrorScreen("Error: No live session data");
+      return LiveErrorScreen(message: "Error: No live session data");
     }
 
     // Extract data
@@ -215,7 +216,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
 
     if (liveId?.isEmpty ?? true) {
       log("❌ Invalid live session data");
-      return _buildErrorScreen("Invalid live session data");
+      return LiveErrorScreen(message: "Invalid live session data");
     }
 
     // ✅ Generate unique user ID to prevent conflicts
@@ -239,10 +240,14 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
                 : ZegoUIKitPrebuiltLiveStreamingConfig.audience())
 
-              ..layout = ZegoLayout.gallery(
+              ..layout = ZegoLayout.pictureInPicture(
                   showScreenSharingFullscreenModeToggleButtonRules:
                   ZegoShowFullscreenModeToggleButtonRules.alwaysShow,
-                  showNewScreenSharingViewInFullscreenMode: true)
+                  showNewScreenSharingViewInFullscreenMode: true,
+                isSmallViewDraggable: false,
+                 // Host stays visible
+                switchLargeOrSmallViewByClick: false,
+              )
               ..audioVideoView = ZegoLiveStreamingAudioVideoViewConfig(
                 showAvatarInAudioMode: true,
                 showSoundWavesInAudioMode: true,
@@ -302,7 +307,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
             ),
           ),
 
-          // Professional Overlay UI (rest of your UI code remains the same)
+
           SafeArea(
             child: Column(
               children: [
@@ -752,70 +757,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     );
   }
 
-  Widget _buildErrorScreen(String message) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(24.w),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.error_outline,
-                    size: 64.sp,
-                    color: Colors.red,
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                Text(
-                  "Oops!",
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey[600]),
-                ),
-                SizedBox(height: 32.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => Get.back(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      padding: EdgeInsets.symmetric(vertical: 16.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                    ),
-                    child: Text(
-                      "Go Back",
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
 }
+

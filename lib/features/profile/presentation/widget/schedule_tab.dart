@@ -1,6 +1,7 @@
 import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/features/event/controller/schedule_controller.dart';
 import 'package:elites_live/features/profile/controller/my_schedule_event_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,13 +11,17 @@ import 'package:intl/intl.dart';
 
 import 'dart:developer';
 
+import '../../../../core/global_widget/custom_comment_sheet.dart';
+import '../../../event/presentation/widget/user_interaction_section.dart';
+
 class EventScheduleTab extends StatelessWidget {
   const EventScheduleTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     final MyScheduleEventController controller =
-        Get.find<MyScheduleEventController>();
+        Get.find();
+    final ScheduleController scheduleController = Get.find();
 
     return Obx(() {
       log(
@@ -199,90 +204,31 @@ class EventScheduleTab extends StatelessWidget {
                 SizedBox(height: 16.h),
 
                 /// Reaction Row
-                Row(
-                  children: [
-                    // Like
-                    GestureDetector(
-                      onTap: () {
-                        log('Like tapped for event: ${event.id}');
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            event.isLiked
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            size: 20.sp,
-                            color:
-                                event.isLiked ? Colors.red : Color(0xFF191919),
-                          ),
-                          SizedBox(width: 6.w),
-                          CustomTextView(
-                          text:   _formatCount(event.count.eventLike),
 
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF191919),
 
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(width: 24.w),
-
-                    // Comment
-                    GestureDetector(
-                      onTap: () {
-                        log('Comment tapped for event: ${event.id}');
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 20.sp,
-                            color: Color(0xFF191919),
-                          ),
-                          SizedBox(width: 6.w),
-                          CustomTextView(
-                          text:   _formatCount(event.count.eventComment),
-
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF191919),
-
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(width: 24.w),
-
-                    // Share
-                    GestureDetector(
-                      onTap: () {
-                        log('Share tapped for event: ${event.id}');
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.share_outlined,
-                            size: 20.sp,
-                            color: Color(0xFF191919),
-                          ),
-                          SizedBox(width: 6.w),
-                          CustomTextView(
-                           text:  "Share",
-
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF191919),
-
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  child: UserInteractionSection(
+                    onLikeTap: (){
+                      scheduleController.createLike(event.id);
+                    },
+                    eventType: event.eventType,
+                    isLiked: event.isLiked,
+                    likeCount: event.count.eventLike.toString(),
+                    commentCount: event.count.eventComment,
+                    onCommentTap: (){
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context){
+                            return CommentSheet(
+                                scheduleController: scheduleController,
+                                eventId: event.id
+                            );
+                          }
+                      );
+                    },
+                    isOwner: true,
+                  ),
                 ),
               ],
             ),
@@ -293,13 +239,5 @@ class EventScheduleTab extends StatelessWidget {
   }
 
   /// Helper method to format large numbers (4.5M, 25.2K, etc.)
-  String _formatCount(int count) {
-    if (count >= 1000000) {
-      return '${(count / 1000000).toStringAsFixed(1)}M';
-    } else if (count >= 1000) {
-      return '${(count / 1000).toStringAsFixed(1)}K';
-    } else {
-      return count.toString();
-    }
-  }
+
 }
