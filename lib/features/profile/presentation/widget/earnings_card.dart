@@ -150,7 +150,7 @@ class EarningsSummaryCard extends StatelessWidget {
         Text(
           "\$${amount.toStringAsFixed(2)}",
           style: GoogleFonts.inter(
-            fontSize: isBold ? 22.sp : 18.sp,
+            fontSize: isBold ? 18.sp : 18.sp,
             fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
             color: Colors.white,
           ),

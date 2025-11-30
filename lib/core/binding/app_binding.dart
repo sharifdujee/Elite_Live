@@ -16,6 +16,7 @@ import 'package:elites_live/features/profile/controller/my_crowd_funding_control
 import 'package:elites_live/features/profile/controller/my_schedule_event_controller.dart';
 import 'package:elites_live/features/profile/controller/profile_controller.dart';
 import 'package:elites_live/features/profile/controller/profile_tab_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../features/authentication/forgot_pass/controller/create_new_pass_controller.dart';
@@ -66,6 +67,7 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>FollowingFollwerController(), fenix: true);
     Get.lazyPut(()=>EarningsController(), fenix: true);
     Get.lazyPut(()=>LiveScreenController(), fenix: true);
+    Get.lazyPut(()=>SearchController(), fenix: true);
 
   }
 }
