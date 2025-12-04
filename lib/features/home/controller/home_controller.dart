@@ -1,32 +1,19 @@
-import 'dart:developer';
-import 'dart:io';
-import 'package:elites_live/core/global_widget/custom_loading.dart';
-import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
-import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
-import 'package:elites_live/core/utils/constants/app_colors.dart';
-import 'package:elites_live/core/utils/constants/app_urls.dart';
-import 'package:elites_live/core/utils/constants/image_path.dart';
-import 'package:elites_live/features/home/data/all_stream_data_model.dart';
-import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
-import '../data/comment_data_model.dart';
 
 import 'dart:developer';
 import 'dart:io';
-import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
-import 'package:elites_live/core/utils/constants/app_colors.dart';
 import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:elites_live/core/utils/constants/image_path.dart';
 import 'package:elites_live/features/home/data/all_stream_data_model.dart';
+import 'package:elites_live/features/home/data/top_influencer_live_data_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../data/comment_data_model.dart';
+import '../data/following_recorded_data_model.dart';
+
+
 
 class HomeController extends GetxController {
   var searchText = ''.obs;
@@ -37,12 +24,16 @@ class HomeController extends GetxController {
   final NetworkCaller networkCaller = NetworkCaller();
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
   RxList<Event> allStreamList = <Event>[].obs;
+  RxList<FollowingEvent> followingStreamList = <FollowingEvent>[].obs;
+  RxList<TopInfluencerLiveResult> topInfluencerLiveList = <TopInfluencerLiveResult>[].obs;
   RxInt currentPage = 1.obs;
   RxInt limit = 10.obs;
 
   @override
   void onInit() {
     super.onInit();
+    topInfluencerLiveLive();
+
     getAllRecordedLive(currentPage.value, limit.value);
   }
 
@@ -50,10 +41,7 @@ class HomeController extends GetxController {
   Future<void> getAllRecordedLive(int currentPage, int limit) async {
     isLoading.value = true;
 
-    Get.dialog(
-      CustomLoading(color: AppColors.primaryColor),
-      barrierDismissible: false,
-    );
+
 
     String? token = helper.getString("userToken");
 
@@ -66,21 +54,20 @@ class HomeController extends GetxController {
       if (response.isSuccess) {
         log("The recorded live is ${response.responseData}");
 
-        final allStream = AllRecordedEventDataModel.fromJson(response.responseData);
 
-        // Clear and assign new data
+        final result = AllStreamResult.fromJson(response.responseData);
+
         allStreamList.clear();
-        allStreamList.assignAll(allStream.result.events);
+        allStreamList.assignAll(result.events);
 
         log("Total events loaded: ${allStreamList.length}");
-
-        // Force UI update
         allStreamList.refresh();
+
       } else {
         log("API Error: ${response.errorMessage}");
         Get.snackbar(
           'Error',
-          'Failed to load events',
+          response.errorMessage ?? 'Failed to load events',
           snackPosition: SnackPosition.BOTTOM,
         );
       }
@@ -95,10 +82,109 @@ class HomeController extends GetxController {
     } finally {
       isLoading.value = false;
 
-      /// Close the loading dialog
-      if (Get.isDialogOpen == true) {
-        Get.back();
+
+    }
+  }
+  /// get following recorded live
+  Future<void> getFollowingRecordedLive(int currentPage, int limit) async {
+    isLoading.value = true;
+
+
+
+    String? token = helper.getString("userToken");
+
+    try {
+      var response = await networkCaller.getRequest(
+        AppUrls.getAllFollowingRecordedLive(currentPage, limit),
+        token: token,
+      );
+
+      if (response.isSuccess) {
+        log("The recorded live is ${response.responseData}");
+
+
+        final result = AllFollowingEventResult.fromJson(response.responseData);
+
+        followingStreamList.clear();
+        followingStreamList.assignAll(result.events);
+
+        log("Total events loaded: ${followingStreamList.length}");
+        followingStreamList.refresh();
+
+      } else {
+        log("API Error: ${response.errorMessage}");
+        Get.snackbar(
+          'Error',
+          response.errorMessage ?? 'Failed to load events',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
+    } catch (e, stackTrace) {
+      log("Exception: ${e.toString()}");
+      log("StackTrace: ${stackTrace.toString()}");
+      Get.snackbar(
+        'Error',
+        'Something went wrong: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+
+
+    }
+  }
+
+  /// top influencer Live
+  Future<void> topInfluencerLiveLive() async {
+    isLoading.value = true;
+
+    String? token = helper.getString("userToken");
+
+    try {
+      var response = await networkCaller.getRequest(
+        AppUrls.topInfluencerLive,
+        token: token,
+      );
+
+      if (response.isSuccess) {
+        log("The top influencer live is ${response.responseData}");
+
+        // Check if response is a List or Map
+        if (response.responseData is List) {
+          // Direct list of results
+          final List<dynamic> dataList = response.responseData;
+          topInfluencerLiveList.clear();
+          topInfluencerLiveList.assignAll(
+              dataList.map((item) => TopInfluencerLiveResult.fromJson(item)).toList()
+          );
+        } else if (response.responseData is Map<String, dynamic>) {
+          // Wrapped in success/message/result structure
+          final result = TopInfluencerLiveDataModel.fromJson(response.responseData);
+          topInfluencerLiveList.clear();
+          topInfluencerLiveList.assignAll(result.result);
+        }
+
+        log("Total events loaded: ${topInfluencerLiveList.length}");
+        topInfluencerLiveList.refresh();
+
+      } else {
+        log("API Error: ${response.errorMessage}");
+        Get.snackbar(
+          'Error',
+          response.errorMessage ?? 'Failed to load events',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e, stackTrace) {
+      log("Exception: ${e.toString()}");
+      log("StackTrace: ${stackTrace.toString()}");
+      Get.snackbar(
+        'Error',
+        'Something went wrong: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 

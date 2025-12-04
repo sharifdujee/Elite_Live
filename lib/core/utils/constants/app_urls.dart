@@ -104,10 +104,14 @@ class AppUrls {
 
   /// Home Flow
   static String getAllRecordedLive(int page, int limit) => "$_baseUrl/event/all/event?page=$page&limit=$limit";
+  static String getAllFollowingRecordedLive(int page, int limit) => "$_baseUrl/event/following/event?page=$page&limit=$limit";
+  static const String topInfluencerLive = "$_baseUrl/live/top-influencers/live";
+
 
   /// search flow
   static const String getOtherUser = "$_baseUrl/auth/user-list";
   static String searchOtherUser(String search) => "$_baseUrl/auth/user-list?search=$search";
+  static const String getAllRecordingVideo = "$_baseUrl/event/all/recording";
 
   /// notification flow
    static const String getAllNotification = "$_baseUrl/notification";

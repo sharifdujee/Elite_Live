@@ -27,6 +27,7 @@ class FollowSection extends StatelessWidget {
     final eventInfo = controller.eventList[index];
     final isFollowing = eventInfo.user.isFollow;
     final userId = eventInfo.userId;
+    final HomeController homeController = Get.find();
 
 
 

@@ -1,40 +1,32 @@
-
+// To parse this JSON data, do
+//
+//     final allFollowingEventDataModel = allFollowingEventDataModelFromJson(jsonString);
 
 import 'dart:convert';
 
-AllRecordedEventDataModel allEventDataModelFromJson(String str) => AllRecordedEventDataModel.fromJson(json.decode(str));
+AllFollowingEventDataModel allFollowingEventDataModelFromJson(String str) =>
+    AllFollowingEventDataModel.fromJson(json.decode(str));
 
-String allEventDataModelToJson(AllRecordedEventDataModel data) => json.encode(data.toJson());
+String allFollowingEventDataModelToJson(AllFollowingEventDataModel data) =>
+    json.encode(data.toJson());
 
-class AllRecordedEventDataModel {
+class AllFollowingEventDataModel {
   bool success;
   String message;
-  AllStreamResult result;
+  AllFollowingEventResult result;
 
-  AllRecordedEventDataModel({
+  AllFollowingEventDataModel({
     required this.success,
     required this.message,
     required this.result,
   });
 
-  factory AllRecordedEventDataModel.fromJson(Map<String, dynamic> json) {
-    // Check if 'result' key exists (full response)
-    if (json.containsKey('result')) {
-      return AllRecordedEventDataModel(
-        success: json["success"] ?? true,
-        message: json["message"] ?? '',
-        result: AllStreamResult.fromJson(json["result"]),
+  factory AllFollowingEventDataModel.fromJson(Map<String, dynamic> json) =>
+      AllFollowingEventDataModel(
+        success: json["success"] ?? false,
+        message: json["message"] ?? "",
+        result: AllFollowingEventResult.fromJson(json["result"]),
       );
-    }
-    // Otherwise, json is already the result object
-    else {
-      return AllRecordedEventDataModel(
-        success: true,
-        message: '',
-        result: AllStreamResult.fromJson(json),
-      );
-    }
-  }
 
   Map<String, dynamic> toJson() => {
     "success": success,
@@ -43,27 +35,29 @@ class AllRecordedEventDataModel {
   };
 }
 
-class AllStreamResult {
+class AllFollowingEventResult {
   int totalCount;
   int totalPages;
   int currentPage;
-  List<Event> events;
+  List<FollowingEvent> events;
 
-  AllStreamResult({
+  AllFollowingEventResult({
     required this.totalCount,
     required this.totalPages,
     required this.currentPage,
     required this.events,
   });
 
-  factory AllStreamResult.fromJson(Map<String, dynamic> json) => AllStreamResult(
-    totalCount: json["totalCount"] ?? 0,
-    totalPages: json["totalPages"] ?? 0,
-    currentPage: json["currentPage"] ?? 0,
-    events: json["events"] != null
-        ? List<Event>.from(json["events"].map((x) => Event.fromJson(x)))
-        : [],
-  );
+  factory AllFollowingEventResult.fromJson(Map<String, dynamic> json) =>
+      AllFollowingEventResult(
+        totalCount: json["totalCount"] ?? 0,
+        totalPages: json["totalPages"] ?? 0,
+        currentPage: json["currentPage"] ?? 1,
+        events: json["events"] == null
+            ? []
+            : List<FollowingEvent>.from(
+            json["events"].map((x) => FollowingEvent.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
     "totalCount": totalCount,
@@ -73,7 +67,7 @@ class AllStreamResult {
   };
 }
 
-class Event {
+class FollowingEvent {
   String id;
   String userId;
   String streamId;
@@ -82,27 +76,27 @@ class Event {
   String text;
   DateTime? scheduleDate;
   int payAmount;
-  String? recordedLink;
+  String recordedLink;
   DateTime createdAt;
   DateTime updatedAt;
   User user;
   Count count;
-  List<EventLike> eventLike;
+  List<dynamic> eventLike;
   Stream stream;
   bool isLiked;
   bool isOwner;
   bool isPayment;
 
-  Event({
+  FollowingEvent({
     required this.id,
     required this.userId,
     required this.streamId,
     required this.eventType,
     required this.title,
     required this.text,
-    this.scheduleDate,
+    required this.scheduleDate,
     required this.payAmount,
-    this.recordedLink,
+    required this.recordedLink,
     required this.createdAt,
     required this.updatedAt,
     required this.user,
@@ -114,34 +108,27 @@ class Event {
     required this.isPayment,
   });
 
-  factory Event.fromJson(Map<String, dynamic> json) => Event(
-    id: json["id"] ?? '',
-    userId: json["userId"] ?? '',
-    streamId: json["streamId"] ?? '',
-    eventType: json["eventType"] ?? '',
-    title: json["title"] ?? '',
-    text: json["text"] ?? '',
-    scheduleDate: json["scheduleDate"] != null ? DateTime.tryParse(json["scheduleDate"]) : null,
+  factory FollowingEvent.fromJson(Map<String, dynamic> json) => FollowingEvent(
+    id: json["id"] ?? "",
+    userId: json["userId"] ?? "",
+    streamId: json["streamId"] ?? "",
+    eventType: json["eventType"] ?? "",
+    title: json["title"] ?? "",
+    text: json["text"] ?? "",
+    scheduleDate: json["scheduleDate"] == null
+        ? null
+        : DateTime.tryParse(json["scheduleDate"]),
     payAmount: json["payAmount"] ?? 0,
-    recordedLink: json["recordedLink"],
-    createdAt: json["createdAt"] != null
-        ? DateTime.parse(json["createdAt"])
-        : DateTime.now(),
-    updatedAt: json["updatedAt"] != null
-        ? DateTime.parse(json["updatedAt"])
-        : DateTime.now(),
-    user: json["user"] != null
-        ? User.fromJson(json["user"])
-        : User(id: '', firstName: '', lastName: '', profileImage: null, profession: null, isFollow: false),
-    count: json["_count"] != null
-        ? Count.fromJson(json["_count"])
-        : Count(eventLike: 0, eventComment: 0),
-    eventLike: json["EventLike"] != null
-        ? List<EventLike>.from(json["EventLike"].map((x) => EventLike.fromJson(x)))
-        : [],
-    stream: json["stream"] != null
-        ? Stream.fromJson(json["stream"])
-        : Stream(id: '', isLive: false, hostLink: '', coHostLink: '', audienceLink: ''),
+    recordedLink: json["recordedLink"] ??
+        "https://www.pexels.com/download/video/6521834/",
+    createdAt: DateTime.parse(json["createdAt"]),
+    updatedAt: DateTime.parse(json["updatedAt"]),
+    user: User.fromJson(json["user"]),
+    count: Count.fromJson(json["_count"]),
+    eventLike: json["EventLike"] == null
+        ? []
+        : List<dynamic>.from(json["EventLike"].map((x) => x)),
+    stream: Stream.fromJson(json["stream"]),
     isLiked: json["isLiked"] ?? false,
     isOwner: json["isOwner"] ?? false,
     isPayment: json["isPayment"] ?? false,
@@ -161,7 +148,7 @@ class Event {
     "updatedAt": updatedAt.toIso8601String(),
     "user": user.toJson(),
     "_count": count.toJson(),
-    "EventLike": List<dynamic>.from(eventLike.map((x) => x.toJson())),
+    "EventLike": List<dynamic>.from(eventLike.map((x) => x)),
     "stream": stream.toJson(),
     "isLiked": isLiked,
     "isOwner": isOwner,
@@ -189,22 +176,6 @@ class Count {
   };
 }
 
-class EventLike {
-  String id;
-
-  EventLike({
-    required this.id,
-  });
-
-  factory EventLike.fromJson(Map<String, dynamic> json) => EventLike(
-    id: json["id"] ?? '',
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-  };
-}
-
 class Stream {
   String id;
   bool isLive;
@@ -221,11 +192,11 @@ class Stream {
   });
 
   factory Stream.fromJson(Map<String, dynamic> json) => Stream(
-    id: json["id"] ?? '',
+    id: json["id"] ?? "",
     isLive: json["isLive"] ?? false,
-    hostLink: json["hostLink"] ?? '',
-    coHostLink: json["coHostLink"] ?? '',
-    audienceLink: json["audienceLink"] ?? '',
+    hostLink: json["hostLink"] ?? "",
+    coHostLink: json["coHostLink"] ?? "",
+    audienceLink: json["audienceLink"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {
@@ -241,25 +212,26 @@ class User {
   String id;
   String firstName;
   String lastName;
-  String? profileImage;
-  String? profession;
+  String profileImage;
+  String profession;
   bool isFollow;
 
   User({
     required this.id,
     required this.firstName,
     required this.lastName,
-    this.profileImage,
-    this.profession,
+    required this.profileImage,
+    required this.profession,
     required this.isFollow,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json["id"] ?? '',
-    firstName: json["firstName"] ?? '',
-    lastName: json["lastName"] ?? '',
-    profileImage: json["profileImage"],
-    profession: json["profession"],
+    id: json["id"] ?? "",
+    firstName: json["firstName"] ?? "",
+    lastName: json["lastName"] ?? "",
+    profileImage: json["profileImage"] ??
+        "https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001877.png",
+    profession: json["profession"] ?? "N/A",
     isFollow: json["isFollow"] ?? false,
   );
 

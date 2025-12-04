@@ -106,7 +106,7 @@ class AllLiveScreen extends StatelessWidget {
                                   NameBadgeSection(userName: userName),
                                   SizedBox(height: 4.h),
                                   DesignationSection(
-                                    timeAgo: formatScheduleDate(recordeEvent.scheduleDate!),
+                                    timeAgo: formatScheduleDate(recordeEvent.scheduleDate??DateTime.now()),
                                     designation: "${recordeEvent.user.profession}",
                                   ),
                                 ],
@@ -151,18 +151,28 @@ class AllLiveScreen extends StatelessWidget {
 
             SizedBox(height: 16.h),
 
-            SizedBox(
-              height: 260.h,
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return TopInfluenceSection();
-                },
-              ),
-            ),
-          ],
+        SizedBox(
+          height: 260.h,
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: controller.topInfluencerLiveList.length,
+            itemBuilder: (context, index) {
+              final topInfluencerLive = controller.topInfluencerLiveList[index];
+
+              final eventName = (topInfluencerLive.events.isNotEmpty)
+                  ? topInfluencerLive.events.first.title
+                  : "No Title";
+
+              return TopInfluenceSection(
+                watchCount: topInfluencerLive.watchCount.toString(),
+                eventName: eventName,
+              );
+            },
+          ),
+        )
+
+        ],
         ),
       );
     });

@@ -1,3 +1,4 @@
+import 'package:elites_live/features/home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,14 +18,16 @@ class FollowingScreen extends StatelessWidget {
   FollowingScreen({super.key});
 
   final EventController controller = Get.find();
+  final HomeController homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    Future.microtask(()=>homeController.getFollowingRecordedLive(homeController.currentPage.value, controller.limit.value));
     return Obx(() {
       /// -------------------------------
       /// 1. LOADING STATE
       /// -------------------------------
-      if (controller.isLoading.value) {
+      if (homeController.isLoading.value) {
         return Center(
           child: Padding(
             padding: EdgeInsets.only(top: 100.h),
@@ -36,14 +39,15 @@ class FollowingScreen extends StatelessWidget {
       }
 
       /// ✅ FILTER: Show only events where user.isFollow == true
-      final followingEvents = controller.eventList
+      /*final followingEvents = home.eventList
           .where((event) => event.user.isFollow == true)
-          .toList();
+          .toList();*/
+
 
       /// -------------------------------
       /// 2. EMPTY STATE
       /// -------------------------------
-      if (followingEvents.isEmpty) {
+      if (homeController.followingStreamList.isEmpty) {
         return Center(
           child: Padding(
             padding: EdgeInsets.only(top: 120.h),
@@ -68,14 +72,14 @@ class FollowingScreen extends StatelessWidget {
               width: double.infinity,
               color: Colors.white,
               child: ListView.builder(
-                itemCount: followingEvents.length,
+                itemCount: homeController.followingStreamList.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final recordeEvent = followingEvents[index];
+                  final recordeEvent = homeController.followingStreamList[index];
 
                   /// ✅ FIXED: Use stream.isLive instead of user.isFollow
-                  final isLive = recordeEvent.stream?.isLive ?? false;
+                  final isLive = recordeEvent.stream.isLive ?? false;
 
                   final firstName = recordeEvent.user.firstName;
                   final lastName = recordeEvent.user.lastName;
@@ -90,7 +94,7 @@ class FollowingScreen extends StatelessWidget {
                           children: [
                             /// Live indicator
                             LiveIndicatorSection(
-                              influencerProfile: "${recordeEvent.user.profileImage}",
+                              influencerProfile: recordeEvent.user.profileImage,
                               isLive: isLive,
                             ),
 
@@ -104,8 +108,8 @@ class FollowingScreen extends StatelessWidget {
                                   NameBadgeSection(userName: userName),
                                   SizedBox(height: 4.h),
                                   DesignationSection(
-                                    timeAgo: formatScheduleDate(recordeEvent.scheduleDate!),
-                                    designation: "${recordeEvent.user.profession}",
+                                    timeAgo: formatScheduleDate(recordeEvent.scheduleDate??DateTime.now()),
+                                    designation: recordeEvent.user.profession,
                                   ),
                                 ],
                               ),

@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 
 import '../data/others_user_list_data_model.dart';
+import '../data/recorded_live_event.dart';
 import '../data/user_tab_data_model.dart';
 import '../data/video _tab_model.dart';
 
@@ -19,13 +20,55 @@ class SearchScreenController extends GetxController {
   final NetworkCaller networkCaller = NetworkCaller();
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
   final TextEditingController searchController = TextEditingController();
+  RxList<AllRecordingResult> allRecordingList = <AllRecordingResult>[].obs;
 
   @override
   void onInit() {
     // TODO: implement onInit
     getOtherUserList();
+    getAllRecordingList();
     super.onInit();
   }
+
+  /// get all recording
+  Future<void> getAllRecordingList() async {
+    isLoading.value = true;
+
+    String? token = helper.getString('userToken');
+    log("the token during fetch othersList: $token");
+
+    try {
+      var response = await networkCaller.getRequest(AppUrls.getAllRecordingVideo, token: token);
+
+      if (response.isSuccess) {
+        log("the api response of all recording list  ${response.responseData}");
+
+        // Fix: Check if responseData is already the full JSON or just the result array
+        if (response.responseData is Map<String, dynamic>) {
+          // If it's a Map, parse normally
+          final others = AllRecordingDataModel.fromJson(response.responseData);
+          allRecordingList.assignAll(others.result);
+        } else if (response.responseData is List) {
+          // If it's a List, create the wrapper manually
+          final resultList = List<AllRecordingResult>.from(
+              response.responseData.map((x) => AllRecordingResult.fromJson(x))
+          );
+          allRecordingList.assignAll(resultList);
+        }
+
+        log("Successfully loaded ${allRecordingList.length} users");
+      } else {
+
+        log("API request failed: ${response.statusCode}");
+      }
+    } catch (e) {
+
+      log("the exception is ${e.toString()}");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 
   /// get others user
 
