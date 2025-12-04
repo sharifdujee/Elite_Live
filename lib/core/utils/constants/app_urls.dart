@@ -98,6 +98,12 @@ class AppUrls {
   static String deletePool(String poolId) => "$_baseUrl/polls/$poolId";
   static String votePool(String poolId) => "$_baseUrl/polls/submit/vote/$poolId";
   static  String poolResult(String streamId) => "$_baseUrl/polls/result/$streamId";
+  static String startRecording(String streamId) => "$_baseUrl/live/start/recording/$streamId";
+  static String stopRecording(String streamId) => "$_baseUrl/live/stop/recording/$streamId";
+  static String startLive(String streamId) => "$_baseUrl/live/start/streaming/$streamId";
+
+  /// Home Flow
+  static String getAllRecordedLive(int page, int limit) => "$_baseUrl/event/all/event?page=$page&limit=$limit";
 
   /// search flow
   static const String getOtherUser = "$_baseUrl/auth/user-list";

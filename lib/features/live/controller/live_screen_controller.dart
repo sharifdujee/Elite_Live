@@ -53,6 +53,149 @@ class LiveScreenController extends GetxController {
     return 'audience_${uuid.v4()}';
   }
 
+
+  /// start Live
+  // Key fixes in LiveScreenController:
+
+  /// start Live (FIXED: isLoading finally block bug)
+  Future<void> startLive(String streamId) async {
+    isLoading.value = true;
+    String? token = helper.getString("userToken");
+    log("the token during start live is $token");
+
+    try {
+      var response = await networkCaller.postRequest(
+          AppUrls.startLive(streamId),
+          body: {},
+          token: token
+      );
+
+      if (response.isSuccess) {
+        log("the api response is ${response.responseData}");
+        CustomSnackBar.success(
+            title: "Live Started",
+            message: "Live session started successfully"
+        );
+      } else {
+        CustomSnackBar.error(
+            title: "Error",
+            message: "Failed to start live session"
+        );
+      }
+    } catch (e) {
+      log("the exception is ${e.toString()}");
+      CustomSnackBar.error(
+          title: "Error",
+          message: "Failed to start live: ${e.toString()}"
+      );
+    } finally {
+      isLoading.value = false; // ← FIXED: was 'true' before
+    }
+  }
+
+  /// start recording (IMPROVED: Better error handling)
+  Future<void> startRecording(String streamId) async {
+    String? token = helper.getString("userToken");
+    log("the token during start recording: $token");
+
+    try {
+      var response = await networkCaller.postRequest(
+          AppUrls.startRecording(streamId),
+          body: {},
+          token: token
+      );
+
+      if (response.isSuccess) {
+        log("Start recording API response: ${response.responseData}");
+      } else {
+        throw Exception("Failed to start recording");
+      }
+    } catch (e) {
+      log("Start recording exception: ${e.toString()}");
+      rethrow; // Re-throw so toggleRecording can handle it
+    }
+  }
+
+  /// stop recording (IMPROVED: Better error handling)
+  Future<void> stopRecording(String streamId) async {
+    String? token = helper.getString("userToken");
+    log("the token during stop recording: $token");
+
+    try {
+      var response = await networkCaller.postRequest(
+          AppUrls.stopRecording(streamId),
+          body: {},
+          token: token
+      );
+
+      if (response.isSuccess) {
+        log("Stop recording API response: ${response.responseData}");
+      } else {
+        throw Exception("Failed to stop recording");
+      }
+    } catch (e) {
+      log("Stop recording exception: ${e.toString()}");
+      rethrow; // Re-throw so toggleRecording can handle it
+    }
+  }
+
+  /// FIXED: Toggle recording with proper API calls
+  void toggleRecording(String streamId) async {
+    if (isRecording.value) {
+      // === STOP RECORDING ===
+      showMenu.value = false;
+      isLoading.value = true;
+
+      try {
+        await stopRecording(streamId);
+        isRecording.value = false;
+
+        Get.snackbar(
+          'Recording Stopped',
+          'Recording has been saved',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.black87,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+        );
+      } catch (e) {
+        log("Failed to stop recording: $e");
+        CustomSnackBar.error(
+            title: "Error",
+            message: "Failed to stop recording"
+        );
+      } finally {
+        isLoading.value = false;
+      }
+    } else {
+      // === START RECORDING ===
+      showMenu.value = false;
+      isLoading.value = true;
+
+      try {
+        await startRecording(streamId);
+        isRecording.value = true;
+
+        Get.snackbar(
+          'Recording Started',
+          'This session is now being recorded',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.black87,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+        );
+      } catch (e) {
+        log("Failed to start recording: $e");
+        CustomSnackBar.error(
+            title: "Error",
+            message: "Failed to start recording"
+        );
+      } finally {
+        isLoading.value = false;
+      }
+    }
+  }
+
   /// Create Live Stream with generated links (ONLY for hosts)
   Future<Map<String, dynamic>?> createLive({
     required bool isPaid,
@@ -262,7 +405,9 @@ class LiveScreenController extends GetxController {
     try {
       var response = await networkCaller.postRequest(
         AppUrls.endLive(streamId),
-        body: {},
+        body: {
+          "isHost":true,
+        },
         token: token,
       );
       if (response.isSuccess) {
@@ -274,6 +419,13 @@ class LiveScreenController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+
+
+   /// stop recording
+
+  ///
 
   void toggleCamera() {
     isCameraOn.value = !isCameraOn.value;
@@ -314,21 +466,7 @@ class LiveScreenController extends GetxController {
 
 
 
-  void toggleRecording() {
-    isRecording.value = !isRecording.value;
-    showMenu.value = false;
 
-    Get.snackbar(
-      isRecording.value ? 'Recording Started' : 'Recording Stopped',
-      isRecording.value
-          ? 'This session is now being recorded'
-          : 'Recording has been saved',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 2),
-    );
-  }
 
   void toggleMenu() {
     showMenu.value = !showMenu.value;

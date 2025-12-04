@@ -168,17 +168,46 @@ class EventScheduleScreen extends StatelessWidget {
                   hostLink: hostLink,
                   audienceLink: audienceLink,
                   isPayment: paymentStatus,
-                  onTap: () {
-                    log("the steam id is $streamId");
-                    if (isOwner) {
-                      if (hostLink == null || hostLink.isEmpty) {
-                        // OWNER: Start Live (create new session)
-                        controller.createAndNavigateToLive(
-                            isPaid: false,
-                            isHost: isOwner
-                        );
-                      } else {
-                        // OWNER: Join as Host (existing session)
+                    // In EventDetailsSection onTap callback (EventScheduleScreen)
+
+                    onTap: () async {
+                      log("the stream id is $streamId");
+
+                      if (isOwner) {
+                        if (hostLink == null || hostLink.isEmpty) {
+                          // OWNER: Start Live (create new session)
+                          controller.createAndNavigateToLive(
+                              isPaid: false,
+                              isHost: isOwner
+                          );
+                        } else {
+                          // OWNER: Join as Host (existing session)
+                          // Call startLive API before navigation
+                          await controller.startLive(streamId!);
+
+                          Get.toNamed(AppRoute.myLive, arguments: {
+                            'roomId': streamId,
+                            'userName': currentUserName,
+                            'isHost': isOwner,
+                            'hostLink': hostLink,
+                            'audienceLink': audienceLink,
+                            'hostId': hostId,
+                            'coHostLink': cohostLink,
+                          });
+                        }
+                        return;
+                      }
+
+                      if (!paymentStatus) {
+                        DonationSheet.show(context, eventId: event.id);
+                        return;
+                      }
+
+                      // CASE B: User has paid → Join as audience
+                      if (audienceLink != null && audienceLink.isNotEmpty) {
+                        // Call startLive API before joining as audience
+                        await controller.startLive(streamId!);
+
                         Get.toNamed(AppRoute.myLive, arguments: {
                           'roomId': streamId,
                           'userName': currentUserName,
@@ -188,35 +217,13 @@ class EventScheduleScreen extends StatelessWidget {
                           'hostId': hostId,
                           'coHostLink': cohostLink,
                         });
+                      } else {
+                        CustomSnackBar.warning(
+                            title: "Not Available",
+                            message: "The live event hasn't started yet. Please wait for the host to begin."
+                        );
                       }
-                      return;
                     }
-                    if (!paymentStatus) {
-                      // TODO: Replace with your actual payment route
-                      DonationSheet.show(context,eventId: event.id);
-
-
-                      return;
-                    }
-
-                    // CASE B: User has paid → Join as audience
-                    if (audienceLink != null && audienceLink.isNotEmpty) {
-                      Get.toNamed(AppRoute.myLive, arguments: {
-                        'roomId': streamId,
-                        'userName': currentUserName,
-                        'isHost': isOwner,
-                        'hostLink': hostLink,
-                        'audienceLink': audienceLink,
-                        'hostId': hostId,
-                        'coHostLink': cohostLink,
-                      });
-                    } else {
-                      // Show error: Live hasn't started yet
-                      CustomSnackBar.warning(title: "Not Available ", message: "The live event hasn\'t started yet. Please wait for the host to begin.");
-
-
-                    }
-                  },
                 ),
 
                 SizedBox(height: 10.h),

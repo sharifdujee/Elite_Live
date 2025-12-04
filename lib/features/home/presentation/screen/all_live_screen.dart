@@ -1,11 +1,11 @@
 import 'package:elites_live/core/global_widget/custom_loading.dart';
 import 'package:elites_live/core/global_widget/custom_text_view.dart';
 import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/features/home/controller/home_controller.dart';
 
 import 'package:elites_live/features/home/presentation/widget/video_player_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../event/controller/event_controller.dart';
 import '../widget/designation_section.dart';
 import '../widget/follow_section.dart';
 import '../widget/live_description_section.dart';
@@ -18,11 +18,13 @@ import 'package:get/get.dart';
 class AllLiveScreen extends StatelessWidget {
   AllLiveScreen({super.key});
 
-  final EventController controller = Get.find();
+
+  final HomeController controller = Get.find();
 
 
   @override
   Widget build(BuildContext context) {
+    Future.microtask(()=>controller.getAllRecordedLive(controller.currentPage.value, controller.limit.value));
     return Obx(() {
       /// -------------------------------
       /// 1. LOADING STATE
@@ -41,7 +43,7 @@ class AllLiveScreen extends StatelessWidget {
       /// -------------------------------
       /// 2. EMPTY STATE
       /// -------------------------------
-      if (controller.eventList.isEmpty) {
+      if (controller.allStreamList.isEmpty) {
         return Center(
           child: Padding(
             padding: EdgeInsets.only(top: 120.h),
@@ -54,9 +56,10 @@ class AllLiveScreen extends StatelessWidget {
         );
       }
 
+
       /// -------------------------------
       /// 3. MAIN CONTENT
-      /// -------------------------------
+
       return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,11 +69,11 @@ class AllLiveScreen extends StatelessWidget {
               width: double.infinity,
               color: Colors.white,
               child: ListView.builder(
-                itemCount: controller.eventList.length,
+                itemCount: controller.allStreamList.length,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final recordeEvent = controller.eventList[index];
+                  final recordeEvent = controller.allStreamList[index];
                   ///need update Here is Live
 
                   final isLive = recordeEvent.stream!.isLive;
@@ -120,7 +123,7 @@ class AllLiveScreen extends StatelessWidget {
 
                         /// video
                         VideoPlayerSection(
-                          videoUrl: recordeEvent.recordedLink,
+                          videoUrl: recordeEvent.recordedLink.toString(),
                         ),
 
                         /// like, comment, share

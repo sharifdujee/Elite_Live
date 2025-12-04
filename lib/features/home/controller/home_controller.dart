@@ -1,6 +1,27 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
+import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/core/utils/constants/app_urls.dart';
 import 'package:elites_live/core/utils/constants/image_path.dart';
+import 'package:elites_live/features/home/data/all_stream_data_model.dart';
+import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../data/comment_data_model.dart';
+
+import 'dart:developer';
+import 'dart:io';
+import 'package:elites_live/core/global_widget/custom_loading.dart';
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
+import 'package:elites_live/core/utils/constants/app_colors.dart';
+import 'package:elites_live/core/utils/constants/app_urls.dart';
+import 'package:elites_live/core/utils/constants/image_path.dart';
+import 'package:elites_live/features/home/data/all_stream_data_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,33 +33,109 @@ class HomeController extends GetxController {
   var selectedTab = 0.obs;
   var commentText = ''.obs;
   var selectedDonationAmount = 0.0.obs;
+  var isLoading = false.obs;
+  final NetworkCaller networkCaller = NetworkCaller();
+  final SharedPreferencesHelper helper = SharedPreferencesHelper();
+  RxList<Event> allStreamList = <Event>[].obs;
+  RxInt currentPage = 1.obs;
+  RxInt limit = 10.obs;
 
-  List<String> liveDescription = [
-    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
-    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
-    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
-    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
-    "Tell me what excites you and makes you smile. Only good conversations—no bad texters!...",
-  ];
+  @override
+  void onInit() {
+    super.onInit();
+    getAllRecordedLive(currentPage.value, limit.value);
+  }
 
-  List<String> influencerName = [
-    "Ethan Walker",
-    "Ronald Richards",
-    "Marvin",
-    "Jerome Bell",
-    "Marvin",
-  ];
+  /// get all recording
+  Future<void> getAllRecordedLive(int currentPage, int limit) async {
+    isLoading.value = true;
 
-  List<String> influencerProfile = [
-    "https://t4.ftcdn.net/jpg/03/83/25/83/360_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg",
-    "https://www.wilsoncenter.org/sites/default/files/media/images/person/james-person-1.jpg",
-    "https://www.fluentu.com/blog/wp-content/uploads/site//4/african-american-young-mom-with-curly-hair-in-stylish-outfit-feeling-grateful-and-happy-receiving-surprise-gift-from-kid-holding-palms-on-heart-smiling.jpg",
-    "https://www.viewbug.com/media/mediafiles/2017/11/16/76191533_large.jpg",
-    "https://www.newdirectionsforwomen.org/wp-content/uploads/2021/02/Woman-smiling-sunlight.jpg"
-  ];
+    Get.dialog(
+      CustomLoading(color: AppColors.primaryColor),
+      barrierDismissible: false,
+    );
 
-  List<bool> isLive = [true, false, true, true];
-  List<bool> isFollow = [true, false, true, true, true];
+    String? token = helper.getString("userToken");
+
+    try {
+      var response = await networkCaller.getRequest(
+        AppUrls.getAllRecordedLive(currentPage, limit),
+        token: token,
+      );
+
+      if (response.isSuccess) {
+        log("The recorded live is ${response.responseData}");
+
+        final allStream = AllRecordedEventDataModel.fromJson(response.responseData);
+
+        // Clear and assign new data
+        allStreamList.clear();
+        allStreamList.assignAll(allStream.result.events);
+
+        log("Total events loaded: ${allStreamList.length}");
+
+        // Force UI update
+        allStreamList.refresh();
+      } else {
+        log("API Error: ${response.errorMessage}");
+        Get.snackbar(
+          'Error',
+          'Failed to load events',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e, stackTrace) {
+      log("Exception: ${e.toString()}");
+      log("StackTrace: ${stackTrace.toString()}");
+      Get.snackbar(
+        'Error',
+        'Something went wrong: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+
+      /// Close the loading dialog
+      if (Get.isDialogOpen == true) {
+        Get.back();
+      }
+    }
+  }
+
+  // Method to get filtered events based on tab
+  List<Event> get filteredEvents {
+    if (searchText.value.isEmpty) {
+      return allStreamList;
+    }
+
+    return allStreamList.where((event) {
+      final searchLower = searchText.value.toLowerCase();
+      return event.title.toLowerCase().contains(searchLower) ||
+          event.text.toLowerCase().contains(searchLower) ||
+          event.user.firstName.toLowerCase().contains(searchLower) ||
+          event.user.lastName.toLowerCase().contains(searchLower);
+    }).toList();
+  }
+
+  // Get live events only
+  List<Event> get liveEvents {
+    return allStreamList.where((event) => event.stream.isLive).toList();
+  }
+
+  // Get recorded events only
+  List<Event> get recordedEvents {
+    return allStreamList.where((event) => !event.stream.isLive).toList();
+  }
+
+  // Get scheduled events
+  List<Event> get scheduledEvents {
+    return allStreamList.where((event) => event.eventType == 'Schedule').toList();
+  }
+
+  // Get funding events
+  List<Event> get fundingEvents {
+    return allStreamList.where((event) => event.eventType == 'Funding').toList();
+  }
 
   var commentImage = Rx<File?>(null);
   var isEmojiVisible = false.obs;
@@ -49,26 +146,6 @@ class HomeController extends GetxController {
   void onTabSelected(int index) => selectedTab.value = index;
 
   void onSearchChanged(String value) => searchText.value = value;
-
-  /// FIXED: Now actually calls Stripe payment service
-
-
-  /// Get the current post/stream ID
-  /// Replace this with your actual logic to get the post ID
-  String getCurrentPostId() {
-    // TODO: Get actual post ID from current stream/video
-    // This could come from navigation arguments, selected item, etc.
-    return "post_123"; // Placeholder - replace with real post ID
-  }
-
-  /// Refresh posts after successful payment
-  Future<void> getAllPost() async {
-    // TODO: Implement your logic to refresh the posts list
-    log('Refreshing posts after payment...');
-    // Example:
-    // await fetchPosts();
-    // posts.refresh();
-  }
 
   void toggleEmojiKeyboard() {
     isEmojiVisible.value = !isEmojiVisible.value;
@@ -124,6 +201,20 @@ class HomeController extends GetxController {
       comment.isLiked.value = !comment.isLiked.value;
     }
     comments.refresh();
+  }
+
+  // Refresh method for pull-to-refresh
+  Future<void> refreshEvents() async {
+    currentPage.value = 1;
+    await getAllRecordedLive(currentPage.value, limit.value);
+  }
+
+  // Load more for pagination
+  Future<void> loadMore() async {
+    if (!isLoading.value) {
+      currentPage.value++;
+      await getAllRecordedLive(currentPage.value, limit.value);
+    }
   }
 
   @override

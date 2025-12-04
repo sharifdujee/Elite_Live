@@ -590,7 +590,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   color: Colors.red,
                   onTap: () {
                     Get.back();
-                    controller.toggleRecording();
+                    controller.toggleRecording(roomId!);
                   },
                 ),
                 _buildMenuOption(
