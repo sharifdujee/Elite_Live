@@ -55,7 +55,7 @@ class AppRoute {
   static const String setupProfile = '/SetupProfileScreen';
   static const String mainView = '/MainViewScreen';
   static const String settings = '/settings';
-  static const String edit_profile = '/edit_profile';
+  static const String editProfile = '/edit_profile';
   static const String premium = '/premium';
   static const String changePass = '/changePass';
   static const String carddetails = '/carddetails';
@@ -64,7 +64,7 @@ class AppRoute {
   static const String wallet = '/wallet';
   static const String bank = '/bank';
   static const String bankDetails = '/bankDetails';
-  static const String payment_info = '/payment_info';
+  static const String paymentInfo = '/payment_info';
 
   /// added by sharif 
   static const String group = "/group";
@@ -150,7 +150,7 @@ class AppRoute {
     ),
 
     GetPage(
-      name: edit_profile,
+      name: editProfile,
       page: () => EditProfilePage(),
       transition: Transition.rightToLeft,
     ),
@@ -208,7 +208,7 @@ class AppRoute {
       transition: Transition.rightToLeft,
     ),
     GetPage(
-      name: payment_info,
+      name: paymentInfo,
       page: () => PaymentInfoPage(),
       transition: Transition.rightToLeft,
     ),

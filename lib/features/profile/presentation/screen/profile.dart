@@ -258,17 +258,16 @@ class ProfilePage extends StatelessWidget {
                             children: [
 
                               Obx(() {
-                                final follower =
-                                    controller.userinfo.value?.followersCount.toString();
+                                final follower = controller.userinfo.value?.followersCount?.toString() ?? "0";
 
                                 return CustomTextView(
-                                  text: follower!,
-
+                                  text: follower,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 18.sp,
                                   color: AppColors.textHeader,
                                 );
                               }),
+
                               CustomTextView(
                                 text: "Followers",
 
@@ -292,20 +291,18 @@ class ProfilePage extends StatelessWidget {
                           Column(
                             children: [
                               Obx(() {
-                                // Force rebuild by accessing the list
-                                final count =
-                                controller.userinfo.value!.followingCount.toString();
+                                final user = controller.userinfo.value;
 
+                                final count = user?.followingCount?.toString() ?? "0";
 
                                 return CustomTextView(
-                                 text:  count,
-
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 18.sp,
-                                    color: AppColors.textHeader,
-
+                                  text: count,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18.sp,
+                                  color: AppColors.textHeader,
                                 );
                               }),
+
                               CustomTextView(
                                text:  "Following",
 
@@ -360,7 +357,7 @@ class ProfilePage extends StatelessWidget {
                       CustomButtonWhite(
                         text: 'Edit Profile',
                         onPressed: () {
-                          Get.toNamed(AppRoute.edit_profile);
+                          Get.toNamed(AppRoute.editProfile);
                         },
                       ),
                       SizedBox(height: 15.h),

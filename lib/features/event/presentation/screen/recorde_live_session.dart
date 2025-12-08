@@ -97,7 +97,7 @@ class RecordedLiveSession extends StatelessWidget {
             return VideoThumbnailCard(
               videoUrl: videoUrl,
               title: event.title,
-              duration: event.scheduleDate,
+              duration: event.scheduleDate.toIso8601String(),
               onTap: () {
                 // Navigate to full screen video player
                 Get.to(() => FullScreenVideoPlayer(

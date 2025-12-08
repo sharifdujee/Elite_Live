@@ -39,7 +39,8 @@
     <application
         android:name="${applicationName}"
         android:label="elite_lives"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".MainActivity"

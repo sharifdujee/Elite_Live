@@ -2,8 +2,9 @@ class AppUrls {
 
   /// vps
   ////static const String _baseUrl = 'http://206.162.244.144:5020/api/v1';
-  ////static const String _baseUrl = 'http://10.0.20.169:5020/api/v1';
+  ///static const String _baseUrl = 'http://10.0.20.169:5020/api/v1';
   static const String _baseUrl = 'https://api.morgan.smtsigma.com/api/v1';
+  //  ';
 
 
   //create
@@ -21,7 +22,8 @@ class AppUrls {
    static String getOthersUserScheduleEvent(String userId) => "$_baseUrl/event/user-schedule/event/$userId";
    static String getOthersUserFundingEvent(String userId) => "$_baseUrl/event/user-funding/event/$userId";
   /// setting flow
-  static const String getMyEvent = "$_baseUrl/event/my-schedule/event";
+  static const String getMyRecording = "$_baseUrl/event/my/recording";
+  static  String myEvent(int page, int limit) => "$_baseUrl/event/my/event";
   static const String getMyCrowdFund = "$_baseUrl/event/my-funding/event";
 
   static const String socialLogin = '$_baseUrl/auth/auth-login';
@@ -112,6 +114,9 @@ class AppUrls {
   static const String getOtherUser = "$_baseUrl/auth/user-list";
   static String searchOtherUser(String search) => "$_baseUrl/auth/user-list?search=$search";
   static const String getAllRecordingVideo = "$_baseUrl/event/all/recording";
+  /// setting flow
+  static String addModerator(String userId) => "$_baseUrl/auth/add-moderator/$userId";
+
 
   /// notification flow
    static const String getAllNotification = "$_baseUrl/notification";

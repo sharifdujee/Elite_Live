@@ -50,6 +50,9 @@ class SignInController extends GetxController {
           "userToken",
           response.responseData['accessToken'],
         );
+        log("the user id after login is ${response.responseData['id']}");
+        preferencesHelper.setString('userId', response.responseData['id']);
+        log("the user id after save is ${preferencesHelper.getString('userId')}");
         log("the api response is ${response.responseData}");
         Get.offAllNamed(AppRoute.setupProfile, arguments: {});
         final isSetup = response.responseData['isSetup'];

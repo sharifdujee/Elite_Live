@@ -7,7 +7,7 @@ import 'custom_text_view.dart';
 class VideoThumbnailCard extends StatelessWidget {
   final String videoUrl;
   final String title;
-  final DateTime duration;
+  final String duration;
   final VoidCallback onTap;
 
   const VideoThumbnailCard({

@@ -101,10 +101,10 @@ class EventScheduleTab extends StatelessWidget {
           // Format date and time
           String formattedDate = DateFormat(
             'dd-MM-yyyy',
-          ).format(event.scheduleDate);
+          ).format(event.scheduleDate??DateTime.now());
           String formattedTime = DateFormat(
             'hh:mm a',
-          ).format(event.scheduleDate);
+          ).format(event.scheduleDate??DateTime.now());
 
           return Container(
             padding: EdgeInsets.all(16.w),

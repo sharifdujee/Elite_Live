@@ -76,6 +76,7 @@
         </dict>
 
         <!-- URL Schemes -->
+        <!-- URL Schemes -->
         <key>CFBundleURLTypes</key>
         <array>
             <dict>
@@ -84,6 +85,7 @@
                 <key>CFBundleURLSchemes</key>
                 <array>
                     <string>com.googleusercontent.apps.628281445808-k25kto9ln6ge4f3vopoaulhsmsq7gtll</string>
+                    <string>com.googleusercontent.apps.628281445808-9sopig57tblhtf10f1hfiar6cvngnlfi</string>
                     <string>fb888504579764089</string>
                 </array>
             </dict>

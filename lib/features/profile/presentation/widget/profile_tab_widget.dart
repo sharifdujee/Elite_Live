@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/profile_tab_controller.dart';
-import 'funding_schedule_tab.dart';
+
 
 
 
@@ -38,12 +38,7 @@ class ProfileTabsWidget extends StatelessWidget {
                   activeIcon: controller.scheduleActive,
                   inactiveIcon: controller.scheduleInactive,
                 ),
-                _buildTabItem(
-                  controller: controller,
-                  index: 2,
-                  activeIcon: controller.crowdActive,
-                  inactiveIcon: controller.crowdInactive,
-                ),
+
               ],
             ),
           ),
@@ -59,7 +54,7 @@ class ProfileTabsWidget extends StatelessWidget {
             children: [
               MyRecordedLiveSession(),
               EventScheduleTab(),
-              FundingScheduleTab(),
+
             ],
           ),
         ),

@@ -10,17 +10,15 @@ import '../../../../core/utils/constants/app_colors.dart';
 import '../../controller/my_schedule_event_controller.dart';
 
 
+
 class MyRecordedLiveSession extends StatelessWidget {
   const MyRecordedLiveSession({super.key});
-
-
-
 
   @override
   Widget build(BuildContext context) {
     final MyScheduleEventController controller =
     Get.find<MyScheduleEventController>();
-
+    Future.microtask(()=>controller.getMyRecording());
 
     return Obx(() {
       // Loading State
@@ -31,7 +29,7 @@ class MyRecordedLiveSession extends StatelessWidget {
       }
 
       // Empty State
-      if (controller.myEventScheduleList.isEmpty) {
+      if (controller.myRecordingList.isEmpty) {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -53,32 +51,6 @@ class MyRecordedLiveSession extends StatelessWidget {
         );
       }
 
-      final result = controller.myEventScheduleList.first;
-      final events = result.events;
-
-      // Empty events list
-      if (events.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.video_library_outlined,
-                size: 80.sp,
-                color: Colors.grey.shade400,
-              ),
-              SizedBox(height: 16.h),
-              CustomTextView(
-                text: "No Recorded Videos Available",
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade600,
-              ),
-            ],
-          ),
-        );
-      }
-
       // Grid View with Videos
       return GridView.builder(
         shrinkWrap: true,
@@ -89,26 +61,26 @@ class MyRecordedLiveSession extends StatelessWidget {
           mainAxisSpacing: 8.h,
           childAspectRatio: 0.7,
         ),
-        itemCount: events.length,
+        itemCount: controller.myRecordingList.length,
         itemBuilder: (context, index) {
-          final event = events[index];
-          // Use default video if recordedLink is null or empty
-          final videoUrl = (event.recordedLink.isEmpty)
-              ? 'https://cdn.pixabay.com/video/2016/08/16/4841-180474205_large.mp4'
-              : event.recordedLink;
+          final recording = controller.myRecordingList[index];
+
+          // Use recordingLink if available, otherwise use default video
+          final videoUrl = recording.recordingLink.isNotEmpty
+              ? recording.recordingLink
+              : 'https://cdn.pixabay.com/video/2016/08/16/4841-180474205_large.mp4';
 
           return VideoThumbnailCard(
             videoUrl: videoUrl,
-            title: event.eventType,
-            duration: event.scheduleDate,
+            title: 'Recording ${index + 1}',
+            duration: 'Views: ${recording.watchCount}',
             onTap: () {
               // Navigate to full screen video player
-              Get.to(() =>
-                  FullScreenVideoPlayer(
-                    videoUrl: videoUrl,
-                    title: event.text,
-                    description: event.text,
-                  ));
+              Get.to(() => FullScreenVideoPlayer(
+                videoUrl: videoUrl,
+                title: 'Recording ${index + 1}',
+                description: 'Watch Count: ${recording.watchCount}',
+              ));
             },
           );
         },
