@@ -3,7 +3,7 @@ import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
 import 'package:elites_live/core/services/network_caller/repository/network_caller.dart';
 import 'package:elites_live/features/event/data/crowd_funding_data_model.dart';
 import 'package:elites_live/features/event/data/others_user_data_model.dart';
-import 'package:elites_live/features/event/data/others_user_schedule_event.dart';
+
 import 'package:elites_live/routes/app_routing.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,9 @@ import '../data/event_comment_data_model.dart';
 import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
+import '../data/others_user_event_data_model.dart';
 import '../data/others_user_funding_data_model.dart';
+import '../data/others_user_recording_data_model.dart';
 
 class ScheduleController extends GetxController {
   var selectedDate = ''.obs;
@@ -35,8 +37,9 @@ class ScheduleController extends GetxController {
   final TextEditingController eventTitleController = TextEditingController();
   final TextEditingController crowdFundTitleController = TextEditingController();
   RxList<OthersUserResult> othersUserInfo = <OthersUserResult>[].obs;
-  RxList<OthersUserScheduleEventResult> otherScheduleEvent = <OthersUserScheduleEventResult>[].obs;
+  RxList<OtherUserEventResult> otherScheduleEvent = <OtherUserEventResult>[].obs;
   RxList<OthersUserFundingResult> othersUserFundingResult = <OthersUserFundingResult>[].obs;
+  RxList<OtherUserRecordingResult> otherUserRecordingList = <OtherUserRecordingResult>[].obs;
 
   RxInt currentPage = 1.obs;
   RxInt totalPages = 1.obs;
@@ -507,10 +510,9 @@ class ScheduleController extends GetxController {
 
         // IMPORTANT: Your network caller already extracts the 'result' field!
         // So resultData IS the user object, not the full response
-        final userResult = OthersUserScheduleEventResult.fromJson(resultData);
-
-
+        final userResult = OtherUserEventResult.fromJson(resultData);
         otherScheduleEvent.value = [userResult];
+
         log("othersUserInfo updated, length: ${othersUserInfo.length}");
 
       } else {
@@ -522,6 +524,72 @@ class ScheduleController extends GetxController {
     } finally {
       isLoading.value = false;
       log("Loading completed, isLoading: ${isLoading.value}");
+    }
+  }
+
+  /// get other user Recording
+  Future<void> getOthersRecording(String userId) async {
+    isLoading.value = true;
+    String? token = sharedPreferencesHelper.getString("userToken");
+    log("token during fetch my recording is $token");
+
+    try {
+      var response = await networkCaller.getRequest(AppUrls.getOthersUserRecording(userId), token: token);
+
+      if (response.isSuccess) {
+        log("=== RAW API RESPONSE ===");
+        log("${response.responseData}");
+        log("Response type: ${response.responseData.runtimeType}");
+
+        // Check if response is a List directly
+        if (response.responseData is List) {
+          log("Response is a direct List");
+          List<dynamic> dataList = response.responseData;
+
+          // Parse each item in the list
+          List<OtherUserRecordingResult> recordings = dataList
+              .map((item) => OtherUserRecordingResult.fromJson(item as Map<String, dynamic>))
+              .toList();
+
+          // Assign the list of recordings
+          otherUserRecordingList.assignAll(recordings);
+
+        } else if (response.responseData is Map<String, dynamic>) {
+          log("Response is a Map with wrapper");
+          Map<String, dynamic> data = response.responseData;
+
+          // Parse the response using the model
+          final recording = OthersRecordingDataModel.fromJson(data);
+
+          // Assign the list of recordings directly
+          otherUserRecordingList.assignAll(recording.result);
+        } else {
+          log("ERROR: Unknown response type");
+          return;
+        }
+
+        log("=== ASSIGNMENT COMPLETE ===");
+        log("myRecordingList length: ${otherUserRecordingList.length}");
+
+        // Log first few recordings
+        for (var i = 0; i < otherUserRecordingList.length && i < 3; i++) {
+          final rec = otherUserRecordingList[i];
+          log("Recording $i:");
+          log("  - ID: ${rec.id}");
+          log("  - Recording Link: ${rec.recordingLink}");
+          log("  - Watch Count: ${rec.watchCount}");
+        }
+
+      } else {
+        log("API request failed: ${response.errorMessage}");
+      }
+    } catch (e, stackTrace) {
+      log("=== EXCEPTION ===");
+      log("Exception: ${e.toString()}");
+      log("Stack trace: $stackTrace");
+    } finally {
+      isLoading.value = false;
+      log("Loading complete. Final list length: ${otherUserRecordingList.length}");
     }
   }
 

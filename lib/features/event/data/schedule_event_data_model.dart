@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+/// ===============================
 /// Encoding / Decoding helpers
+/// ===============================
 ScheduleEventDataModel scheduleEventDataModelFromJson(String str) =>
     ScheduleEventDataModel.fromJson(json.decode(str));
 
 String scheduleEventDataModelToJson(ScheduleEventDataModel data) =>
     json.encode(data.toJson());
+
 
 /// ===============================
 /// MAIN DATA MODEL
@@ -25,9 +28,9 @@ class ScheduleEventDataModel {
       ScheduleEventDataModel(
         success: json["success"] ?? false,
         message: json["message"] ?? "",
-        result: json["result"] == null
-            ? null
-            : ScheduleEventResult.fromJson(json["result"]),
+        result: json["result"] != null
+            ? ScheduleEventResult.fromJson(json["result"])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -37,8 +40,9 @@ class ScheduleEventDataModel {
   };
 }
 
+
 /// ===============================
-/// RESULT DATA
+/// RESULT
 /// ===============================
 class ScheduleEventResult {
   int totalCount;
@@ -61,8 +65,7 @@ class ScheduleEventResult {
         events: json["events"] == null
             ? []
             : List<LiveEvent>.from(
-          json["events"].map((x) => LiveEvent.fromJson(x)),
-        ),
+            json["events"].map((x) => LiveEvent.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -72,6 +75,7 @@ class ScheduleEventResult {
     "events": List<dynamic>.from(events.map((x) => x.toJson())),
   };
 }
+
 
 /// ===============================
 /// LIVE EVENT
@@ -95,7 +99,7 @@ class LiveEvent {
   bool isLiked;
   bool isOwner;
   bool isPayment;
-
+  bool isModerator;
 
   LiveEvent({
     required this.id,
@@ -115,7 +119,8 @@ class LiveEvent {
     required this.stream,
     required this.isLiked,
     required this.isOwner,
-    required this.isPayment, // <-- NEW
+    required this.isPayment,
+    required this.isModerator,
   });
 
   factory LiveEvent.fromJson(Map<String, dynamic> json) => LiveEvent(
@@ -130,28 +135,31 @@ class LiveEvent {
         : DateTime.parse(json["scheduleDate"]),
     payAmount: (json["payAmount"] ?? 0).toDouble(),
 
-    // ✅ FIXED: Handle null and use working fallback
-    recordedLink: json['recordedLink'] != null && json['recordedLink'].toString().isNotEmpty
-        ? json['recordedLink']
-        : 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    /// recordedLink can be null in API → fallback to empty string
+    recordedLink:
+    json["recordedLink"] == null ? "" : json["recordedLink"],
 
-    createdAt: json["createdAt"] == null
-        ? null
-        : DateTime.parse(json["createdAt"]),
-    updatedAt: json["updatedAt"] == null
-        ? null
-        : DateTime.parse(json["updatedAt"]),
+    createdAt:
+    json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt:
+    json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+
     user: User.fromJson(json["user"] ?? {}),
+
     count: Count.fromJson(json["_count"] ?? {}),
+
     eventLike: json["EventLike"] == null
         ? []
         : List<EventLike>.from(
         json["EventLike"].map((x) => EventLike.fromJson(x))),
+
     stream:
     json["stream"] == null ? null : StreamData.fromJson(json["stream"]),
+
     isLiked: json["isLiked"] ?? false,
     isOwner: json["isOwner"] ?? false,
     isPayment: json["isPayment"] ?? false,
+    isModerator: json["isModerator"] ?? false, // <-- NEW FIELD
   );
 
   Map<String, dynamic> toJson() => {
@@ -163,7 +171,7 @@ class LiveEvent {
     "text": text,
     "scheduleDate": scheduleDate?.toIso8601String(),
     "payAmount": payAmount,
-    'recordedLink' : recordedLink,
+    "recordedLink": recordedLink,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "user": user.toJson(),
@@ -172,13 +180,14 @@ class LiveEvent {
     "stream": stream?.toJson(),
     "isLiked": isLiked,
     "isOwner": isOwner,
-    "isPayment": isPayment, // <-- ADD TO JSON
+    "isPayment": isPayment,
+    "isModerator": isModerator,
   };
 }
 
 
 /// ===============================
-/// STREAM DATA
+/// STREAM
 /// ===============================
 class StreamData {
   String id;
@@ -212,8 +221,9 @@ class StreamData {
   };
 }
 
+
 /// ===============================
-/// COUNT MODEL
+/// COUNT
 /// ===============================
 class Count {
   int eventLike;
@@ -235,6 +245,7 @@ class Count {
   };
 }
 
+
 /// ===============================
 /// EVENT LIKE
 /// ===============================
@@ -252,8 +263,9 @@ class EventLike {
   };
 }
 
+
 /// ===============================
-/// USER MODEL
+/// USER
 /// ===============================
 class User {
   String id;

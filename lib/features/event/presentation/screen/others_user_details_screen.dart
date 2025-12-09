@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'others_user_crowd_fund_event.dart';
+
 import 'others_user_schedule_event_screen.dart';
 
 
@@ -25,7 +25,7 @@ class OthersUserDetailsScreen extends StatelessWidget {
     log("the user id is $userId");
 
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -211,7 +211,7 @@ class OthersUserDetailsScreen extends StatelessWidget {
                   tabs: const [
                     Tab(icon: Icon(Icons.grid_on)),
                     Tab(icon: Icon(Icons.calendar_today)),
-                    Tab(icon: Icon(Icons.person_outline)),
+
                   ],
                 ),
               ),
@@ -224,7 +224,7 @@ class OthersUserDetailsScreen extends StatelessWidget {
                     // Calendar Tab
                     OthersUserScheduleEventScreen(userId: user.id,),
                     // Profile Tab
-                    OthersUserCrowdScreen(userId: user.id)
+
                   ],
                 ),
               ),

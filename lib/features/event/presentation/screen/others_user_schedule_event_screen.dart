@@ -105,13 +105,13 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CustomTextView(
-                          text: 'Date: ${formatDate(event.scheduleDate)}',
+                          text: 'Date: ${formatDate(event.scheduleDate??DateTime.now())}',
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.black87,
                         ),
                         CustomTextView(
-                          text: formatTime(event.scheduleDate),
+                          text: formatTime(event.scheduleDate??DateTime.now()),
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primaryColor,

@@ -19,7 +19,8 @@ class AppUrls {
 
   /// others user flow
    static String getOtherUserInfo(String userId) => "$_baseUrl/users/$userId";
-   static String getOthersUserScheduleEvent(String userId) => "$_baseUrl/event/user-schedule/event/$userId";
+   static String getOthersUserScheduleEvent(String userId) => "$_baseUrl/event/user/event/$userId";
+   static String getOthersUserRecording(String userId) => "$_baseUrl/event/user/recording/$userId";
    static String getOthersUserFundingEvent(String userId) => "$_baseUrl/event/user-funding/event/$userId";
   /// setting flow
   static const String getMyRecording = "$_baseUrl/event/my/recording";
