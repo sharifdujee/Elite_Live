@@ -70,7 +70,7 @@ class EventScheduleScreen extends StatelessWidget {
                 if (eventController.isPaginationLoading.value) {
                   return Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: Center(child: CustomLoading(color: AppColors.primaryColor,)),
                   );
                 }
                 return SizedBox.shrink();
@@ -170,6 +170,9 @@ class EventScheduleScreen extends StatelessWidget {
                   isPayment: paymentStatus,
                     // In EventDetailsSection onTap callback (EventScheduleScreen)
 
+                    // UPDATED: EventScheduleScreen onTap logic
+// Replace the EventDetailsSection onTap callback with this:
+
                     onTap: () async {
                       log("the stream id is $streamId");
 
@@ -177,16 +180,17 @@ class EventScheduleScreen extends StatelessWidget {
                         if (hostLink == null || hostLink.isEmpty) {
                           // OWNER: Start Live (create new session)
                           controller.createAndNavigateToLive(
-                              isPaid: false,
-                              isHost: isOwner
+                            isPaid: false,
+                            isHost: isOwner,
                           );
                         } else {
                           // OWNER: Join as Host (existing session)
-                          // Call startLive API before navigation
                           await controller.startLive(streamId!);
 
+                          // ← UPDATED: Pass eventId for comment system
                           Get.toNamed(AppRoute.myLive, arguments: {
                             'roomId': streamId,
+                            'eventId': eventId, // ← NEW: Pass event ID
                             'userName': currentUserName,
                             'isHost': isOwner,
                             'hostLink': hostLink,
@@ -205,11 +209,12 @@ class EventScheduleScreen extends StatelessWidget {
 
                       // CASE B: User has paid → Join as audience
                       if (audienceLink != null && audienceLink.isNotEmpty) {
-                        // Call startLive API before joining as audience
                         await controller.startLive(streamId!);
 
+                        // ← UPDATED: Pass eventId for comment system
                         Get.toNamed(AppRoute.myLive, arguments: {
                           'roomId': streamId,
+                          'eventId': eventId, // ← NEW: Pass event ID
                           'userName': currentUserName,
                           'isHost': isOwner,
                           'hostLink': hostLink,
@@ -219,8 +224,8 @@ class EventScheduleScreen extends StatelessWidget {
                         });
                       } else {
                         CustomSnackBar.warning(
-                            title: "Not Available",
-                            message: "The live event hasn't started yet. Please wait for the host to begin."
+                          title: "Not Available",
+                          message: "The live event hasn't started yet. Please wait for the host to begin.",
                         );
                       }
                     }

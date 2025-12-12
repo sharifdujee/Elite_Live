@@ -3,7 +3,7 @@ class AppUrls {
   /// vps
   ////static const String _baseUrl = 'http://206.162.244.144:5020/api/v1';
   ///static const String _baseUrl = 'http://10.0.20.169:5020/api/v1';
-  static const String _baseUrl = 'https://api.morgan.smtsigma.com/api/v1';
+  static const String _baseUrl = 'https://api.elites-livestream.com/api/v1';
   //  ';
 
 
@@ -104,6 +104,8 @@ class AppUrls {
   static String startRecording(String streamId) => "$_baseUrl/live/start/recording/$streamId";
   static String stopRecording(String streamId) => "$_baseUrl/live/stop/recording/$streamId";
   static String startLive(String streamId) => "$_baseUrl/live/start/streaming/$streamId";
+  static String banUser(String streamId) => "$_baseUrl/live/ban/user/live/$streamId";
+  static String updateWatchCount(String streamId) => "$_baseUrl/live/watch-count/$streamId";
 
   /// Home Flow
   static String getAllRecordedLive(int page, int limit) => "$_baseUrl/event/all/event?page=$page&limit=$limit";
@@ -117,6 +119,7 @@ class AppUrls {
   static const String getAllRecordingVideo = "$_baseUrl/event/all/recording";
   /// setting flow
   static String addModerator(String userId) => "$_baseUrl/auth/add-moderator/$userId";
+
 
 
   /// notification flow

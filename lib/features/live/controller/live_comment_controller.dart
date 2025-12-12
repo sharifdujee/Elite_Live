@@ -1,0 +1,382 @@
+// lib/features/live/controller/live_comment_controller.dart
+
+// lib/features/live/controller/live_comment_controller.dart
+// FIXED: Handles both single comments and comment arrays
+
+import 'dart:convert';
+import 'dart:developer';
+import 'package:get/get.dart';
+import 'package:elites_live/core/services/socket_service.dart';
+import 'package:elites_live/core/helper/shared_prefarenses_helper.dart';
+import 'package:elites_live/core/global_widget/custom_snackbar.dart';
+import '../data/live_comment_data_model.dart';
+
+class LiveCommentController extends GetxController {
+  final WebSocketClientService webSocketService = WebSocketClientService.to;
+  final SharedPreferencesHelper helper = SharedPreferencesHelper();
+
+  // Observable comment list
+  final RxList<LiveComment> comments = <LiveComment>[].obs;
+  final RxBool isJoined = false.obs;
+  final RxBool isSending = false.obs;
+  final RxBool isConnecting = false.obs;
+  final RxString connectionError = ''.obs;
+
+  // Stream info
+  String? eventId;
+  String? streamId;
+  bool isFromEvent = false;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _setupMessageListener();
+  }
+
+  /// Initialize for Event-based live streaming
+  Future<void> initializeForEvent(String eventIdParam) async {
+    eventId = eventIdParam;
+    streamId = null;
+    isFromEvent = true;
+
+    log("📺 Initializing comment system for Event: $eventId");
+
+    try {
+      await _ensureWebSocketConnected();
+      await _joinStream();
+    } catch (e) {
+      log("❌ Failed to initialize for event: $e");
+      connectionError.value = "Failed to connect to chat server";
+    }
+  }
+
+  /// Initialize for Free live streaming
+  Future<void> initializeForFreeLive(String streamIdParam) async {
+    streamId = streamIdParam;
+    eventId = null;
+    isFromEvent = false;
+
+    log("📺 Initializing comment system for Free Live: $streamId");
+
+    try {
+      await _ensureWebSocketConnected();
+      await _joinStream();
+    } catch (e) {
+      log("❌ Failed to initialize for free live: $e");
+      connectionError.value = "Failed to connect to chat server";
+    }
+  }
+
+  /// Ensure WebSocket is connected
+  Future<void> _ensureWebSocketConnected() async {
+    if (webSocketService.isConnected.value) {
+      log("✅ WebSocket already connected");
+      return;
+    }
+
+    if (webSocketService.isConnecting.value) {
+      log("⏳ WebSocket connection already in progress, waiting...");
+      int attempts = 0;
+      const maxAttempts = 20;
+
+      while (attempts < maxAttempts &&
+          webSocketService.isConnecting.value &&
+          !webSocketService.isConnected.value) {
+        await Future.delayed(Duration(milliseconds: 500));
+        attempts++;
+      }
+
+      if (webSocketService.isConnected.value) {
+        log("✅ WebSocket connected (waited for existing connection)");
+        return;
+      }
+
+      if (attempts >= maxAttempts) {
+        throw Exception("Timeout waiting for existing connection");
+      }
+    }
+
+    isConnecting.value = true;
+    log("🔌 Connecting to WebSocket...");
+
+    final authToken = helper.getString('userToken');
+    if (authToken == null || authToken.isEmpty) {
+      isConnecting.value = false;
+      log("❌ No auth token available");
+      throw Exception("Authentication token not found");
+    }
+
+    const socketUrl = "wss://api.morgan.smtsigma.com";
+
+    try {
+      await webSocketService.connect(socketUrl, authToken);
+
+      int attempts = 0;
+      const maxAttempts = 20;
+
+      while (attempts < maxAttempts && !webSocketService.isConnected.value) {
+        await Future.delayed(Duration(milliseconds: 500));
+        attempts++;
+      }
+
+      if (!webSocketService.isConnected.value) {
+        throw Exception("WebSocket connection timeout");
+      }
+
+      isConnecting.value = false;
+      connectionError.value = '';
+      log("✅ WebSocket connected successfully");
+    } catch (e) {
+      isConnecting.value = false;
+      connectionError.value = e.toString();
+      log("❌ WebSocket connection error: $e");
+      rethrow;
+    }
+  }
+
+  /// Setup message listener for incoming comments
+  void _setupMessageListener() {
+    webSocketService.setOnMessageReceived((message) {
+      try {
+        final data = jsonDecode(message);
+        log("📨 Received message: $data");
+
+        final messageType = data['type'] as String?;
+
+        if (messageType == 'chat-streaming-comment' ||
+            messageType == 'chat-streaming-free-comment' ||
+            messageType == 'new-comment') {
+          _handleNewComment(data);
+        } else if (messageType == 'comment-history') {
+          _handleCommentHistory(data);
+        } else if (messageType == 'join-success') {
+          log("✅ Successfully joined streaming room");
+        } else if (messageType == 'error') {
+          log("❌ Server error: ${data['message']}");
+        }
+      } catch (e) {
+        log("❌ Error parsing message: $e");
+      }
+    });
+  }
+
+  /// ✅ FIXED: Handle both single comment and comment arrays
+  void _handleNewComment(Map<String, dynamic> data) {
+    try {
+      log("🔍 Parsing comment from data: $data");
+
+      final messageData = data['message'] ?? data;
+
+      // ✅ Check if this message contains an EventComment array
+      if (messageData['EventComment'] != null && messageData['EventComment'] is List) {
+        log("📚 Detected EventComment array with ${(messageData['EventComment'] as List).length} comments");
+        _handleCommentArray(messageData['EventComment'] as List);
+        return;
+      }
+
+      // ✅ Otherwise, handle as single comment
+      final comment = LiveComment.fromJson(data);
+
+      log("✅ Parsed single comment: ${comment.userName} - ${comment.comment}");
+
+      // Add to top of list (newest first)
+      comments.insert(0, comment);
+
+      // Keep only last 100 comments
+      if (comments.length > 100) {
+        comments.removeRange(100, comments.length);
+      }
+
+      log("💬 Comment added to list. Total comments: ${comments.length}");
+    } catch (e, stackTrace) {
+      log("❌ Error handling new comment: $e");
+      log("Stack trace: $stackTrace");
+      log("Data that failed to parse: $data");
+    }
+  }
+
+  /// ✅ NEW: Handle array of comments (for event streams)
+  void _handleCommentArray(List commentArray) {
+    try {
+      log("📥 Processing ${commentArray.length} comments from array");
+
+      // Parse all comments from array
+      final List<LiveComment> parsedComments = [];
+
+      for (var commentData in commentArray) {
+        try {
+          final comment = LiveComment.fromJson(commentData);
+          parsedComments.add(comment);
+          log("✅ Parsed: ${comment.userName} - ${comment.comment}");
+        } catch (e) {
+          log("❌ Failed to parse comment: $e");
+          log("Comment data: $commentData");
+        }
+      }
+
+      if (parsedComments.isEmpty) {
+        log("⚠️ No comments were successfully parsed");
+        return;
+      }
+
+      // Sort by timestamp (newest first)
+      parsedComments.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+      // Replace current comments with new array
+      comments.value = parsedComments;
+
+      log("✅ Loaded ${parsedComments.length} comments from array");
+      log("💬 Total comments in list: ${comments.length}");
+    } catch (e, stackTrace) {
+      log("❌ Error handling comment array: $e");
+      log("Stack trace: $stackTrace");
+    }
+  }
+
+  /// Handle comment history
+  void _handleCommentHistory(Map<String, dynamic> data) {
+    try {
+      final List<dynamic> history = data['comments'] ?? [];
+      final List<LiveComment> loadedComments = history
+          .map((item) => LiveComment.fromJson(item))
+          .toList();
+
+      comments.value = loadedComments;
+      log("📜 Loaded ${loadedComments.length} comments from history");
+    } catch (e) {
+      log("❌ Error handling comment history: $e");
+    }
+  }
+
+  /// Join the streaming room
+  Future<void> _joinStream() async {
+    if (!webSocketService.isConnected.value) {
+      log("❌ Cannot join: WebSocket not connected");
+      throw Exception("WebSocket not connected");
+    }
+
+    try {
+      final request = isFromEvent
+          ? JoinStreamingRequest(
+        type: WebSocketMessageType.joinStreaming,
+        eventId: eventId,
+      )
+          : JoinStreamingRequest(
+        type: WebSocketMessageType.joinStreamingFree,
+        streamId: streamId,
+      );
+
+      webSocketService.sendMessage(request.toJson());
+      isJoined.value = true;
+
+      log("✅ Joined streaming room: ${isFromEvent ? 'Event $eventId' : 'Stream $streamId'}");
+    } catch (e) {
+      log("❌ Error joining stream: $e");
+      rethrow;
+    }
+  }
+
+  /// Send a comment
+  Future<void> sendComment(String commentText) async {
+    if (commentText.trim().isEmpty) {
+      log("⚠️ Cannot send empty comment");
+      return;
+    }
+
+    if (!webSocketService.isConnected.value) {
+      log("❌ Cannot send: WebSocket not connected");
+      CustomSnackBar.error(
+        title: "Connection Error",
+        message: "Not connected to chat server. Please try again.",
+      );
+      throw Exception("Not connected to server");
+    }
+
+    if (!isJoined.value) {
+      log("❌ Cannot send: Not joined to stream");
+      CustomSnackBar.error(
+        title: "Error",
+        message: "Not joined to chat room. Please refresh.",
+      );
+      throw Exception("Not joined to stream");
+    }
+
+    isSending.value = true;
+
+    try {
+      final request = isFromEvent
+          ? ChatStreamingRequest(
+        type: WebSocketMessageType.chatStreaming,
+        eventId: eventId,
+        comment: commentText,
+      )
+          : ChatStreamingRequest(
+        type: WebSocketMessageType.chatStreamingFree,
+        streamId: streamId,
+        comment: commentText,
+      );
+
+      webSocketService.sendMessage(request.toJson());
+
+      log("💬 Comment sent: $commentText");
+    } catch (e) {
+      log("❌ Error sending comment: $e");
+      CustomSnackBar.error(
+        title: "Send Failed",
+        message: "Failed to send comment. Please try again.",
+      );
+      rethrow;
+    } finally {
+      isSending.value = false;
+    }
+  }
+
+  /// Retry connection
+  Future<void> retryConnection() async {
+    connectionError.value = '';
+
+    try {
+      if (isFromEvent && eventId != null) {
+        await initializeForEvent(eventId!);
+      } else if (!isFromEvent && streamId != null) {
+        await initializeForFreeLive(streamId!);
+      }
+    } catch (e) {
+      log("❌ Retry failed: $e");
+    }
+  }
+
+  /// Leave the streaming room
+  Future<void> leaveStream() async {
+    if (!isJoined.value) return;
+
+    try {
+      final leaveType = isFromEvent
+          ? WebSocketMessageType.leaveStreaming
+          : WebSocketMessageType.leaveStreamingFree;
+
+      final request = {
+        'type': leaveType,
+        if (isFromEvent) 'eventId': eventId,
+        if (!isFromEvent) 'streamId': streamId,
+      };
+
+      if (webSocketService.isConnected.value) {
+        webSocketService.sendMessage(request);
+      }
+
+      isJoined.value = false;
+      comments.clear();
+
+      log("👋 Left streaming room");
+    } catch (e) {
+      log("❌ Error leaving stream: $e");
+    }
+  }
+
+  @override
+  void onClose() {
+    leaveStream();
+    super.onClose();
+  }
+}

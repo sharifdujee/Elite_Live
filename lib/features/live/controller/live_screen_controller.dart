@@ -16,8 +16,6 @@ import 'package:uuid/uuid.dart';
 import '../data/create_live_response_data_model.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 
-
-
 class LiveScreenController extends GetxController {
   var isCameraOn = true.obs;
   var isMicOn = true.obs;
@@ -27,7 +25,6 @@ class LiveScreenController extends GetxController {
   var viewerCount = 0.obs;
   var isLoading = false.obs;
   late ZegoUIKitPrebuiltLiveStreamingController prebuiltController;
-
 
   final NetworkCaller networkCaller = NetworkCaller();
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
@@ -53,7 +50,6 @@ class LiveScreenController extends GetxController {
     return 'audience_${uuid.v4()}';
   }
 
-
   /// start Live
   // Key fixes in LiveScreenController:
 
@@ -65,28 +61,28 @@ class LiveScreenController extends GetxController {
 
     try {
       var response = await networkCaller.postRequest(
-          AppUrls.startLive(streamId),
-          body: {},
-          token: token
+        AppUrls.startLive(streamId),
+        body: {},
+        token: token,
       );
 
       if (response.isSuccess) {
         log("the api response is ${response.responseData}");
         CustomSnackBar.success(
-            title: "Live Started",
-            message: "Live session started successfully"
+          title: "Live Started",
+          message: "Live session started successfully",
         );
       } else {
         CustomSnackBar.error(
-            title: "Error",
-            message: "Failed to start live session"
+          title: "Error",
+          message: "Failed to start live session",
         );
       }
     } catch (e) {
       log("the exception is ${e.toString()}");
       CustomSnackBar.error(
-          title: "Error",
-          message: "Failed to start live: ${e.toString()}"
+        title: "Error",
+        message: "Failed to start live: ${e.toString()}",
       );
     } finally {
       isLoading.value = false; // ← FIXED: was 'true' before
@@ -100,9 +96,9 @@ class LiveScreenController extends GetxController {
 
     try {
       var response = await networkCaller.postRequest(
-          AppUrls.startRecording(streamId),
-          body: {},
-          token: token
+        AppUrls.startRecording(streamId),
+        body: {},
+        token: token,
       );
 
       if (response.isSuccess) {
@@ -123,9 +119,9 @@ class LiveScreenController extends GetxController {
 
     try {
       var response = await networkCaller.postRequest(
-          AppUrls.stopRecording(streamId),
-          body: {},
-          token: token
+        AppUrls.stopRecording(streamId),
+        body: {},
+        token: token,
       );
 
       if (response.isSuccess) {
@@ -161,8 +157,8 @@ class LiveScreenController extends GetxController {
       } catch (e) {
         log("Failed to stop recording: $e");
         CustomSnackBar.error(
-            title: "Error",
-            message: "Failed to stop recording"
+          title: "Error",
+          message: "Failed to stop recording",
         );
       } finally {
         isLoading.value = false;
@@ -187,8 +183,8 @@ class LiveScreenController extends GetxController {
       } catch (e) {
         log("Failed to start recording: $e");
         CustomSnackBar.error(
-            title: "Error",
-            message: "Failed to start recording"
+          title: "Error",
+          message: "Failed to start recording",
         );
       } finally {
         isLoading.value = false;
@@ -205,9 +201,7 @@ class LiveScreenController extends GetxController {
 
     // Show loading spinner
     Get.dialog(
-       Center(child: CustomLoading(
-        color:AppColors.primaryColor ,
-      )),
+      Center(child: CustomLoading(color: AppColors.primaryColor)),
       barrierDismissible: false,
     );
 
@@ -215,7 +209,10 @@ class LiveScreenController extends GetxController {
 
     if (token == null || token.isEmpty) {
       if (Get.isDialogOpen ?? false) Get.back();
-      CustomSnackBar.error(title: "Authentication Error", message: "Please login again");
+      CustomSnackBar.error(
+        title: "Authentication Error",
+        message: "Please login again",
+      );
 
       isLoading.value = false;
       return null;
@@ -279,7 +276,6 @@ class LiveScreenController extends GetxController {
     }
   }
 
-  /// Navigate to live screen after creating live stream
   Future<void> createAndNavigateToLive({
     required bool isPaid,
     required bool isHost,
@@ -288,7 +284,6 @@ class LiveScreenController extends GetxController {
     log("=== createAndNavigateToLive called ===");
     log("isPaid: $isPaid, isHost: $isHost, cost: $cost");
 
-    // Prevent multiple simultaneous calls
     if (isLoading.value) {
       log("⚠️ Already loading, ignoring duplicate call");
       return;
@@ -300,7 +295,6 @@ class LiveScreenController extends GetxController {
       cost: cost,
     );
 
-    // If creation successful, navigate
     if (liveData != null) {
       log("🚀 Navigating to live screen...");
       log("Navigation data: $liveData");
@@ -308,25 +302,22 @@ class LiveScreenController extends GetxController {
       try {
         if (isPaid) {
           log("Navigating to premium screen");
-          await Get.toNamed(
-            AppRoute.premiumScreen,
-            arguments: liveData,
-          );
+          await Get.toNamed(AppRoute.premiumScreen, arguments: liveData);
         } else {
-          log("Navigating to my live screen");
+          log("Navigating to my live screen (FREE LIVE)");
+          // ← UPDATED: Don't pass eventId for free live
           await Get.toNamed(
             AppRoute.myLive,
-            arguments: {
-              ...liveData,
-              'isHost': isHost,
-            },
+            arguments: {...liveData, 'isHost': isHost},
           );
         }
         log("✅ Navigation successful");
       } catch (e) {
         log("❌ Navigation error: $e");
-        CustomSnackBar.error(title: "Error", message: "Failed to navigate to live screen");
-
+        CustomSnackBar.error(
+          title: "Error",
+          message: "Failed to navigate to live screen",
+        );
       }
     } else {
       log("❌ liveData is null, navigation cancelled");
@@ -334,39 +325,36 @@ class LiveScreenController extends GetxController {
   }
 
   /// Join live session as audience using audience link
-  /// IMPORTANT: The audience link must be in format "liveId|audienceLink"
-  /// Example: "673e123abc|audience_uuid-here"
   Future<void> joinLiveAsAudience({required String audienceLink}) async {
     log("=== joinLiveAsAudience called ===");
     log("Audience Link: $audienceLink");
 
-    // STEP 1: Parse the audience link to extract liveId
-    // The link should be in format: "liveId|audience_link" or just "audience_link"
+    // Parse the audience link
     String? liveId;
     String actualAudienceLink = audienceLink;
 
     if (audienceLink.contains('|')) {
-      // Format: "liveId|audience_link"
       final parts = audienceLink.split('|');
       liveId = parts[0];
       actualAudienceLink = parts[1];
       log("📌 Extracted liveId: $liveId");
       log("📌 Extracted audienceLink: $actualAudienceLink");
     } else {
-      // If no separator, use the audience link itself as liveId
-      // This is a fallback - ideally the host should share "liveId|audienceLink"
       liveId = audienceLink;
       log("⚠️ No separator found, using entire link as liveId: $liveId");
     }
 
     if (liveId.isEmpty) {
-      CustomSnackBar.error(title: "Invalid Link", message: "The audience link is invalid. Please check and try again.");
-
+      CustomSnackBar.error(
+        title: "Invalid Link",
+        message: "The audience link is invalid. Please check and try again.",
+      );
       return;
     }
 
-    // STEP 2: Get current user info
-    String? userId = helper.getString('userId') ?? 'user_${uuid.v4().substring(0, 8)}';
+    // Get current user info
+    String? userId =
+        helper.getString('userId') ?? 'user_${uuid.v4().substring(0, 8)}';
     String? userName = helper.getString('userName') ?? 'Guest User';
 
     log("🚀 Joining live stream as audience...");
@@ -374,27 +362,30 @@ class LiveScreenController extends GetxController {
     log("   User ID: $userId");
     log("   User Name: $userName");
 
-    // STEP 3: Navigate to live screen with the SAME liveId as host
     try {
+      // ← UPDATED: Don't pass eventId when joining via audience link (free live)
       await Get.toNamed(
         AppRoute.myLive,
         arguments: {
-          'roomId': liveId, // CRITICAL: Use the same liveId as host
-          'liveId': liveId, // CRITICAL: Use the same liveId as host
+          'roomId': liveId,
+          'liveId': liveId,
           'audienceLink': actualAudienceLink,
-          'isHost': false, // User is audience, not host
+          'isHost': false,
           'isPaid': false,
           'cost': 0.0,
-          'hostId': userId, // Current user's ID
+          'hostId': userId,
           'hostLink': null,
           'coHostLink': null,
+          // eventId is intentionally NOT passed (joining free live via link)
         },
       );
       log("✅ Successfully joined live stream");
     } catch (e) {
       log("❌ Navigation error: $e");
-      CustomSnackBar.error(title: "Error", message: "Failed to join live stream. Please try again.");
-
+      CustomSnackBar.error(
+        title: "Error",
+        message: "Failed to join live stream. Please try again.",
+      );
     }
   }
 
@@ -405,9 +396,7 @@ class LiveScreenController extends GetxController {
     try {
       var response = await networkCaller.postRequest(
         AppUrls.endLive(streamId),
-        body: {
-          "isHost":true,
-        },
+        body: {"isHost": true},
         token: token,
       );
       if (response.isSuccess) {
@@ -419,13 +408,6 @@ class LiveScreenController extends GetxController {
       isLoading.value = false;
     }
   }
-
-
-
-
-   /// stop recording
-
-  ///
 
   void toggleCamera() {
     isCameraOn.value = !isCameraOn.value;
@@ -440,33 +422,31 @@ class LiveScreenController extends GetxController {
       // === STOP SCREEN SHARING ===
       await ZegoUIKit.instance.stopSharingScreen();
       isScreenSharing.value = false;
-      CustomSnackBar.success(title: "Screen Sharing Stopped", message: "Your screen is no longer being shared");
-
-
+      CustomSnackBar.success(
+        title: "Screen Sharing Stopped",
+        message: "Your screen is no longer being shared",
+      );
     } else {
-      // === START SCREEN SHARING ===
       try {
         await ZegoUIKit.instance.startSharingScreen();
 
         // If no exception, assume success
         isScreenSharing.value = true;
-        CustomSnackBar.success(title: "Screen Sharing Started", message: "Your screen is now being shared with viewers");
-
-
+        CustomSnackBar.success(
+          title: "Screen Sharing Started",
+          message: "Your screen is now being shared with viewers",
+        );
       } catch (e) {
         log("Screen sharing failed: $e");
-        CustomSnackBar.error(title: "Error", message: "Failed to start screen sharing. Please try again.");
-
-
+        CustomSnackBar.error(
+          title: "Error",
+          message: "Failed to start screen sharing. Please try again.",
+        );
       }
     }
 
     showMenu.value = false;
   }
-
-
-
-
 
   void toggleMenu() {
     showMenu.value = !showMenu.value;
@@ -478,18 +458,18 @@ class LiveScreenController extends GetxController {
 
   void addContributor() {
     showMenu.value = false;
-    CustomSnackBar.success(title: "Add Contributor", message: "Opening contributor selection..");
-
+    CustomSnackBar.success(
+      title: "Add Contributor",
+      message: "Opening contributor selection..",
+    );
   }
 
   void openComments() {
     showMenu.value = false;
-
   }
 
   void openPolls() {
     showMenu.value = false;
-
   }
 
   void endCall(BuildContext context, String streamId) {
@@ -534,8 +514,10 @@ class LiveScreenController extends GetxController {
 
                       isLoading.value = false;
                       Get.back(); // navigate back from live screen
-                      CustomSnackBar.success(title: "Session Ended", message: "Live session ended successfully");
-
+                      CustomSnackBar.success(
+                        title: "Session Ended",
+                        message: "Live session ended successfully",
+                      );
                     },
                     text: "End",
                   ),
@@ -589,8 +571,10 @@ class LiveScreenController extends GetxController {
 
                       isLoading.value = false;
                       Get.back(); // leave live screen
-                      CustomSnackBar.warning(title: "Left Session", message: "You have left the live session");
-
+                      CustomSnackBar.warning(
+                        title: "Left Session",
+                        message: "You have left the live session",
+                      );
                     },
                     text: "Leave",
                   ),
@@ -602,4 +586,62 @@ class LiveScreenController extends GetxController {
       },
     );
   }
+
+  /// ban user
+  Future<void> banUser(String streamId, String userId) async {
+    isLoading.value = true; // start loading
+    String? token = helper.getString("userToken");
+    log("Token during ban user: $token");
+
+    try {
+      var response = await networkCaller.postRequest(
+        AppUrls.banUser(streamId),
+        body: {"banUserId": userId},
+        token: token,
+      );
+
+      if (response.isSuccess) {
+        log("API response: ${response.responseData}");
+        CustomSnackBar.success(
+          title: "Success",
+          message: "The user has been successfully banned.",
+        );
+      } else {
+        // Handle API errors properly
+        log("API error response: ${response.responseData}");
+        CustomSnackBar.error(
+          title: "Failed",
+          message: response.errorMessage
+        );
+      }
+    } catch (e) {
+      log("Exception: ${e.toString()}");
+      CustomSnackBar.error(title: "Error", message: e.toString());
+    } finally {
+      // Stop loading in all cases
+      isLoading.value = false;
+    }
+  }
+  
+  
+  /// update watch count 
+   Future<void> updateWatchCount(String streamId) async{
+    isLoading.value = true;
+    String?token = helper.getString("userToken");
+    log("the token during update watch count $token");
+    try{
+      var response = await networkCaller.patchRequest(AppUrls.updateWatchCount(streamId), token: token);
+      if(response.isSuccess){
+        log("the api response is ${response.responseData}");
+      }
+      
+    }
+    catch(e){
+      log("the exception is ${e.toString()}");
+    }
+    finally{
+      isLoading.value = false;
+    }
+   }
+
 }

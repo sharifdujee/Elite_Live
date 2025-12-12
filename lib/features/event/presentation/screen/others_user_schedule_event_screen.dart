@@ -244,13 +244,16 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
         return CustomElevatedButton(
           text: "Start Live",
           ontap: () {
-            Get.snackbar(
-              'Info',
-              'Start Live functionality - requires LiveScreenController',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: AppColors.primaryColor,
-              colorText: Colors.white,
-            );
+            Get.toNamed(AppRoute.myLive, arguments: {
+              'roomId': streamId,
+              'eventId': event.id,     // ✅ FIXED
+              'userName': userName,    // ✅ FIXED
+              'isHost': true,
+              'hostLink': hostLink,
+              'audienceLink': audienceLink,
+              'hostId': hostId,
+              'coHostLink': coHostLink, // ✅ FIXED
+            });
           },
         );
       }
@@ -289,19 +292,15 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
     if (audienceLink != null && audienceLink.isNotEmpty) {
       return CustomElevatedButton(
         text: "Join Now",
-
         ontap: () {
-          if (audienceLink.isNotEmpty) {
-            Get.toNamed(AppRoute.myLive, arguments: {
-              'roomId': streamId,
-              'userName': userName,
-              'isHost': isOwner,
-              'hostLink': hostLink,
-              'audienceLink': audienceLink,
-              'hostId': hostId,
-
-            });
-          }
+          Get.toNamed(AppRoute.myLive, arguments: {
+            'roomId': streamId,
+            'userName': userName,
+            'isHost': false,
+            'hostLink': hostLink,
+            'audienceLink': audienceLink,
+            'hostId': hostId,
+          });
         },
       );
     }
@@ -320,6 +319,7 @@ class OthersUserScheduleEventScreen extends StatelessWidget {
       },
     );
   }
+
 
 
 
