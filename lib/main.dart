@@ -10,6 +10,7 @@ import 'app.dart';
 import 'core/binding/app_binding.dart';
 
 import 'core/services/socket_service.dart';
+import 'features/live/controller/GlobalWebSocketHandler.dart';
 
 
 Future<void> main() async {
@@ -21,6 +22,7 @@ Future<void> main() async {
   await AuthService().init();
   await PushNotificationService.initialize();
   AppBinding().dependencies();
+  Get.put(GlobalWebSocketHandler());
   Get.put(WebSocketClientService(), permanent: true);
 
   // Initialize Zego

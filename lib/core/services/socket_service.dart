@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 
 
 
+
+
 class WebSocketClientService extends GetxService {
   final RxBool isConnected = false.obs;
   final RxBool isConnecting = false.obs;
@@ -23,6 +25,7 @@ class WebSocketClientService extends GetxService {
   static const int _connectionTimeout = 10; // seconds
 
   Function(String)? onMessageRecived;
+  Function(Map<String, dynamic>)? onContributionRequest; // NEW: Global handler
 
   static WebSocketClientService get to => Get.find();
 
@@ -57,7 +60,7 @@ class WebSocketClientService extends GetxService {
         },
       );
 
-      log("✅ WebSocket connected");
+      log("✅ WebSocket connected successfully");
       isConnected.value = true;
       isConnecting.value = false;
       _reconnectAttempts = 0; // Reset reconnect attempts on successful connection
@@ -69,6 +72,7 @@ class WebSocketClientService extends GetxService {
       _socket?.listen(
             (message) {
           log("📨 Received: $message");
+          _handleIncomingMessage(message); // NEW: Process messages
           onMessageRecived?.call(message);
         },
         onDone: () {
@@ -97,6 +101,21 @@ class WebSocketClientService extends GetxService {
       }
 
       rethrow; // Rethrow to let caller handle the error
+    }
+  }
+
+  // NEW: Handle incoming WebSocket messages
+  void _handleIncomingMessage(String message) {
+    try {
+      final decoded = jsonDecode(message);
+
+      // Check if it's a contribution request
+      if (decoded['type'] == 'contribution-request') {
+        log("🎯 Received contribution request");
+        onContributionRequest?.call(decoded);
+      }
+    } catch (e) {
+      log("❌ Error processing incoming message: $e");
     }
   }
 
@@ -170,6 +189,11 @@ class WebSocketClientService extends GetxService {
 
   void setOnMessageReceived(Function(String) callback) {
     onMessageRecived = callback;
+  }
+
+  // NEW: Set global contribution request handler
+  void setOnContributionRequest(Function(Map<String, dynamic>) callback) {
+    onContributionRequest = callback;
   }
 
   @override

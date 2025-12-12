@@ -27,11 +27,13 @@ import '../../features/authentication/set_up_profile/controller/set_up_profile_c
 import '../../features/authentication/sign_in/controller/sign_in_controller.dart';
 import '../../features/authentication/sign_up/controller/sign_up_controller.dart';
 import '../../features/authentication/sign_up/controller/sign_up_otp_controller.dart';
+import '../../features/live/controller/GlobalWebSocketHandler.dart';
 import '../../features/main_view/controller/main_view_controller.dart';
 import '../../features/on_boarding/controller/slider_controller.dart';
 
 import '../../features/splash/controller/splash_controller.dart';
 import '../global_widget/controller/custom_date_time_dialogue.dart';
+import '../services/socket_service.dart';
 
 
 class AppBinding extends Bindings {
@@ -68,6 +70,8 @@ class AppBinding extends Bindings {
     Get.lazyPut(()=>EarningsController(), fenix: true);
     Get.lazyPut(()=>LiveScreenController(), fenix: true);
     Get.lazyPut(()=>SearchController(), fenix: true);
+    Get.put(WebSocketClientService(), permanent: true);
+    Get.put(GlobalWebSocketHandler(), permanent: true);
 
   }
 }

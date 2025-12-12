@@ -10,9 +10,10 @@ import 'dart:developer';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
 import '../../controller/live_screen_controller.dart';
-
 import '../widget/live_comment_widget.dart';
 import '../widget/live_error_screen.dart';
+import 'package:elites_live/features/live/presentation/widget/contributor_request_dialog.dart';
+
 
 class MyLiveScreen extends StatefulWidget {
   const MyLiveScreen({super.key});
@@ -38,17 +39,62 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
   @override
   void initState() {
     super.initState();
-    _extractArguments(); // ← NEW: Extract arguments early
-    ///_initializeWebSocket();
+    _extractArguments();
+    _setupContributionRequestListener();
   }
 
-  // ← NEW: Extract arguments in initState
   void _extractArguments() {
     final Map<String, dynamic>? data = Get.arguments as Map<String, dynamic>?;
     if (data != null) {
       eventId = data['eventId'];
       isFromEvent = eventId != null && eventId!.isNotEmpty;
       log("📌 Is from event: $isFromEvent, Event ID: $eventId");
+    }
+  }
+
+  // NEW: Setup contribution request listener
+  void _setupContributionRequestListener() {
+    webSocketService.setOnContributionRequest((data) {
+      log("🎯 Received contribution request in MyLiveScreen");
+      _handleContributionRequest(data);
+    });
+  }
+
+  // NEW: Handle incoming contribution requests
+  void _handleContributionRequest(Map<String, dynamic> data) {
+    try {
+      final from = data['from'] as Map<String, dynamic>;
+      final String fromUserId = from['id'] ?? '';
+      final String firstName = from['firstName'] ?? '';
+      final String lastName = from['lastName'] ?? '';
+      final String fromUserName = '$firstName $lastName';
+      final String? fromUserImage = from['profileImage'];
+      final String? fromUserProfession = from['profession'];
+      final String coHostLink = data['link'] ?? '';
+      final String streamId = data['streamId'] ?? '';
+
+      log("👤 Invitation from: $fromUserName");
+      log("🔗 Co-Host Link: $coHostLink");
+      log("📺 Stream ID: $streamId");
+
+      // Show the contribution request dialog
+      ContributorRequestDialog.show(
+        onAccepted: (){
+          setState(() {
+
+          });
+        },
+        context,
+        fromUserId: fromUserId,
+        fromUserName: fromUserName,
+        fromUserImage: fromUserImage,
+        fromUserProfession: fromUserProfession,
+        coHostLink: coHostLink,
+        streamId: streamId,
+        webSocketService: webSocketService,
+      );
+    } catch (e) {
+      log("❌ Error handling contribution request: $e");
     }
   }
 
@@ -75,7 +121,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
         return;
       }
 
-      const socketUrl = "wss://api.elites-livestream.com"; // ← UPDATED URL
+      const socketUrl = "wss://api.elites-livestream.com";
       await webSocketService.connect(socketUrl, authToken);
 
       int attempts = 0;
@@ -93,6 +139,9 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
         webSocketService.setOnMessageReceived((message) {
           _handleWebSocketMessage(message);
         });
+
+        // Setup contribution request listener after connection
+        _setupContributionRequestListener();
       } else {
         log("❌ WebSocket connection timeout");
       }
@@ -162,8 +211,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
 
   @override
   void dispose() {
-    log("🔌 Disconnecting WebSocket...");
-    // Don't disconnect here - let comment controller handle it
+    log("🔌 Cleaning up...");
     super.dispose();
   }
 
@@ -176,11 +224,10 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
       return LiveErrorScreen(message: "Error: No live session data");
     }
 
-    // Extract data
     liveId = data["liveId"] ?? data["roomId"] ?? "";
     roomId = data["roomId"] ?? liveId;
-    eventId = data["eventId"]; // ← NEW
-    isFromEvent = eventId != null && eventId!.isNotEmpty; // ← NEW
+    eventId = data["eventId"];
+    isFromEvent = eventId != null && eventId!.isNotEmpty;
     final String userName = data['userName'] ?? 'TestUser';
     final String hostId = data["hostId"] ?? "";
     final String hostLink = data["hostLink"] ?? "";
@@ -190,7 +237,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     final bool isPaid = data["isPaid"] ?? false;
     final double cost = (data["cost"] ?? 0.0).toDouble();
 
-    // Extract Zego roomID
     if (isHost) {
       zegoRoomId = _extractRoomIdFromUrl(hostLink);
     } else {
@@ -205,8 +251,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     log("=== MyLiveScreen Data ===");
     log("Live ID: $liveId");
     log("Room ID (DB): $roomId");
-    log("Event ID: $eventId"); // ← NEW
-    log("Is From Event: $isFromEvent"); // ← NEW
+    log("Event ID: $eventId");
+    log("Is From Event: $isFromEvent");
     log("Zego Room ID: $zegoRoomId");
     log("Is Host: $isHost");
 
@@ -222,7 +268,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Zego Live Streaming View
           ZegoUIKitPrebuiltLiveStreaming(
             appID: 1071350787,
             appSign: "657d70a56532ec960b9fc671ff05d44b498910b5668a1b3f1f1241bede47af71",
@@ -233,31 +278,19 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
                 : ZegoUIKitPrebuiltLiveStreamingConfig.audience())
               ..layout = ZegoLayout.pictureInPicture(
-                showScreenSharingFullscreenModeToggleButtonRules:
-                ZegoShowFullscreenModeToggleButtonRules.alwaysShow,
+                showScreenSharingFullscreenModeToggleButtonRules: ZegoShowFullscreenModeToggleButtonRules.alwaysShow,
                 showNewScreenSharingViewInFullscreenMode: true,
                 isSmallViewDraggable: false,
                 switchLargeOrSmallViewByClick: false,
               )
-            // Completely disable all built-in messaging
-              ..inRoomMessage = ZegoLiveStreamingInRoomMessageConfig(
-                visible: false,
-
-              )
-
-
-
+              ..inRoomMessage = ZegoLiveStreamingInRoomMessageConfig(visible: false)
               ..audioVideoView = ZegoLiveStreamingAudioVideoViewConfig(
                 showAvatarInAudioMode: true,
                 showSoundWavesInAudioMode: true,
                 useVideoViewAspectFill: true,
               )
               ..topMenuBar = ZegoLiveStreamingTopMenuBarConfig(
-                buttons: [
-                  ZegoLiveStreamingMenuBarButtonName.minimizingButton,
-                ],
-                backgroundColor: Colors.transparent,
-                height: 80.h,
+
               )
               ..bottomMenuBar = ZegoLiveStreamingBottomMenuBarConfig(
                 hostButtons: [
@@ -265,16 +298,12 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   ZegoLiveStreamingMenuBarButtonName.toggleMicrophoneButton,
                   ZegoLiveStreamingMenuBarButtonName.switchCameraButton,
                 ],
-                audienceButtons: [], // No default buttons including chat
+                audienceButtons: [],
                 backgroundColor: Colors.transparent,
                 height: 80.h,
               )
-              ..duration = ZegoLiveStreamingDurationConfig(
-                isVisible: true,
-              )
-              ..memberList = ZegoLiveStreamingMemberListConfig(
-                showFakeUser: false,
-              )
+              ..duration = ZegoLiveStreamingDurationConfig(isVisible: true)
+              ..memberList = ZegoLiveStreamingMemberListConfig(showFakeUser: false)
               ..confirmDialogInfo = ZegoLiveStreamingDialogInfo(
                 title: "Leave Live",
                 message: "Are you sure you want to leave?",
@@ -290,19 +319,14 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 onEnter: (ZegoUIKitUser user) async {
                   log("✅ User entered: ${user.name} (${user.id})");
 
-                  // Update local viewer count (only count audience, not host)
                   final localUser = ZegoUIKit().getLocalUser();
-                  final isLocalUserHost = localUser.id == user.id && isHost; // If this is the host joining
+                  final isLocalUserHost = localUser.id == user.id && isHost;
 
-                  // Only increment viewer count for audience members (not the host)
                   if (user.id != localUser.id || !isHost) {
                     controller.viewerCount.value++;
                   }
 
-                  // Call updateWatchCount API only for audience members entering
                   if (roomId != null && roomId!.isNotEmpty) {
-                    // Safely call only if it's not the host (or co-host pretending to be audience)
-                    // We assume: if current device is host, don't count local joins as viewers
                     if (!isHost || user.id != localUser.id) {
                       try {
                         await controller.updateWatchCount(roomId!);
@@ -318,7 +342,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
 
                   final localUser = ZegoUIKit().getLocalUser();
 
-                  // Only decrement if it's not the host leaving (or if it is, but we don't count host in viewers)
                   if (user.id != localUser.id || !isHost) {
                     if (controller.viewerCount.value > 0) {
                       controller.viewerCount.value--;
@@ -329,7 +352,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
             ),
           ),
 
-          // ← NEW: Custom Comment Panel (Slide-in from bottom)
           Positioned(
             bottom: 0,
             left: 0,
@@ -348,11 +370,9 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
             ),
           ),
 
-          // Top Bar & Bottom Controls
           SafeArea(
             child: Column(
               children: [
-                // Top Bar
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                   decoration: BoxDecoration(
@@ -383,7 +403,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                       Expanded(
                         child: Row(
                           children: [
-                            // LIVE Badge
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                               decoration: BoxDecoration(
@@ -408,7 +427,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                             ),
                             SizedBox(width: 8.w),
 
-                            // Viewer Count
                             Obx(() => Container(
                               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                               decoration: BoxDecoration(
@@ -443,7 +461,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
 
                 Spacer(),
 
-                // ← NEW: Chat Toggle Button (Bottom Right)
                 if (!showComments)
                   Padding(
                     padding: EdgeInsets.only(right: 16.w, bottom: 100.h),
@@ -476,7 +493,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                     ),
                   ),
 
-                // Close Comments Button
                 if (showComments)
                   Padding(
                     padding: EdgeInsets.only(right: 16.w, bottom: 420.h),
@@ -507,12 +523,15 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     );
   }
 
+
   void _showMenuOptions(BuildContext context, bool isHost) {
     final Map<String, dynamic>? data = Get.arguments;
     final String hostLink = data?["hostLink"] ?? "";
     final String audienceLink = data?["audienceLink"] ?? "";
 
     showModalBottomSheet(
+
+
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
@@ -526,6 +545,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              /// Drag bar
               Container(
                 width: 40.w,
                 height: 4.h,
@@ -535,6 +555,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 ),
               ),
               SizedBox(height: 20.h),
+
+              /// Title
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: Row(
@@ -551,6 +573,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 ),
               ),
               SizedBox(height: 20.h),
+
+              /// Link Boxes for HOST
               if (isHost)
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -566,6 +590,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                     ],
                   ),
                 ),
+
+              /// OPTIONS FOR HOST
               if (isHost) ...[
                 _buildMenuOption(
                   icon: Icons.screen_share,
@@ -602,6 +628,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   },
                 ),
               ],
+
+              /// Create Poll (available for all)
               _buildMenuOption(
                 icon: Icons.poll,
                 title: "Create Poll",
@@ -613,6 +641,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   CreatePollDialog.show(context, streamId: liveId!);
                 },
               ),
+
+              /// End Live (host only)
               if (isHost)
                 _buildMenuOption(
                   icon: Icons.call_end,
@@ -625,6 +655,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   },
                   isDanger: true,
                 ),
+
               SizedBox(height: 20.h),
             ],
           ),
@@ -633,8 +664,11 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     );
   }
 
+  /// LINK BOX UI (same as second)
   Widget _buildLinkBox({required String title, required String value}) {
     String displayValue = value;
+
+    // first version logic kept
     if (title == "Audience Join Link" && liveId != null && liveId!.isNotEmpty) {
       displayValue = "$liveId|$value";
     }
@@ -671,8 +705,10 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
               InkWell(
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: displayValue));
-                  CustomSnackBar.success(title: "Copied", message: "$title copied to clipboard");
-
+                  CustomSnackBar.success(
+                    title: "Copied",
+                    message: "$title copied to clipboard",
+                  );
                 },
                 child: Icon(Icons.copy, color: Colors.blue, size: 20.sp),
               ),
@@ -683,6 +719,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     );
   }
 
+  /// MENU OPTION UI (same as second)
   Widget _buildMenuOption({
     required IconData icon,
     required String title,
@@ -712,6 +749,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
+
                     title,
                     style: TextStyle(
                       fontSize: 16.sp,
@@ -733,7 +771,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
       ),
     );
   }
-
 
 }
 
