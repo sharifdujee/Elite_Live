@@ -36,7 +36,24 @@ class LiveIndicatorSection extends StatelessWidget {
           onTap: onTap,
           child: CircleAvatar(
             radius: 30.r,
-            backgroundImage: NetworkImage(imageUrl),
+            backgroundColor: Colors.grey[200],
+            child: ClipOval(
+              child: Image.network(
+                imageUrl,
+                width: 60.r,
+                height: 60.r,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // Show fallback image if network fails
+                  return Image.network(
+                    fallbackImage,
+                    width: 60.r,
+                    height: 60.r,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            ),
           ),
         ),
 
@@ -66,3 +83,4 @@ class LiveIndicatorSection extends StatelessWidget {
     );
   }
 }
+
