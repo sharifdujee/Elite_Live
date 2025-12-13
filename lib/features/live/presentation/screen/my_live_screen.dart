@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'dart:developer';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_uikit_prebuilt_live_streaming/zego_uikit_prebuilt_live_streaming.dart';
+import '../../controller/GlobalWebSocketHandler.dart';
 import '../../controller/live_screen_controller.dart';
 import '../widget/live_comment_widget.dart';
 import '../widget/live_error_screen.dart';
@@ -26,6 +27,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
   final LiveScreenController controller = Get.put(LiveScreenController());
   final WebSocketClientService webSocketService = WebSocketClientService.to;
   final SharedPreferencesHelper helper = SharedPreferencesHelper();
+  final GlobalWebSocketHandler globalHandler = Get.find<GlobalWebSocketHandler>();
 
   String? liveId;
   String? roomId;
@@ -35,12 +37,15 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
   bool isFromEvent = false;
   bool isWebSocketInitialized = false;
   bool showComments = false;
+  bool isHost = true;
+  bool isCoHost = false; // NEW: Track co-host status
 
   @override
   void initState() {
     super.initState();
     _extractArguments();
     _setupContributionRequestListener();
+    _setupCoHostListeners(); // NEW
   }
 
   void _extractArguments() {
@@ -48,11 +53,14 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     if (data != null) {
       eventId = data['eventId'];
       isFromEvent = eventId != null && eventId!.isNotEmpty;
+      isHost = data['isHost'] ?? true;
+      isCoHost = data['isCoHost'] ?? false; // NEW: Check if user is co-host
       log("📌 Is from event: $isFromEvent, Event ID: $eventId");
+      log("📌 Is Host: $isHost, Is Co-Host: $isCoHost");
     }
   }
 
-  // NEW: Setup contribution request listener
+  // Setup contribution request listener
   void _setupContributionRequestListener() {
     webSocketService.setOnContributionRequest((data) {
       log("🎯 Received contribution request in MyLiveScreen");
@@ -60,7 +68,92 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     });
   }
 
-  // NEW: Handle incoming contribution requests
+  // NEW: Setup co-host event listeners
+  void _setupCoHostListeners() {
+    // Listen for co-host joined
+    webSocketService.setOnCoHostJoined((data) {
+      log("✅ Co-host joined event received");
+      _handleCoHostJoined(data);
+    });
+
+    // Listen for co-host left
+    webSocketService.setOnCoHostLeft((data) {
+      log("❌ Co-host left event received");
+      _handleCoHostLeft(data);
+    });
+
+    // Listen for host transferred
+    webSocketService.setOnHostTransferred((data) {
+      log("🔄 Host transferred event received");
+      _handleHostTransferred(data);
+    });
+  }
+
+  // NEW: Handle co-host joined
+  void _handleCoHostJoined(Map<String, dynamic> data) {
+    try {
+      final String coHostId = data['coHostId'] ?? '';
+      final String coHostName = data['coHostName'] ?? 'Co-Host';
+      final String streamId = data['streamId'] ?? '';
+
+      if (streamId == roomId) {
+        controller.addCoHost(coHostId);
+
+        CustomSnackBar.success(
+          title: "Co-Host Joined",
+          message: "$coHostName is now a co-host",
+        );
+      }
+    } catch (e) {
+      log("❌ Error handling co-host joined: $e");
+    }
+  }
+
+  // NEW: Handle co-host left
+  void _handleCoHostLeft(Map<String, dynamic> data) {
+    try {
+      final String coHostId = data['coHostId'] ?? '';
+      final String streamId = data['streamId'] ?? '';
+
+      if (streamId == roomId) {
+        controller.removeCoHost(coHostId);
+
+        CustomSnackBar.warning(
+          title: "Co-Host Left",
+          message: "A co-host has left the session",
+        );
+      }
+    } catch (e) {
+      log("❌ Error handling co-host left: $e");
+    }
+  }
+
+  // NEW: Handle host transferred
+  void _handleHostTransferred(Map<String, dynamic> data) {
+    try {
+      final String newHostId = data['newHostId'] ?? '';
+      final String oldHostId = data['oldHostId'] ?? '';
+      final String streamId = data['streamId'] ?? '';
+      final String? currentUserId = helper.getString('userId');
+
+      if (streamId == roomId && currentUserId == newHostId) {
+        // Current user became the host
+        setState(() {
+          isHost = true;
+          isCoHost = false;
+        });
+
+        CustomSnackBar.success(
+          title: "You're Now the Host",
+          message: "Host role has been transferred to you",
+        );
+      }
+    } catch (e) {
+      log("❌ Error handling host transferred: $e");
+    }
+  }
+
+  // Handle incoming contribution requests
   void _handleContributionRequest(Map<String, dynamic> data) {
     try {
       final from = data['from'] as Map<String, dynamic>;
@@ -79,11 +172,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
 
       // Show the contribution request dialog
       ContributorRequestDialog.show(
-        onAccepted: (){
-          setState(() {
-
-          });
-        },
         context,
         fromUserId: fromUserId,
         fromUserName: fromUserName,
@@ -92,6 +180,12 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
         coHostLink: coHostLink,
         streamId: streamId,
         webSocketService: webSocketService,
+        onAccepted: () {
+          setState(() {
+            isCoHost = true;
+            isHost = false;
+          });
+        },
       );
     } catch (e) {
       log("❌ Error handling contribution request: $e");
@@ -140,8 +234,9 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
           _handleWebSocketMessage(message);
         });
 
-        // Setup contribution request listener after connection
+        // Setup listeners after connection
         _setupContributionRequestListener();
+        _setupCoHostListeners();
       } else {
         log("❌ WebSocket connection timeout");
       }
@@ -169,6 +264,15 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
   }
 
   void _openAddContributorDialog() {
+    // Co-hosts cannot add contributors
+    if (isCoHost) {
+      CustomSnackBar.warning(
+        title: "Not Allowed",
+        message: "Only the host can add contributors",
+      );
+      return;
+    }
+
     log("🎯 Opening Add Contributor Dialog");
 
     if (!webSocketService.isConnected.value) {
@@ -212,6 +316,15 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
   @override
   void dispose() {
     log("🔌 Cleaning up...");
+
+    // If co-host is leaving, notify others
+    if (isCoHost && roomId != null) {
+      final String? currentUserId = helper.getString('userId');
+      if (currentUserId != null) {
+        webSocketService.notifyCoHostLeft(roomId!, currentUserId);
+      }
+    }
+
     super.dispose();
   }
 
@@ -233,12 +346,15 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     final String hostLink = data["hostLink"] ?? "";
     final String audienceLink = data["audienceLink"] ?? "";
     coHostLink = data["coHostLink"] ?? "";
-    final bool isHost = data["isHost"] ?? true;
+    isHost = data["isHost"] ?? true;
+    isCoHost = data["isCoHost"] ?? false;
     final bool isPaid = data["isPaid"] ?? false;
     final double cost = (data["cost"] ?? 0.0).toDouble();
 
     if (isHost) {
       zegoRoomId = _extractRoomIdFromUrl(hostLink);
+    } else if (isCoHost) {
+      zegoRoomId = _extractRoomIdFromUrl(coHostLink ?? "");
     } else {
       zegoRoomId = _extractRoomIdFromUrl(audienceLink);
     }
@@ -255,6 +371,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     log("Is From Event: $isFromEvent");
     log("Zego Room ID: $zegoRoomId");
     log("Is Host: $isHost");
+    log("Is Co-Host: $isCoHost");
 
     if (liveId?.isEmpty ?? true) {
       log("❌ Invalid live session data");
@@ -263,6 +380,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
 
     final String uniqueUserId = isHost
         ? "${hostId.substring(0, 8)}_host"
+        : isCoHost
+        ? "${hostId.substring(0, 8)}_cohost"
         : "${hostId.substring(0, 8)}_${DateTime.now().millisecondsSinceEpoch % 10000}";
 
     return Scaffold(
@@ -274,7 +393,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
             userName: userName,
             userID: uniqueUserId,
             liveID: zegoRoomId!,
-            config: (isHost
+            config: (isHost || isCoHost
                 ? ZegoUIKitPrebuiltLiveStreamingConfig.host()
                 : ZegoUIKitPrebuiltLiveStreamingConfig.audience())
               ..layout = ZegoLayout.pictureInPicture(
@@ -289,9 +408,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 showSoundWavesInAudioMode: true,
                 useVideoViewAspectFill: true,
               )
-              ..topMenuBar = ZegoLiveStreamingTopMenuBarConfig(
-
-              )
+              ..topMenuBar = ZegoLiveStreamingTopMenuBarConfig()
               ..bottomMenuBar = ZegoLiveStreamingBottomMenuBarConfig(
                 hostButtons: [
                   ZegoLiveStreamingMenuBarButtonName.toggleCameraButton,
@@ -322,12 +439,12 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   final localUser = ZegoUIKit().getLocalUser();
                   final isLocalUserHost = localUser.id == user.id && isHost;
 
-                  if (user.id != localUser.id || !isHost) {
+                  if (user.id != localUser.id || (!isHost && !isCoHost)) {
                     controller.viewerCount.value++;
                   }
 
                   if (roomId != null && roomId!.isNotEmpty) {
-                    if (!isHost || user.id != localUser.id) {
+                    if ((!isHost && !isCoHost) || user.id != localUser.id) {
                       try {
                         await controller.updateWatchCount(roomId!);
                         log("📈 updateWatchCount API called for viewer: ${user.name}");
@@ -342,7 +459,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
 
                   final localUser = ZegoUIKit().getLocalUser();
 
-                  if (user.id != localUser.id || !isHost) {
+                  if (user.id != localUser.id || (!isHost && !isCoHost)) {
                     if (controller.viewerCount.value > 0) {
                       controller.viewerCount.value--;
                     }
@@ -389,7 +506,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: () => controller.goBack(context, roomId!),
+                        onTap: () => controller.goBack(context, roomId!, isHost, isCoHost),
                         child: Container(
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
@@ -427,6 +544,26 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                             ),
                             SizedBox(width: 8.w),
 
+                            // NEW: Show co-host badge if user is co-host
+                            if (isCoHost) ...[
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [Colors.purple, Colors.deepPurple]),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.co_present, color: Colors.white, size: 12.sp),
+                                    SizedBox(width: 4.w),
+                                    Text("CO-HOST", style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                            ],
+
                             Obx(() => Container(
                               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                               decoration: BoxDecoration(
@@ -445,7 +582,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => _showMenuOptions(context, isHost),
+                        onTap: () => _showMenuOptions(context, isHost, isCoHost),
                         child: Container(
                           padding: EdgeInsets.all(8.w),
                           decoration: BoxDecoration(
@@ -523,15 +660,12 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     );
   }
 
-
-  void _showMenuOptions(BuildContext context, bool isHost) {
+  void _showMenuOptions(BuildContext context, bool isHost, bool isCoHost) {
     final Map<String, dynamic>? data = Get.arguments;
     final String hostLink = data?["hostLink"] ?? "";
     final String audienceLink = data?["audienceLink"] ?? "";
 
     showModalBottomSheet(
-
-
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
@@ -574,7 +708,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
               ),
               SizedBox(height: 20.h),
 
-              /// Link Boxes for HOST
+              /// Link Boxes for HOST only
               if (isHost)
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -591,8 +725,9 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                   ),
                 ),
 
-              /// OPTIONS FOR HOST
-              if (isHost) ...[
+              /// OPTIONS FOR HOST AND CO-HOST
+              if (isHost || isCoHost) ...[
+                // Screen Share (available for both host and co-host)
                 _buildMenuOption(
                   icon: Icons.screen_share,
                   title: "Screen Share",
@@ -605,6 +740,8 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                     controller.toggleScreenShare();
                   },
                 ),
+
+                // Recording (available for both host and co-host)
                 _buildMenuOption(
                   icon: Icons.fiber_manual_record,
                   title: "Recording",
@@ -617,16 +754,19 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                     controller.toggleRecording(roomId!);
                   },
                 ),
-                _buildMenuOption(
-                  icon: Icons.person_add,
-                  title: "Add Contributor",
-                  subtitle: "Invite someone to join",
-                  color: Colors.green,
-                  onTap: () {
-                    Get.back();
-                    _openAddContributorDialog();
-                  },
-                ),
+
+                // Add Contributor (ONLY for host, not co-host)
+                if (isHost)
+                  _buildMenuOption(
+                    icon: Icons.person_add,
+                    title: "Add Contributor",
+                    subtitle: "Invite someone to join",
+                    color: Colors.green,
+                    onTap: () {
+                      Get.back();
+                      _openAddContributorDialog();
+                    },
+                  ),
               ],
 
               /// Create Poll (available for all)
@@ -642,16 +782,22 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 },
               ),
 
-              /// End Live (host only)
-              if (isHost)
+              /// End Live (host and co-host, but different logic for host)
+              if (isHost || isCoHost)
                 _buildMenuOption(
                   icon: Icons.call_end,
-                  title: "End Live",
-                  subtitle: "Stop live streaming",
+                  title: isCoHost ? "End Live" : "End Live",
+                  subtitle: isCoHost
+                      ? "Stop live streaming"
+                      : "Stop live streaming or transfer host",
                   color: Colors.red[700]!,
                   onTap: () {
                     Get.back();
-                    controller.endCall(context, roomId!);
+                    if (isHost) {
+                      controller.endCallAsHost(context, roomId!);
+                    } else if (isCoHost) {
+                      controller.endCallAsCoHost(context, roomId!);
+                    }
                   },
                   isDanger: true,
                 ),
@@ -664,11 +810,10 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     );
   }
 
-  /// LINK BOX UI (same as second)
+  /// LINK BOX UI
   Widget _buildLinkBox({required String title, required String value}) {
     String displayValue = value;
 
-    // first version logic kept
     if (title == "Audience Join Link" && liveId != null && liveId!.isNotEmpty) {
       displayValue = "$liveId|$value";
     }
@@ -719,7 +864,7 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
     );
   }
 
-  /// MENU OPTION UI (same as second)
+  /// MENU OPTION UI
   Widget _buildMenuOption({
     required IconData icon,
     required String title,
@@ -749,7 +894,6 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-
                     title,
                     style: TextStyle(
                       fontSize: 16.sp,
@@ -771,6 +915,5 @@ class _MyLiveScreenState extends State<MyLiveScreen> {
       ),
     );
   }
-
 }
 
